@@ -4,7 +4,6 @@ import pandas as pd
 import urllib.request as req
 import datetime
 
-# @st.cache(allow_output_mutation=True)
 @st.experimental_memo
 def getRTMSDataSvcAptTrade(city, date, user_key, rows): 
     url = st.secrets.api_path
@@ -50,15 +49,19 @@ def api(date):
 
 file_1 = pd.read_csv(st.secrets.user_path,encoding='cp949')
 user_key = st.secrets.user_key
+
 c1,c2,c3 = st.columns([1,1,1])
+
 try:
     with c1 :
         date = st.date_input('날짜').strftime('%Y%m%d')
         date_2 = datetime.datetime(year=int(date[:3 + 1]),month=int(date[4:5 + 1]),day=int(date[6:])).strftime('%y.%m')
+        
     with c2:
         with c3:
             empey = st.empty()
             아파트 = empey.selectbox('아파트', ' ')
+            
         시군구 = st.selectbox('시군구', sorted([i for i in set(file_1["법정동명"])]),index=230) # 93 강남 230 파주
         file_2 = file_1[file_1['법정동명'].str.contains(시군구)].astype(str)
         city = file_2.iloc[0,0][:5]
@@ -83,13 +86,13 @@ try:
         if len(당월전체) == 0 :
             st.info(f'{date[4:5+1]}월 신규 등록이 없습니다😎')
         else:            
-            st.table(당월전체.style.background_gradient(subset=['거래금액', '면적', '건축']))
+            st.dataframe(당월전체.style.background_gradient(subset=['거래금액', '면적', '건축']))
 
     with st.expander(f'{시군구} {date[4:5+1]}월 아파트별', expanded=True) :
         if len(당월전체) == 0 :
             st.info(f'{date[4:5+1]}월 신규 등록이 없습니다😎')
         else:
-            st.table(아파트별.reset_index(drop=True).style.background_gradient(subset=['거래금액','면적','건축'],cmap='Reds'))
+            st.dataframe(아파트별.reset_index(drop=True).style.background_gradient(subset=['거래금액','면적','건축'],cmap='Reds'))
 
     st.success('GTX 운정신도시 오픈챗 https://open.kakao.com/o/gICcjcDb')
     st.warning('참여코드 : 2023gtxa')
