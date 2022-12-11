@@ -6,7 +6,7 @@ import datetime
 
 @st.experimental_memo
 def getRTMSDataSvcAptTrade(city, date, user_key, rows): 
-    url = st.secrets.api_path
+    url = "http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptTradeDev"
 
     url = url + "?&LAWD_CD=" + city
     url = url + "&DEAL_YMD=" + date[:6]
@@ -31,7 +31,8 @@ def getRTMSDataSvcAptTrade(city, date, user_key, rows):
         해제            = item.find("해제여부").text
         발생일      = item.find("해제사유발생일").text
         temp = pd.DataFrame(([[아파트, 거래금액, 층, 면적, 건축, 동, 거래일자, 거래유형, 해제, 발생일]]), 
-                            columns=["아파트                    ", "거래금액", "층", "면적",  "건축", "동", "거래일", "거래유형", "해제","발생일"])
+                            columns=["아파트                    ", "거래금액", "층", "면적",  "건축", "동", "거래일", "거래유형", "해제","발생일"]) 
+        aptTrade = pd.concat([aptTrade,temp])
 
     aptTrade = aptTrade.reset_index(drop=True)    
     aptTrade['면적'] = aptTrade['면적'].astype(float).map('{:.2f}'.format)
@@ -54,24 +55,22 @@ try:
     with c1 :
         date = st.date_input('날짜').strftime('%Y%m%d')
         date_2 = datetime.datetime(year=int(date[:3 + 1]),month=int(date[4:5 + 1]),day=int(date[6:])).strftime('%y.%m')
-        
     with c2:
         with c3:
             empey = st.empty()
             아파트 = empey.selectbox('아파트', ' ')
-            
-        시군구 = st.selectbox('시군구', sorted([i for i in set(file_1["법정동명"])]),index=230) # 93 강남 230 파주
+
+        시군구 = st.selectbox('검색하거나 선택하세요🧐', sorted([i for i in set(file_1["법정동명"])]),index=230) # 93 강남 230 파주
         file_2 = file_1[file_1['법정동명'].str.contains(시군구)].astype(str)
         city = file_2.iloc[0,0][:5]
         rows = '9999'
-        
     당월 = datetime.datetime(year=int(date[:3 + 1]),month=int(date[4:5 + 1]),day=int(date[6:]))
     어제 = 당월 - datetime.timedelta(days=1)
     전월 = 당월 - datetime.timedelta(days=30)
     오늘합 = pd.concat([api(당월.strftime('%Y%m%d')),api(전월.strftime('%Y%m%d'))]).reset_index(drop=True)
     오늘합['계약일'] = pd.to_datetime(오늘합['거래일'],format = "%Y%m%d").dt.strftime('%y.%m.%d')
     오늘합 = 오늘합[["아파트                    ", "거래금액", "층", "면적", "계약일","건축", "동", "거래유형", "해제", "발생일"]]
-
+    
     if 시군구:
         당월전체 = 오늘합
         당월전체 = 당월전체[당월전체['계약일'].str.contains(date_2)]
@@ -79,20 +78,20 @@ try:
         당월전체['동'] = 당월전체['동'].str.split().str[0]
         아파트 = empey.selectbox('아파트', sorted([i for i in 당월전체["아파트                    "].drop_duplicates()]))
         
-    with c3:
+    with c3:  
         아파트별 = 당월전체[당월전체['아파트                    '] == 아파트]
-    
-    with st.expander(f'{시군구} {date[4:5+1]}월 아파트별', expanded=True) :
+        
+    with st.expander(f'{시군구} {date[4:5+1]}월 아파트별',expanded=True) :
         if len(당월전체) == 0 :
             st.info(f'{date[4:5+1]}월 신규 등록이 없습니다😎')
         else:
-            st.dataframe(아파트별.reset_index(drop=True).style.background_gradient(subset=['거래금액','면적','건축'],cmap='Reds'))    
-        
-    with st.expander(f'{시군구} {date[4:5+1]}월 전체', expanded=False) :
+            st.dataframe(아파트별.reset_index(drop=True).style.background_gradient(subset=['거래금액','면적','건축'],cmap='Reds')) 
+            
+    with st.expander(f'{시군구} {date[4:5+1]}월 전체',expanded=False) :
         if len(당월전체) == 0 :
             st.info(f'{date[4:5+1]}월 신규 등록이 없습니다😎')
-        else:            
-            st.dataframe(당월전체.style.background_gradient(subset=['거래금액', '면적', '건축']))        
+        else:
+            st.dataframe(당월전체.style.background_gradient(subset=['거래금액', '면적', '건축']))      
 
     st.success('GTX 운정신도시 오픈챗 https://open.kakao.com/o/gICcjcDb')
     st.warning('참여코드 : 2023gtxa')
