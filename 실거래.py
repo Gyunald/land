@@ -44,7 +44,7 @@ def getRTMSDataSvcAptTrade(city, date, user_key, rows):
         aptTrade['거래유형'] = aptTrade['거래유형'].str.replace(i,'')
     return aptTrade
 
-def date2(date):
+def api(date):
     당월전체 = getRTMSDataSvcAptTrade(city, date, user_key, rows)
     return 당월전체
 
@@ -54,7 +54,7 @@ c1,c2,c3 = st.columns([1,1,1])
 try:
     with c1 :
         date = st.date_input('날짜').strftime('%Y%m%d')
-        date3 = datetime.datetime(year=int(date[:3 + 1]),month=int(date[4:5 + 1]),day=int(date[6:])).strftime('%y.%m')
+        date_2 = datetime.datetime(year=int(date[:3 + 1]),month=int(date[4:5 + 1]),day=int(date[6:])).strftime('%y.%m')
     with c2:
         with c3:
             empey = st.empty()
@@ -66,13 +66,14 @@ try:
         당월 = datetime.datetime(year=int(date[:3 + 1]),month=int(date[4:5 + 1]),day=int(date[6:]))
         어제 = 당월 - datetime.timedelta(days=1)
         전월 = 당월 - datetime.timedelta(days=30)
-        오늘합 = pd.concat([date2(당월.strftime('%Y%m')),date2(전월.strftime('%Y%m'))]).reset_index(drop=True)
+        오늘합 = pd.concat([api(당월.strftime('%Y%m')),api(전월.strftime('%Y%m'))]).reset_index(drop=True)
         오늘합['계약일'] = pd.to_datetime(오늘합['거래일'],format = "%Y%m%d").dt.strftime('%y.%m.%d')
         오늘합 = 오늘합[["아파트", "거래금액", "층", "면적", "계약일","건축", "동", "거래유형", "해제", "발생일"]]
 
     if 시군구:
         당월전체 = 오늘합
         당월전체 = 당월전체[당월전체['계약일'].str.contains(date3)]
+        당월전체['계약일'] = 당월전체['계약일'].str.replace('22.','',regex=True)
         아파트 = empey.selectbox('아파트', sorted([i for i in 당월전체["아파트"].drop_duplicates()]))
 
     with c3:
