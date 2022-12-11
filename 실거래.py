@@ -87,13 +87,13 @@ try:
         else:
             st.dataframe(아파트별.reset_index(drop=True).style.background_gradient(subset=['거래금액','면적','건축'], cmap='Reds')) 
             
-    with st.expander(f'{시군구} 실거래 - {date[4:5+1]}월 전체',expanded=False) :
+    with st.expander(f'{시군구} 실거래 - {date[4:5+1]}월 전체',expanded=True) :
         if len(당월전체) == 0 :
             st.info(f'{date[4:5+1]}월 신규 등록이 없습니다😎')
         else:
             st.dataframe(당월전체.style.background_gradient(subset=['거래금액', '면적', '건축'], cmap="Reds"))      
 
-    st.success('GTX 운정신도시 오픈챗 https://open.kakao.com/o/gICcjcDb')
+    st.success('GTX 운정신도시 오픈챗 : https://open.kakao.com/o/gICcjcDb')
     st.warning('참여코드 : 2023gtxa')
     
 except Exception as e:
