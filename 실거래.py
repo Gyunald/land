@@ -50,20 +50,20 @@ file_1 = pd.read_csv(st.secrets.user_path,encoding='cp949')
 user_key = st.secrets.user_key
 
 c1,c2,c3 = st.columns([1,1,1])
-
 try:
     with c1 :
-        date = st.date_input('날짜').strftime('%Y%m%d')
+        date = st.date_input('📆 날짜').strftime('%Y%m%d')
         date_2 = datetime.datetime(year=int(date[:3 + 1]),month=int(date[4:5 + 1]),day=int(date[6:])).strftime('%y.%m')
     with c2:
         with c3:
             empey = st.empty()
             아파트 = empey.selectbox('아파트', ' ')
 
-        시군구 = st.selectbox('검색하거나 선택하세요🧐', sorted([i for i in set(file_1["법정동명"])]),index=230) # 93 강남 230 파주
+        시군구 = st.selectbox('⌨️ 검색 또는 선택 🖱️', sorted([i for i in set(file_1["법정동명"])]),index=230) # 93 강남 230 파주
         file_2 = file_1[file_1['법정동명'].str.contains(시군구)].astype(str)
         city = file_2.iloc[0,0][:5]
         rows = '9999'
+        
     당월 = datetime.datetime(year=int(date[:3 + 1]),month=int(date[4:5 + 1]),day=int(date[6:]))
     어제 = 당월 - datetime.timedelta(days=1)
     전월 = 당월 - datetime.timedelta(days=30)
@@ -76,7 +76,7 @@ try:
         당월전체 = 당월전체[당월전체['계약일'].str.contains(date_2)]
         당월전체['계약일'] = 당월전체['계약일'].str.replace('22.','',regex=True)
         당월전체['동'] = 당월전체['동'].str.split().str[0]
-        아파트 = empey.selectbox('아파트', sorted([i for i in 당월전체["아파트                    "].drop_duplicates()]))
+        아파트 = empey.selectbox('🏠 아파트', sorted([i for i in 당월전체["아파트                    "].drop_duplicates()]))
         
     with c3:  
         아파트별 = 당월전체[당월전체['아파트                    '] == 아파트]
