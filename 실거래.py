@@ -48,7 +48,8 @@ def api(date):
 
 file_1 = pd.read_csv(st.secrets.user_path,encoding='cp949')
 user_key = st.secrets.user_key
-st.info('도시를 입력하거나 고르세요😃')
+
+st.info('🔍 검색어를 입력하거나 선택하세요'
 c1,c2,c3 = st.columns([1,1,1])
 
 try:
