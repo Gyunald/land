@@ -59,7 +59,7 @@ try:
             empey = st.empty()
             아파트 = empey.selectbox('아파트', ' ')
 
-        시군구 = st.selectbox('📱 검색 또는 선택', sorted([i for i in set(file_1["법정동명"])]),index=230) # 93 강남 230 파주
+        시군구 = st.selectbox('🖥️ 검색 또는 선택', sorted([i for i in set(file_1["법정동명"])]),index=230) # 93 강남 230 파주
         file_2 = file_1[file_1['법정동명'].str.contains(시군구)].astype(str)
         city = file_2.iloc[0,0][:5]
         rows = '9999'
