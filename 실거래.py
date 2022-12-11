@@ -48,7 +48,7 @@ def api(date):
 
 file_1 = pd.read_csv(st.secrets.user_path,encoding='cp949')
 user_key = st.secrets.user_key
-
+st.info('도시를 입력하거나 고르세요😃')
 c1,c2,c3 = st.columns([1,1,1])
 
 try:
@@ -78,7 +78,7 @@ try:
         당월전체 = 당월전체[당월전체['계약일'].str.contains(date_2)]
         당월전체['계약일'] = 당월전체['계약일'].str.replace('22.','',regex=True)
         당월전체['동'] = 당월전체['동'].str.split().str[0]
-        아파트 = empey.selectbox('아파트별', sorted([i for i in 당월전체["아파트"].drop_duplicates()]))
+        아파트 = empey.selectbox('아파트', sorted([i for i in 당월전체["아파트"].drop_duplicates()]))
 
     with c3:
         아파트별 = 당월전체[당월전체['아파트'] == 아파트]
