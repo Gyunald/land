@@ -72,7 +72,7 @@ try:
 
     if 시군구:
         당월전체 = 오늘합
-        당월전체 = 당월전체[당월전체['계약일'].str.contains(date3)]
+        당월전체 = 당월전체[당월전체['계약일'].str.contains(date_2)]
         당월전체['계약일'] = 당월전체['계약일'].str.replace('22.','',regex=True)
         아파트 = empey.selectbox('아파트', sorted([i for i in 당월전체["아파트"].drop_duplicates()]))
 
