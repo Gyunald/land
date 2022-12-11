@@ -31,15 +31,14 @@ def getRTMSDataSvcAptTrade(city, date, user_key, rows):
         해제            = item.find("해제여부").text
         발생일      = item.find("해제사유발생일").text
         temp = pd.DataFrame(([[아파트, 거래금액, 층, 면적, 건축, 동, 거래일자, 거래유형, 해제, 발생일]]), 
-                            columns=["아파트", "거래금액", "층", "면적",  "건축", "동", "거래일", "거래유형", "해제","발생일"]) 
-        aptTrade = pd.concat([aptTrade,temp])
+                            columns=["아파트                    ", "거래금액", "층", "면적",  "건축", "동", "거래일", "거래유형", "해제","발생일"])
 
     aptTrade = aptTrade.reset_index(drop=True)    
     aptTrade['면적'] = aptTrade['면적'].astype(float).map('{:.2f}'.format)
     aptTrade['거래금액'] = aptTrade['거래금액'].str.replace(',','').astype(int)
     replace_word = '아파트','마을','신도시','단지','\(.+\)'
     for i in replace_word:
-        aptTrade['아파트'] = aptTrade['아파트'].str.replace(i,'',regex=True)
+        aptTrade['아파트                    '] = aptTrade['아파트                    '].str.replace(i,'',regex=True)
     return aptTrade
 
 def api(date):
@@ -49,7 +48,6 @@ def api(date):
 file_1 = pd.read_csv(st.secrets.user_path,encoding='cp949')
 user_key = st.secrets.user_key
 
-st.info('🔍 검색어를 입력하거나 선택하세요')
 c1,c2,c3 = st.columns([1,1,1])
 
 try:
@@ -72,29 +70,29 @@ try:
     전월 = 당월 - datetime.timedelta(days=30)
     오늘합 = pd.concat([api(당월.strftime('%Y%m%d')),api(전월.strftime('%Y%m%d'))]).reset_index(drop=True)
     오늘합['계약일'] = pd.to_datetime(오늘합['거래일'],format = "%Y%m%d").dt.strftime('%y.%m.%d')
-    오늘합 = 오늘합[["아파트", "거래금액", "층", "면적", "계약일","건축", "동", "거래유형", "해제", "발생일"]]
+    오늘합 = 오늘합[["아파트                    ", "거래금액", "층", "면적", "계약일","건축", "동", "거래유형", "해제", "발생일"]]
 
     if 시군구:
         당월전체 = 오늘합
         당월전체 = 당월전체[당월전체['계약일'].str.contains(date_2)]
         당월전체['계약일'] = 당월전체['계약일'].str.replace('22.','',regex=True)
         당월전체['동'] = 당월전체['동'].str.split().str[0]
-        아파트 = empey.selectbox('아파트', sorted([i for i in 당월전체["아파트"].drop_duplicates()]))
-
-    with c3:
-        아파트별 = 당월전체[당월전체['아파트'] == 아파트]
+        아파트 = empey.selectbox('아파트', sorted([i for i in 당월전체["아파트                    "].drop_duplicates()]))
         
-    with st.expander(f'{시군구} {date[4:5+1]}월 전체', expanded=True) :
-        if len(당월전체) == 0 :
-            st.info(f'{date[4:5+1]}월 신규 등록이 없습니다😎')
-        else:            
-            st.dataframe(당월전체.style.background_gradient(subset=['거래금액', '면적', '건축']))
-
+    with c3:
+        아파트별 = 당월전체[당월전체['아파트                    '] == 아파트]
+    
     with st.expander(f'{시군구} {date[4:5+1]}월 아파트별', expanded=True) :
         if len(당월전체) == 0 :
             st.info(f'{date[4:5+1]}월 신규 등록이 없습니다😎')
         else:
-            st.dataframe(아파트별.reset_index(drop=True).style.background_gradient(subset=['거래금액','면적','건축'],cmap='Reds'))          
+            st.dataframe(아파트별.reset_index(drop=True).style.background_gradient(subset=['거래금액','면적','건축'],cmap='Reds'))    
+        
+    with st.expander(f'{시군구} {date[4:5+1]}월 전체', expanded=False) :
+        if len(당월전체) == 0 :
+            st.info(f'{date[4:5+1]}월 신규 등록이 없습니다😎')
+        else:            
+            st.dataframe(당월전체.style.background_gradient(subset=['거래금액', '면적', '건축']))        
 
     st.success('GTX 운정신도시 오픈챗 https://open.kakao.com/o/gICcjcDb')
     st.warning('참여코드 : 2023gtxa')
