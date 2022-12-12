@@ -46,6 +46,26 @@ def api(date):
     당월전체 = getRTMSDataSvcAptTrade(city, date, user_key, rows)
     return 당월전체
 
+@st.experimental_memo    
+def load_lottie(url:str):
+    r = requests.get(url)
+
+    if r.status_code != 200:
+        return None
+    return r.json()
+
+lottie_url = 'https://assets7.lottiefiles.com/packages/lf20_ghunc0fe.json'
+# lottie_url =  'https://assets1.lottiefiles.com/packages/lf20_9kfnbeaf.json'
+lottie_json = load_lottie(lottie_url)
+
+st_lottie(
+    lottie_json,
+    speed=4,
+    # # reverse='Ture',
+    loop=True,
+    quality='low',
+    )
+
 file_1 = pd.read_csv(st.secrets.user_path,encoding='cp949')
 user_key = st.secrets.user_key
 
