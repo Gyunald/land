@@ -8,7 +8,7 @@ from streamlit_lottie import st_lottie
 
 @st.experimental_memo
 def getRTMSDataSvcAptTrade(city, date, user_key, rows): 
-    url = "http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptTradeDev"
+    url = st.secrets.api_path
 
     url = url + "?&LAWD_CD=" + city
     url = url + "&DEAL_YMD=" + date[:6]
