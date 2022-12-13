@@ -105,10 +105,10 @@ try:
         아파트별 = 당월전체[당월전체['아파트                    '] == 아파트].reset_index(drop=True)
         
 
-    st.dataframe(아파트별.style.background_gradient(subset=['거래금액','면적'], cmap='Reds'),use_container_width=True) 
+    st.dataframe(아파트별) 
             
 
-    st.dataframe(당월전체.style.background_gradient(subset=['거래금액','면적'], cmap="Reds"),use_container_width=True)     
+    st.dataframe(당월전체)     
 
     
 except Exception as e:
