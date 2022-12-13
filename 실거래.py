@@ -105,7 +105,7 @@ try:
         아파트별 = 당월전체[당월전체['아파트                    '] == 아파트].reset_index(drop=True)
         
 
-    st.dataframe(아파트별) 
+#     st.dataframe(아파트별) 
             
 
     st.dataframe(당월전체)     
