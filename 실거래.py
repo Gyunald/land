@@ -33,16 +33,17 @@ def getRTMSDataSvcAptTrade(city, date, user_key, rows):
         해제            = item.find("해제여부").text
         발생일      = item.find("해제사유발생일").text
         temp = pd.DataFrame(([[아파트, 거래금액, 층, 면적, 건축, 동, 거래일자, 거래유형, 해제, 발생일]]), 
-                            columns=["아파트                    ", "거래금액", "층", "면적",  "건축", "동", "거래일", "거래유형", "해제","발생일"]) 
+                            columns=["아파트                    ", "거래금액", "층", "면적",  "건축", "동", "거래일", "거래", "해제","발생일"]) 
         aptTrade = pd.concat([aptTrade,temp])
 
     aptTrade = aptTrade.reset_index(drop=True)    
     aptTrade['면적'] = aptTrade['면적'].astype(float).map('{:.2f}'.format)
     aptTrade['거래금액'] = aptTrade['거래금액'].str.replace(',','').astype(int)
     aptTrade['동'] = aptTrade['동'].str.split().str[0]
-    replace_word = '아파트','마을','신도시','단지','\(.+\)'
+    replace_word = '아파트','마을','신도시','단지','\(.+\)','중개거래','거래'
     for i in replace_word:
         aptTrade['아파트                    '] = aptTrade['아파트                    '].str.replace(i,'',regex=True)
+        aptTrade['거래'] = aptTrade['거래'].str.replace(i,'',regex=True)
     return aptTrade
 
 def api(date):
