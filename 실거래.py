@@ -89,7 +89,7 @@ try:
     당월 = datetime.datetime(year=int(date[:3 + 1]),month=int(date[4:5 + 1]),day=int(date[6:]))
     어제 = 당월 - datetime.timedelta(days=1)
     전월 = 당월 - datetime.timedelta(days=30)
-    오늘합 = pd.concat([api(당월.strftime('%Y%m')),api(전월.strftime('%Y%m'))]).reset_index(drop=True)
+    오늘합 = pd.concat([api(당월.strftime('%Y%m')),api(전월.strftime('%Y%m'))])
     오늘합['계약일'] = pd.to_datetime(오늘합['거래일'],format = "%Y%m%d").dt.strftime('%y.%m.%d')
     오늘합['거래금액'] = 오늘합['거래금액'].astype('int64')
     오늘합['면적'] = 오늘합['면적'].astype(float).map('{:.2f}'.format)
@@ -97,12 +97,12 @@ try:
     
     if 시군구:
         당월전체 = 오늘합
-        당월전체 = 당월전체[당월전체['계약일'].str.contains(date_2)]
+        당월전체 = 당월전체[당월전체['계약일'].str.contains(date_2)].reset_index(drop=True)
         당월전체['계약일'] = 당월전체['계약일'].str.replace('22.','',regex=True)
         아파트 = empey.selectbox('🏠 아파트', sorted([i for i in 당월전체["아파트                    "].drop_duplicates()]))
         
     with c3:  
-        아파트별 = 당월전체[당월전체['아파트                    '] == 아파트]
+        아파트별 = 당월전체[당월전체['아파트                    '] == 아파트].reset_index(drop=True)
         
     with st.expander(f'{시군구} 실거래 - {date[4:5+1]}월 🚀 아파트별',expanded=True) :
         if len(당월전체) == 0 :
