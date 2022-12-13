@@ -93,7 +93,7 @@ try:
     오늘합['계약일'] = pd.to_datetime(오늘합['거래일'],format = "%Y%m%d").dt.strftime('%y.%m.%d')
     오늘합['거래금액'] = 오늘합['거래금액'].astype('int64')
     오늘합['면적'] = 오늘합['면적'].astype(float).map('{:.2f}'.format)
-    오늘합 = 오늘합[["아파트                    ", "거래금액","면적","계약일"]].sort_values(by=['거래금액'], ascending=False).reset_index(drop=True)
+    오늘합 = 오늘합[["아파트                    ", "거래금액", "층", "면적", "계약일","건축", "동", "거래", "해제", "발생일"]].sort_values(by=['거래금액'], ascending=False).reset_index(drop=True)
     
     if 시군구:
         당월전체 = 오늘합
@@ -104,12 +104,17 @@ try:
     with c3:  
         아파트별 = 당월전체[당월전체['아파트                    '] == 아파트].reset_index(drop=True)
         
+    with st.expander(f'{시군구} 실거래 - {date[4:5+1]}월 🚀 아파트별',expanded=True) :
+        if len(당월전체) == 0 :
+            st.info(f'{date[4:5+1]}월 신규 등록이 없습니다😎')
+        else:
+            st.dataframe(아파트별.style.background_gradient(subset=['거래금액','면적','건축'], cmap='Reds')) 
 
-#     st.dataframe(아파트별) 
-            
-
-    st.dataframe(당월전체)     
-
+    with st.expander(f'{시군구} 실거래 - {date[4:5+1]}월 전체',expanded=True) :
+        if len(당월전체) == 0 :
+            st.info(f'{date[4:5+1]}월 신규 등록이 없습니다😎')
+        else:
+            st.dataframe(당월전체.style.background_gradient(subset=['거래금액', '면적', '건축'], cmap="Reds"))
     
 except Exception as e:
     st.error('No data.😎')
