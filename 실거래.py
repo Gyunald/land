@@ -5,7 +5,7 @@ import urllib.request as req
 import datetime
 import requests
 from streamlit_lottie import st_lottie
-
+st.set_page_config(layout='wide')
 @st.experimental_memo
 def getRTMSDataSvcAptTrade(city, date, user_key, rows): 
     url = st.secrets.api_path
