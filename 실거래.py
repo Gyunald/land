@@ -64,7 +64,7 @@ lottie_json = load_lottie(lottie_url)
 
 st_lottie(
     lottie_json,
-    speed=3,
+    speed=2,
     # # reverse='Ture',
     loop=True,
     quality='low',
