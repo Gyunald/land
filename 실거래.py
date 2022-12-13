@@ -40,7 +40,7 @@ def getRTMSDataSvcAptTrade(city, date, user_key, rows):
     aptTrade['면적'] = aptTrade['면적'].astype(float).map('{:.2f}'.format)
     aptTrade['거래금액'] = aptTrade['거래금액'].str.replace(',','').astype(int)
     aptTrade['동'] = aptTrade['동'].str.split().str[0]
-    replace_word = '아파트','마을','신도시','단지','\(.+\)','중개거래','거래'
+    replace_word = '아파트','마을','신도시','단지','\(.+\)','중개거래'
     for i in replace_word:
         aptTrade['아파트                    '] = aptTrade['아파트                    '].str.replace(i,'',regex=True)
         aptTrade['거래유형'] = aptTrade['거래유형'].str.replace(i,'',regex=True)
