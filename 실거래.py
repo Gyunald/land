@@ -110,8 +110,6 @@ try:
 
     st.dataframe(당월전체.style.background_gradient(subset=['거래금액', '면적', '건축'], cmap="Reds"),use_container_width=True)     
 
-    st.success('GTX 운정신도시 오픈챗 🚅 https://open.kakao.com/o/gICcjcDb')
-    st.warning('참여코드 🍩 2023gtxa')
     
 except Exception as e:
     st.error('No data.😎')
