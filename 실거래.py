@@ -104,7 +104,7 @@ try:
         아파트 = empey.selectbox('🏠 아파트', sorted([i for i in 당월전체["아파트                    "].drop_duplicates()]))
         
     with c3:  
-        아파트별 = 당월전체[당월전체['아파트                    '] == 아파트].reset_index(drop=True)
+        아파트별 = 당월전체[당월전체['아파트                    '] == 아파트].sort_values(by=['계약일'], ascending=False).reset_index(drop=True)
         
     with st.expander(f'{시군구} 실거래 - {date[4:5+1]}월 🚀 아파트별',expanded=False) :
         if len(당월전체) == 0 :
