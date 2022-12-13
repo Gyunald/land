@@ -91,7 +91,7 @@ try:
     당월 = datetime.datetime(year=int(date[:3 + 1]),month=int(date[4:5 + 1]),day=int(date[6:]))
     어제 = 당월 - datetime.timedelta(days=1)
     전월 = 당월 - datetime.timedelta(days=30)
-    오늘합 = pd.concat([api(당월.strftime('%Y%m')),api(전월.strftime('%Y%m'))])
+    오늘합 = pd.concat([api(당월.strftime('%Y%m%d')),api(전월.strftime('%Y%m%d'))])
     오늘합['계약일'] = pd.to_datetime(오늘합['거래일'],format = "%Y%m%d").dt.strftime('%y.%m.%d')
     오늘합['거래금액'] = 오늘합['거래금액'].astype('int64')
     오늘합['면적'] = 오늘합['면적'].astype(float).map('{:.2f}'.format)
