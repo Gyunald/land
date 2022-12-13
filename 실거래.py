@@ -95,7 +95,7 @@ try:
     오늘합['계약일'] = pd.to_datetime(오늘합['거래일'],format = "%Y%m%d").dt.strftime('%y.%m.%d')
     오늘합['거래금액'] = 오늘합['거래금액'].astype('int64')
     오늘합['면적'] = 오늘합['면적'].astype(float).map('{:.2f}'.format)
-    오늘합 = 오늘합[["아파트                    ", "거래금액", "층", "면적", "계약일","건축", "동", "거래유형", "해제", "발생일"]].sort_values(by=['거래금액'], ascending=False).reset_index(drop=True)
+    오늘합 = 오늘합[["아파트                    ", "거래금액", "층", "면적", "계약일","건축", "동", "거래유형", "해제", "발생일"]].sort_values(by=['계약일'], ascending=False).reset_index(drop=True)
     
     if 시군구:
         당월전체 = 오늘합
