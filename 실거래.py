@@ -104,11 +104,8 @@ try:
     with c3:  
         아파트별 = 당월전체[당월전체['아파트                    '] == 아파트].reset_index(drop=True)
         
-    with st.expander(f'{시군구} 실거래 - {date[4:5+1]}월 🚀 아파트별',expanded=True) :
-        if len(당월전체) == 0 :
-            st.info(f'{date[4:5+1]}월 신규 등록이 없습니다😎')
-        else:
-            st.table(아파트별.style.background_gradient(subset=['거래금액','면적','건축'], cmap='Reds')) 
+
+    st.table(아파트별.style.background_gradient(subset=['거래금액','면적','건축'], cmap='Reds')) 
             
 
     st.table(당월전체.style.background_gradient(subset=['거래금액', '면적', '건축'], cmap="Reds"))      
