@@ -114,7 +114,7 @@ try:
         if len(당월전체) == 0 :
             st.info(f'{date[4:5+1]}월 신규 등록이 없습니다😎')
         else:
-            st.table(당월전체.sort_values(by=['거래금액'], ascending=False).style.background_gradient(subset=['거래금액', '면적', '건축'], cmap="Reds"))      
+            st.table(당월전체.sort_values(by=['거래금액'], ascending=False).reset_index(drop=True).style.background_gradient(subset=['거래금액', '면적', '건축'], cmap="Reds"))      
 
     st.success('GTX 운정신도시 오픈챗 🚅 https://open.kakao.com/o/gICcjcDb')
     st.warning('참여코드 🍩 2023gtxa')
