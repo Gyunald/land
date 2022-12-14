@@ -7,8 +7,8 @@ import requests
 from streamlit_lottie import st_lottie
 
 @st.experimental_memo
-def getRTMSDataSvcAptTrade(city, date, user_key, rows): 
-    url = st.secrets.api_path
+def getRTMSDataSvcAptTrade(city, date, user_key, rows):
+    url = "http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptTradeDev"
 
     url = url + "?&LAWD_CD=" + city
     url = url + "&DEAL_YMD=" + date[:6]
@@ -22,28 +22,27 @@ def getRTMSDataSvcAptTrade(city, date, user_key, rows):
     items = soup.findAll("item")
     aptTrade = pd.DataFrame()
     for item in items:
-        거래일자            = int(item.find("년").text) * 10000 + int(item.find('월').text) * 100 + int(item.find('일').text)
+        계약            = int(item.find('월').text) * 100 + int(item.find('일').text)
         동                  = item.find("법정동").text
         면적            = float(item.find("전용면적").text)
         아파트              = item.find("아파트").text
         층                  = int(item.find("층").text)
-        거래금액            = item.find("거래금액").text
+        금액            = item.find("거래금액").text
         건축            = int(item.find("건축년도").text)
-        거래유형            = item.find("거래유형").text
-        해제            = item.find("해제여부").text
-        발생일      = item.find("해제사유발생일").text
-        temp = pd.DataFrame(([[아파트, 거래금액, 층, 면적, 건축, 동, 거래일자, 거래유형, 해제, 발생일]]), 
-                            columns=["아파트                    ", "거래금액", "층", "면적",  "건축", "동", "거래일", "거래유형", "해제","발생일"]) 
+        거래            = item.find("거래유형").text
+        파기      = item.find("해제사유발생일").text
+        temp = pd.DataFrame(([[아파트, 금액, 층, 면적, 건축, 계약, 동, 거래, 파기]]), 
+                            columns=["아파트", "금액", "층", "면적", "건축", "계약", "동", "거래", "파기"])
         aptTrade = pd.concat([aptTrade,temp])
-
-    aptTrade = aptTrade.reset_index(drop=True)    
-    aptTrade['면적'] = aptTrade['면적'].astype(float).map('{:.2f}'.format)
-    aptTrade['거래금액'] = aptTrade['거래금액'].str.replace(',','').astype(int)
-    aptTrade['동'] = aptTrade['동'].str.split().str[0]
-    replace_word = '아파트','마을','신도시','단지','\(.+\)','중개거래'
+    replace_word = '아파트','마을','신도시','단지','\(.+\)','중개거래','거래'
     for i in replace_word:
-        aptTrade['아파트                    '] = aptTrade['아파트                    '].str.replace(i,'',regex=True)
-        aptTrade['거래유형'] = aptTrade['거래유형'].str.replace(i,'',regex=True)
+        aptTrade['아파트'] = aptTrade['아파트'].str.replace(i,'',regex=True)
+        aptTrade['거래'] = aptTrade['거래'].str.replace(i,'',regex=True)
+    aptTrade['금액'] = aptTrade['금액'].str.replace(',','')
+    aptTrade['파기'] = aptTrade['파기'].str.replace('22.','')
+    aptTrade['계약'] = pd.to_datetime(aptTrade['계약'],format = "%m%d").dt.strftime('%m.%d')
+    aptTrade['면적'] = aptTrade['면적'].astype(float).map('{:.2f}'.format)
+    aptTrade['동'] = aptTrade['동'].str.split().str[0]
     return aptTrade
 
 def api(date):
@@ -77,7 +76,7 @@ c1,c2,c3 = st.columns([1,1,1])
 try:
     with c1 :
         date = st.date_input('📆 날짜').strftime('%Y%m%d')
-        date_2 = datetime.datetime(year=int(date[:3 + 1]),month=int(date[4:5 + 1]),day=int(date[6:])).strftime('%y.%m')
+        date_2 = datetime.datetime(year=int(date[:3 + 1]),month=int(date[4:5 + 1]),day=int(date[6:])).strftime('%m.')
     with c2:
         with c3:
             empey = st.empty()
@@ -89,34 +88,29 @@ try:
         rows = '9999'
         
     당월 = datetime.datetime(year=int(date[:3 + 1]),month=int(date[4:5 + 1]),day=int(date[6:]))
-    어제 = 당월 - datetime.timedelta(days=1)
     전월 = 당월 - datetime.timedelta(days=30)
-    오늘합 = pd.concat([api(당월.strftime('%Y%m%d')),api(전월.strftime('%Y%m%d'))])
-    오늘합['계약일'] = pd.to_datetime(오늘합['거래일'],format = "%Y%m%d").dt.strftime('%y.%m.%d')
-    오늘합['거래금액'] = 오늘합['거래금액'].astype('int64')
-    오늘합['면적'] = 오늘합['면적'].astype(float).map('{:.2f}'.format)
-    오늘합 = 오늘합[["아파트                    ", "거래금액", "층", "면적", "계약일","건축", "동", "거래유형", "해제", "발생일"]].sort_values(by=['거래금액'], ascending=False).reset_index(drop=True)
-    
+    전월당월합 = pd.concat([api(당월.strftime('%Y%m%d')),api(전월.strftime('%Y%m%d'))]).reset_index(drop=True)
+
     if 시군구:
-        당월전체 = 오늘합
-        당월전체 = 당월전체[당월전체['계약일'].str.contains(date_2)].reset_index(drop=True)
-        당월전체['계약일'] = 당월전체['계약일'].str.replace('22.','',regex=True)
-        아파트 = empey.selectbox('🏠 아파트', sorted([i for i in 당월전체["아파트                    "].drop_duplicates()]))
+        당월전체 = 전월당월합
+        당월전체 = 당월전체[당월전체['계약'].str.contains(date_2)].reset_index(drop=True)
+        당월전체['계약'] = 당월전체['계약'].str.replace('22.','',regex=True)
+        아파트 = empey.selectbox('🏠 아파트', sorted([i for i in 당월전체["아파트"].drop_duplicates()]))
         
     with c3:  
-        아파트별 = 당월전체[당월전체['아파트                    '] == 아파트].sort_values(by=['거래금액'], ascending=False).reset_index(drop=True)
+        아파트별 = 당월전체[당월전체['아파트'] == 아파트].sort_values(by=['금액'], ascending=False).reset_index(drop=True)
         
     with st.expander(f'{시군구} 실거래 - {date[4:5+1]}월 🚀 아파트별 {len(아파트별)}건',expanded=False) :
         if len(당월전체) == 0 :
             st.info(f'{date[4:5+1]}월 신규 등록이 없습니다😎')
         else:
-            st.dataframe(아파트별.style.background_gradient(subset=['거래금액','면적','건축'], cmap='Reds')) 
+            st.dataframe(아파트별.style.background_gradient(subset=['금액','면적','계약'], cmap='Reds')) 
 
     with st.expander(f'{시군구} 실거래 - {date[4:5+1]}월 전체 {len(당월전체)}건',expanded=True) :
         if len(당월전체) == 0 :
             st.info(f'{date[4:5+1]}월 신규 등록이 없습니다😎')
         else:
-            st.dataframe(당월전체.style.background_gradient(subset=['거래금액', '면적', '건축'], cmap="Reds"))
+            st.dataframe(당월전체.style.background_gradient(subset=['금액', '면적', '계약'], cmap="Reds"))
     
 except Exception as e:
     st.error('No data.😎')
