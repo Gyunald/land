@@ -31,8 +31,8 @@ def getRTMSDataSvcAptTrade(city, date, user_key, rows):
         건축            = int(item.find("건축년도").text)
         거래            = item.find("거래유형").text
         파기      = item.find("해제사유발생일").text
-        temp = pd.DataFrame(([[계약, 아파트, 금액, 층, 면적, 건축, 동, 거래, 파기]]), 
-                            columns=[ "계약", "아파트", "금액", "층", "면적", "건축", "동", "거래", "파기"])
+        temp = pd.DataFrame(([[아파트, 금액, 층,면적, 건축,계약 ,동,거래, 파기]]), 
+                            columns=["아파트", "금액", "층", "면적", "건축", "계약","동", "거래", "파기"])
         aptTrade = pd.concat([aptTrade,temp])
     replace_word = '아파트','마을','신도시','단지','\(.+\)','중개거래','거래'
     for i in replace_word:
