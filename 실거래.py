@@ -31,8 +31,8 @@ def getRTMSDataSvcAptTrade(city, date, user_key, rows):
         건축            = int(item.find("건축년도").text)
         거래            = item.find("거래유형").text
         파기      = item.find("해제사유발생일").text
-        temp = pd.DataFrame(([[아파트, 금액, 층, 면적, 건축, 계약, 동, 거래, 파기]]), 
-                            columns=["아파트", "금액", "층", "면적", "건축", "계약", "동", "거래", "파기"])
+        temp = pd.DataFrame(([[계약, 아파트, 금액, 층, 면적, 건축, 동, 거래, 파기]]), 
+                            columns=[ "계약", "아파트", "금액", "층", "면적", "건축", "동", "거래", "파기"])
         aptTrade = pd.concat([aptTrade,temp])
     replace_word = '아파트','마을','신도시','단지','\(.+\)','중개거래','거래'
     for i in replace_word:
@@ -43,7 +43,7 @@ def getRTMSDataSvcAptTrade(city, date, user_key, rows):
     aptTrade['계약'] = pd.to_datetime(aptTrade['계약'],format = "%m%d").dt.strftime('%m.%d')
     aptTrade['면적'] = aptTrade['면적'].astype(float).map('{:.2f}'.format)
     aptTrade['동'] = aptTrade['동'].str.split().str[0]
-    return aptTrade
+    return aptTrade.sort_values(by=['계약'], ascending=False)
 
 def api(date):
     당월전체 = getRTMSDataSvcAptTrade(city, date, user_key, rows)
