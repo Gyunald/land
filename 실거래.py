@@ -112,20 +112,20 @@ try:
         if len(당월전체) == 0 :
             st.info(f'{date[4:5+1]}월 신규 등록이 없습니다😎')
         else:
-            st.dataframe(아파트별.style.background_gradient(subset=['금액','면적','계약'], cmap='Reds')) 
+            st.dataframe(아파트별.style.background_gradient(subset=['금액', '계약', '건축'], cmap='Reds')) 
 
     with st.expander(f'{시군구} 실거래 - {date[4:5+1]}월 전체 {len(당월전체)}건',expanded=False) :
         if len(당월전체) == 0 :
             st.info(f'{date[4:5+1]}월 신규 등록이 없습니다😎')
         else:
-            st.dataframe(당월전체.style.background_gradient(subset=['금액', '면적', '계약'], cmap="Reds"))
+            st.dataframe(당월전체.style.background_gradient(subset=['금액', '계약', '건축'], cmap="Reds"))
 
     if len(신규) == 0 :
         st.info(f'{date[6:]}일 신규 등록이 없습니다😎')
     else:
         with st.expander(f'{시군구} 실거래 - {date[6:]}일 신규 {len(신규)}건',expanded=True):
             st.info(f'{date[6:]}일 신규 등록😎')
-            st.dataframe(신규.style.background_gradient(subset=['금액', '면적', '계약'], cmap="Reds"))
+            st.dataframe(신규.style.background_gradient(subset=['금액', '계약', '건축'], cmap="Reds"))
     
 except Exception as e:
     # st.write(e)
