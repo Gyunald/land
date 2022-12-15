@@ -128,5 +128,5 @@ try:
             st.dataframe(신규.style.background_gradient(subset=['금액', '계약', '건축'], cmap="Reds"))
     
 except Exception as e:
-    # st.write(e)
+    st.write(e)
     st.error('No data.😎')
