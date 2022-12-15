@@ -69,7 +69,7 @@ st_lottie(
     quality='low',
     )
 
-file_1 = pd.read_csv(st.secrets.user_path,encoding='cp949')
+file_1 = pd.read_csv(st.secrets.user_path)
 user_key = st.secrets.user_key
 
 c1,c2,c3 = st.columns([1,1,1])
