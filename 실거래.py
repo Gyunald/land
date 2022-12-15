@@ -91,7 +91,7 @@ try:
     전월 = 당월 - datetime.timedelta(days=30)
     어제 = 당월 - datetime.timedelta(days=1)
     갱신 = pd.concat([api(당월.strftime('%Y%m%d')),api(전월.strftime('%Y%m%d'))]).reset_index(drop=True)
-    고정 = pd.read_csv(st.secrets.pixed_data, encoding='cp949').drop(columns=['Unnamed: 0'])
+    고정 = pd.read_csv(st.secrets.fixed_data, encoding='cp949').drop(columns=['Unnamed: 0'])
     고정['면적'] = 고정['면적'].map('{:.2f}'.format)
     고정['계약'] = 고정['계약'].map('{:.2f}'.format)
     고정['금액'] = 고정['금액'].astype(int)
