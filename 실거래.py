@@ -89,10 +89,18 @@ try:
         
     당월 = datetime.datetime(year=int(date[:3 + 1]),month=int(date[4:5 + 1]),day=int(date[6:]))
     전월 = 당월 - datetime.timedelta(days=30)
-    전월당월합 = pd.concat([api(당월.strftime('%Y%m%d')),api(전월.strftime('%Y%m%d'))]).reset_index(drop=True)
-
+    어제 = 당월 - datetime.timedelta(days=1)
+    갱신 = pd.concat([api(당월.strftime('%Y%m%d')),api(전월.strftime('%Y%m%d'))]).reset_index(drop=True)
+    고정 = pd.read_csv(st.secrets.pixed_data, encoding='cp949').drop(columns=['Unnamed: 0'])
+    고정['면적'] = 고정['면적'].map('{:.2f}'.format)
+    고정['계약'] = 고정['계약'].map('{:.2f}'.format)
+    고정['금액'] = 고정['금액'].astype(int)
+    갱신['금액'] = 갱신['금액'].astype(int)
+    고정 = 고정.fillna('')
+    신규 = pd.merge(갱신,고정, how='outer', indicator=True).query('_merge == "left_only"').drop(columns=['_merge']).reset_index(drop=True)
+    
     if 시군구:
-        당월전체 = 전월당월합
+        당월전체 = 갱신
         당월전체 = 당월전체[당월전체['계약'].str.contains(date_2)].reset_index(drop=True)
         당월전체['계약'] = 당월전체['계약'].str.replace('22.','',regex=True)
         아파트 = empey.selectbox('🏠 아파트', sorted([i for i in 당월전체["아파트"].drop_duplicates()]))
@@ -104,13 +112,20 @@ try:
         if len(당월전체) == 0 :
             st.info(f'{date[4:5+1]}월 신규 등록이 없습니다😎')
         else:
-            st.dataframe(아파트별.style.background_gradient(subset=['금액','계약','건축'], cmap='Reds')) 
+            st.dataframe(아파트별.style.background_gradient(subset=['금액','면적','계약'], cmap='Reds')) 
 
-    with st.expander(f'{시군구} 실거래 - {date[4:5+1]}월 전체 {len(당월전체)}건',expanded=True) :
+    with st.expander(f'{시군구} 실거래 - {date[4:5+1]}월 전체 {len(당월전체)}건',expanded=False) :
         if len(당월전체) == 0 :
             st.info(f'{date[4:5+1]}월 신규 등록이 없습니다😎')
         else:
-            st.dataframe(당월전체.style.background_gradient(subset=['금액','계약','건축'], cmap="Reds"))
+            st.dataframe(당월전체.style.background_gradient(subset=['금액', '면적', '계약'], cmap="Reds"))
+
+    if len(신규) == 0 :
+        st.info(f'{date[6:]}일 신규 등록이 없습니다😎')
+    else:
+        with st.expander(f'{시군구} 실거래 - {date[6:]}일 신규 {len(신규)}건',expanded=True):
+            st.info(f'{date[6:]}일 신규 등록😎')
+            st.dataframe(신규.style.background_gradient(subset=['금액', '면적', '계약'], cmap="Reds"))
     
 except Exception as e:
     st.error('No data.😎')
