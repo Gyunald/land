@@ -76,7 +76,6 @@ c1,c2,c3 = st.columns([1,1,1])
 try:
     with c1 :
         date = st.date_input('📆 날짜').strftime('%Y%m%d')
-        date
         date_2 = datetime.datetime(year=int(date[:3 + 1]),month=int(date[4:5 + 1]),day=int(date[6:])).strftime('%m.')
     with c2:
         with c3:
@@ -121,12 +120,12 @@ try:
         else:
             st.dataframe(당월전체.style.background_gradient(subset=['금액', '계약', '건축'], cmap="Reds"))
 
-    if len(신규) == 0 :
-        st.info(f'{date[6:]}일 신규 등록이 없습니다😎')
-    else:
-        with st.expander(f'{시군구} 실거래 - {date[6:]}일 신규 {len(신규)}건',expanded=True):
-            st.info(f'{date[6:]}일 신규 등록😎')
-            st.dataframe(신규.style.background_gradient(subset=['금액', '계약', '건축'], cmap="Reds"))
+    # if len(신규) == 0 :
+    #   st.info(f'{date[6:]}일 신규 등록이 없습니다😎')
+    #else:
+        #with st.expander(f'{시군구} 실거래 - {date[6:]}일 신규 {len(신규)}건',expanded=True):
+            #st.info(f'{date[6:]}일 신규 등록😎')
+            #st.dataframe(신규.style.background_gradient(subset=['금액', '계약', '건축'], cmap="Reds"))
     
 except Exception as e:
     st.write(e)
