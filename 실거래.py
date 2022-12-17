@@ -39,7 +39,7 @@ def getRTMSDataSvcAptTrade(city, date, user_key, rows):
         aptTrade['아파트'] = aptTrade['아파트'].str.replace(i,'',regex=True)
         aptTrade['거래'] = aptTrade['거래'].str.replace(i,'',regex=True)
     aptTrade['금액'] = aptTrade['금액'].str.replace(',','')
-    aptTrade['파기'] = aptTrade['파기'].str.replace('22.','')
+    aptTrade['파기'] = aptTrade['파기'].str.replace('22.','',regex=True)
     aptTrade['계약'] = pd.to_datetime(aptTrade['계약'],format = "%m%d").dt.strftime('%m.%d')
     aptTrade['면적'] = aptTrade['면적'].astype(float).map('{:.2f}'.format)
     aptTrade['동'] = aptTrade['동'].str.split().str[0]
@@ -78,7 +78,7 @@ try:
     with c1 :
         date = st.date_input('📆 날짜').strftime('%Y%m%d')
         date_2 = datetime.datetime(year=int(date[:3 + 1]),month=int(date[4:5 + 1]),day=int(date[6:])).strftime('%m.')
-        date,date_2
+        date
     with c2:
         with c3:
             empey = st.empty()
