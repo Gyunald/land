@@ -100,7 +100,7 @@ try:
     갱신['금액'] = 갱신['금액'].astype(int)
     고정 = 고정.fillna('')
     신규 = pd.merge(갱신,고정, how='outer', indicator=True).query('_merge == "left_only"').drop(columns=['_merge']).reset_index(drop=True)
-
+    st.write(len(갱신))
     if 시군구:
         당월전체 = 갱신
         당월전체 = 당월전체[당월전체['계약'].str.contains(date_2)].reset_index(drop=True)
