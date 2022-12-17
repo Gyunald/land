@@ -127,7 +127,7 @@ try:
         with st.expander(f'{시군구} 실거래 - {date[6:]}일 신규 {len(신규)}건',expanded=True):
             st.info(f'{date[6:]}일 신규 등록😎')
             st.dataframe(신규.style.background_gradient(subset=['금액', '면적', '계약'], cmap="Reds"))
-    갱신.to_csv(f'C:/Users/kdkim/Desktop/python/{시군구}_{date}.csv', encoding='cp949')
+    # 갱신.to_csv(f'C:/Users/kdkim/Desktop/python/{시군구}_{date}.csv', encoding='cp949')
     
 except Exception as e:
     st.write(e)
