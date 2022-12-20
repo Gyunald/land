@@ -70,7 +70,7 @@ try:
     with st.expander(f"파주시 인구 - {month}월"):
         if select_year :
             m(month)
-            st.table(globals()[f"date_{select_year}_{month}"].style.format("{:,}"))
+            st.dataframe(globals()[f"date_{select_year}_{month}"].style.format("{:,}"))
         
     c3,c4 = st.columns([1,1])
     with c3:
@@ -84,6 +84,6 @@ try:
             sub(month)    
             g = globals()[f"date_{select_year}_{month}"] - globals()[f"date_{select_year}_{month-1}"]
             g.rename({'파주시':'전월 대비'},inplace=True)
-            st.table(g.style.applymap(color_negative_red).format('{:+,}'))
+            st.dataframe(g.style.applymap(color_negative_red).format('{:+,}'))
 except Exception as e:
     st.write(e)
