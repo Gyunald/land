@@ -63,7 +63,8 @@ try:
         select_year = st.selectbox('Year', year, main_year)
         if select_year:
             csv_file(select_year)
-            
+    today = datetime.date.today()        
+    date = st.number_input('월', max_value=today.month)       
     with c2:
         month = st.selectbox('Month',range(1,12+1),main_month-1)
     with st.expander(f"파주시 인구 - {month}월",expanded=False):
