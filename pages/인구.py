@@ -66,20 +66,20 @@ try:
             
     with c2:
         month = st.selectbox('Month',range(1,12+1),main_month-1)
-    with st.expander(f"파주시 인구 - {month}월"):
+    with st.expander(f"파주시 인구 - {month}월",expanded=False):
         if select_year :
             m(month)
             st.dataframe(globals()[f"date_{select_year}_{month}"].style.format("{:,}"))
         
     c3,c4 = st.columns([1,1])
     with c3:
-        with st.expander('파주시'):
+        with st.expander('운정',expanded=True):
             if select_year :
                 m(month)
                 m_output()
 
     with c4:
-        with st.expander('운정'):
+        with st.expander('전월 대비',expanded=True):
             sub(month)    
             g = globals()[f"date_{select_year}_{month}"] - globals()[f"date_{select_year}_{month-1}"]
             g.rename({'합계':'전월 대비'},inplace=True)
