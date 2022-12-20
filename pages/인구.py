@@ -36,7 +36,7 @@ def m(month):
 
 def m_output():
     if len(globals()[f"date_{select_year}_{month}"]) > 0 :
-        st.table(globals()[f"date_{select_year}_{month}"][0:1].style.apply(draw_color, color='#FFA07A', subset=pd.IndexSlice[['파주시'],'인구'],axis=1).format('{:,}'))
+        st.table(globals()[f"date_{select_year}_{month}"][0:1].style.apply(draw_color, color='#FFA07A', subset=pd.IndexSlice[['파주'],'인구'],axis=1).format('{:,}'))
         total = globals()[f"date_{select_year}_{month}"].iloc[0,1]
         globals()[f"date_{select_year}_{month}"] = globals()[f"date_{select_year}_{month}"][11:15]
         globals()[f"date_{select_year}_{month}"].loc['합계'] = globals()[f"date_{select_year}_{month}"][['세대수','인구','내국인','외국인']].sum()
