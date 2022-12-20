@@ -14,7 +14,7 @@ def csv_file(year):
     a = pd.read_csv(f'{file_path}{year}.csv',index_col=1)
     a = a.drop(drop_indexs,axis=0)
     a = a.drop(drop_colums,axis=1)
-    a.rename(columns=rename_columns,index=rename_index, inplace=True)
+    a.rename(columns=rename_columns, inplace=True)
     a = a.astype(int)
     return a
 
