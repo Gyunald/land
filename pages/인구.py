@@ -7,7 +7,6 @@ year = 2020, 2021, 2022
 
 file_path = 'https://raw.githubusercontent.com/Gyunald/streamlit-view/main/population/'
 rename_columns = {'등록인구':'인구','등록인구.3' : '내국인', '등록인구.6': '외국인'}
-rename_index = {'합계':'파주'}
 drop_colums = ['시점','등록인구.1','등록인구.2','등록인구.4','등록인구.5','등록인구.7','등록인구.8']
 drop_indexs = ['읍면동별(1)']
 
@@ -36,7 +35,7 @@ def m(month):
 
 def m_output():
     if len(globals()[f"date_{select_year}_{month}"]) > 0 :
-        st.table(globals()[f"date_{select_year}_{month}"][0:1].style.apply(draw_color, color='#FFA07A', subset=pd.IndexSlice[['파주'],'인구'],axis=1).format('{:,}'))
+        st.table(globals()[f"date_{select_year}_{month}"][0:1].style.apply(draw_color, color='#FFA07A', subset=pd.IndexSlice[['합계'],'인구'],axis=1).format('{:,}'))
         total = globals()[f"date_{select_year}_{month}"].iloc[0,1]
         globals()[f"date_{select_year}_{month}"] = globals()[f"date_{select_year}_{month}"][11:15]
         globals()[f"date_{select_year}_{month}"].loc['합계'] = globals()[f"date_{select_year}_{month}"][['세대수','인구','내국인','외국인']].sum()
