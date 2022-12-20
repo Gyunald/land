@@ -23,7 +23,7 @@ def draw_color(x,color):
     return [color]
 
 def color_negative_red(val):
-    color = '#FFA07A' if val < 0 else '#4682B4'
+    color = '#4682B4' if val < 0 else '#d62728'
     # return 'background-color: %s' % color
     return 'color: %s' % color
 
