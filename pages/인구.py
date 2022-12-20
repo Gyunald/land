@@ -58,28 +58,32 @@ def sub(month):
         c2 = 18 * month
         globals()[f"date_{select_year}_{month}"] = csv_file(select_year)[c:c2].astype(int)
     return globals()
-
-c1,c2=st.columns([1,1])
-with c1:
-    select_year = st.selectbox('Year', year, main_year)
-    if select_year:
-        csv_file(select_year)
+try:
+    c1,c2=st.columns([1,1])
+    with c1:
+        select_year = st.selectbox('Year', year, main_year)
+        if select_year:
+            csv_file(select_year)
+            
+    with c2:
+        month = st.selectbox('Month',range(1,12+1),main_month-1)
+    with st.expander(f"파주시 인구 - {month}월"):
+        if select_year :
+            m(month)
+            st.table(globals()[f"date_{select_year}_{month}"].style.format("{:,}"))
         
-with c2:
-    month = st.selectbox('Month',range(1,12+1),main_month-1)
-with st.expander(f"파주시 인구 - {month}월"):
-    if select_year :
-        m(month)
-        st.table(globals()[f"date_{select_year}_{month}"].style.format("{:,}"))
-    
-c3,c4 = st.columns([1,1])
-with c3:
-    if select_year :
-        m(month)
-        m_output()
+    c3,c4 = st.columns([1,1])
+    with st.expander('파주시'):
+        with c3:
+            if select_year :
+                m(month)
+                m_output()
 
-with c4:
-    sub(month)    
-    g = globals()[f"date_{select_year}_{month}"] - globals()[f"date_{select_year}_{month-1}"]
-    g.rename({'파주시':'전월 대비'},inplace=True)
-    st.table(g.style.applymap(color_negative_red).format('{:+,}'))
+    with st.expander('운정'):
+        with c4:
+            sub(month)    
+            g = globals()[f"date_{select_year}_{month}"] - globals()[f"date_{select_year}_{month-1}"]
+            g.rename({'파주시':'전월 대비'},inplace=True)
+            st.table(g.style.applymap(color_negative_red).format('{:+,}'))
+except Exception as e:
+    st.write(e)
