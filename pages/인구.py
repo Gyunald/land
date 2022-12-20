@@ -44,8 +44,7 @@ def m_output():
         
         st.info(f"인구 비율 : { (subtotal / total) * 100:.2f} %")
         st.success('GTX 운정신도시 오픈챗 https://open.kakao.com/o/gICcjcDb')
-        st.warning('참여코드 : 2023gtxa')
-        
+        st.warning('참여코드 : 2023gtxa')        
         
     else:
         st.write('No Data')
@@ -64,7 +63,8 @@ try:
         if select_year:
             csv_file(select_year)
             
-    date = st.number_input('월', max_value=12)       
+    date = st.select_slider('월', options=[2022,1,2,3,4,5,6,7,8,9,10,11,12,],value=(2022,12))
+
     with c2:
         month = st.selectbox('Month',range(1,12+1),main_month-1)
     with st.expander(f"파주시 인구 - {month}월",expanded=False):
