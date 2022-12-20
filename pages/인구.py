@@ -73,14 +73,14 @@ try:
             st.table(globals()[f"date_{select_year}_{month}"].style.format("{:,}"))
         
     c3,c4 = st.columns([1,1])
-    with st.expander('파주시'):
-        with c3:
+    with c3:
+        with st.expander('파주시'):
             if select_year :
                 m(month)
                 m_output()
 
-    with st.expander('운정'):
-        with c4:
+    with c4:
+        with st.expander('운정'):
             sub(month)    
             g = globals()[f"date_{select_year}_{month}"] - globals()[f"date_{select_year}_{month-1}"]
             g.rename({'파주시':'전월 대비'},inplace=True)
