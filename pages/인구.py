@@ -83,7 +83,7 @@ try:
         with st.expander('운정'):
             sub(month)    
             g = globals()[f"date_{select_year}_{month}"] - globals()[f"date_{select_year}_{month-1}"]
-            g.rename({'파주시':'전월 대비'},inplace=True)
+            g.rename({'파주':'전월 대비'},inplace=True)
             st.dataframe(g.style.applymap(color_negative_red).format('{:+,}'))
 except Exception as e:
     st.write(e)
