@@ -39,7 +39,7 @@ def m_output():
         total = globals()[f"date_{select_year}_{month}"].iloc[0,1]
         globals()[f"date_{select_year}_{month}"] = globals()[f"date_{select_year}_{month}"][11:15]
         globals()[f"date_{select_year}_{month}"].loc['합계'] = globals()[f"date_{select_year}_{month}"][['세대수','인구','내국인','외국인']].sum()
-        st.dataframe(globals()[f"date_{select_year}_{month}"].style.apply(draw_color, color='#17becf', subset=pd.IndexSlice[['합계'],'인구'],axis=1).format('{:,}'))        
+        st.table(globals()[f"date_{select_year}_{month}"].style.apply(draw_color, color='#17becf', subset=pd.IndexSlice[['합계'],'인구'],axis=1).format('{:,}'))        
         subtotal = globals()[f"date_{select_year}_{month}"].iloc[4,1]
         
         st.info(f"인구 비율 : { (subtotal / total) * 100:.2f} %")
@@ -83,6 +83,6 @@ try:
             sub(month)    
             g = globals()[f"date_{select_year}_{month}"] - globals()[f"date_{select_year}_{month-1}"]
             g.rename({'합계':'전월 대비'},inplace=True)
-            st.dataframe(g.style.applymap(color_negative_red).format('{:+,}'))
+            st.table(g.style.applymap(color_negative_red).format('{:+,}'))
 except Exception as e:
     st.write(e)
