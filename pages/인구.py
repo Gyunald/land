@@ -2,7 +2,7 @@ import pandas as pd
 import streamlit as st
 
 main_year = 2
-main_month = 10
+main_month = 11
 year = 2020, 2021, 2022
 
 file_path = 'https://raw.githubusercontent.com/Gyunald/streamlit-view/main/population/'
