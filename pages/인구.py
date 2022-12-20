@@ -7,7 +7,7 @@ year = 2020, 2021, 2022
 
 file_path = 'https://raw.githubusercontent.com/Gyunald/streamlit-view/main/population/'
 rename_columns = {'등록인구':'인구','등록인구.3' : '내국인', '등록인구.6': '외국인'}
-rename_index = {'합계':'파주시'}
+rename_index = {'합계':'파주'}
 drop_colums = ['시점','등록인구.1','등록인구.2','등록인구.4','등록인구.5','등록인구.7','등록인구.8']
 drop_indexs = ['읍면동별(1)']
 
