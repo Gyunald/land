@@ -37,20 +37,15 @@ def sub(month):
     return globals()
 
 try:
-    c1,c2=st.columns([1,1])
-
-    with c1:
-        today = datetime.date.today()
-        year = today.year
-        value_date = today - datetime.timedelta(days=30)
-        date = st.slider(f"{year} 🔥",1,12, value=value_date.month)
+    today = datetime.date.today()
+    year = today.year
+    value_date = today - datetime.timedelta(days=30)
+    date = st.slider(f"{year} 🔥",1,12, value=value_date.month)
 
     with st.expander(f"파주시 인구 - {year}.{date}"):
         if date :
             m(date)
             st.dataframe(globals()[f"date_{year}_{date}"].style.format("{:,}"))
-        
-    c3,c4 = st.columns([1,1])
 
     with st.expander('운정신도시 인구',expanded=True):
         use_container = True
