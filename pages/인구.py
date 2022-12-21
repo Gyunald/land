@@ -11,7 +11,7 @@ drop_colums = ['시점','등록인구.1','등록인구.2','등록인구.4','등�
 drop_indexs = ['읍면동별(1)']
 
 def csv_file(year):
-    a = pd.read_csv(f'{file_path}{year}.csv',index_col=1)
+    a = pd.read_csv(f'{file_path}{year}.csv',index_col=1,encoding='cp949')
     a = a.drop(drop_indexs,axis=0)
     a = a.drop(drop_colums,axis=1)
     a.rename(columns=rename_columns, inplace=True)
