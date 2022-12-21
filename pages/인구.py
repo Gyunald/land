@@ -48,7 +48,7 @@ try:
     with st.expander(f"파주시 인구 - {year}.{date}"):
         if date :
             m(date)
-            st.table(globals()[f"date_{year}_{date}"].style.format("{:,}"))
+            st.dataframe(globals()[f"date_{year}_{date}"].style.format("{:,}"))
         
     c3,c4 = st.columns([1,1])
 
@@ -69,7 +69,7 @@ try:
             
             st.dataframe(총합.style.apply(draw_color, color='#17becf', subset=pd.IndexSlice[['운정'],'인구'],axis=1).apply(draw_color, color='#FFA07A', subset=pd.IndexSlice[['파주시'],'인구'],axis=1).format('{:,}'),use_container_width=use_container)
 
-            st.info(f"🔺 운정 비율 : { (subtotal / total) * 100:.2f} %")
+            st.info(f"🎈 운정 비율 : { (subtotal / total) * 100:.2f} %")
         else:
             st.write('No Data')
 
@@ -81,8 +81,8 @@ try:
         else:
             st.dataframe(g.fillna('-'))
 
-    st.success("🎈 [GTX 운정신도시 정보공유방](%s)" % 'https://open.kakao.com/o/gICcjcDb')
-    st.warning('🧸 참여코드 : gtxa24')
+    st.success('🧸 [GTX 운정신도시 정보공유방](%s)' % 'https://open.kakao.com/o/gICcjcDb')
+    st.warning('🎲 참여코드 : gtxa24')
       
 except Exception as e:
     st.write(e)
