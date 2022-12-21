@@ -1,12 +1,9 @@
 import pandas as pd
 import streamlit as st
-
-main_year = 2
-main_month = 11
-year = 2020, 2021, 2022
+import datetime
 
 file_path = 'https://raw.githubusercontent.com/Gyunald/streamlit-view/main/population/'
-rename_columns = {'등록인구':'인구','등록인구.3' : '내국인', '등록인구.6': '외국인'}
+rename_columns = {'합계':'파주시','등록인구':'인구','등록인구.3' : '내국인', '등록인구.6': '외국인'}
 drop_colums = ['시점','등록인구.1','등록인구.2','등록인구.4','등록인구.5','등록인구.7','등록인구.8']
 drop_indexs = ['읍면동별(1)']
 
@@ -14,8 +11,7 @@ def csv_file(year):
     a = pd.read_csv(f'{file_path}{year}.csv',index_col=1,encoding='cp949')
     a = a.drop(drop_indexs,axis=0)
     a = a.drop(drop_colums,axis=1)
-    a.rename(columns=rename_columns, inplace=True)
-    a = a.astype(int)
+    a.rename(columns=rename_columns, index=rename_columns, inplace=True)
     return a
 
 def draw_color(x,color): 
@@ -23,67 +19,70 @@ def draw_color(x,color):
     return [color]
 
 def color_negative_red(val):
-    color = '#4682B4' if val < 0 else '#d62728'
+    color = '#4682B4' if val < 0 else '#ff7f0e'
     # return 'background-color: %s' % color
     return 'color: %s' % color
 
 def m(month):
     c = (18 * month) - 18
     c2 = 18 * month
-    globals()[f"date_{select_year}_{month}"] = csv_file(select_year)[c:c2].astype(int)
-    return globals()
-
-def m_output():
-    if len(globals()[f"date_{select_year}_{month}"]) > 0 :
-        st.table(globals()[f"date_{select_year}_{month}"][0:1].style.apply(draw_color, color='#FFA07A', subset=pd.IndexSlice[['합계'],'인구'],axis=1).format('{:,}'))
-        total = globals()[f"date_{select_year}_{month}"].iloc[0,1]
-        globals()[f"date_{select_year}_{month}"] = globals()[f"date_{select_year}_{month}"][11:15]
-        globals()[f"date_{select_year}_{month}"].loc['합계'] = globals()[f"date_{select_year}_{month}"][['세대수','인구','내국인','외국인']].sum()
-        st.dataframe(globals()[f"date_{select_year}_{month}"].style.apply(draw_color, color='#17becf', subset=pd.IndexSlice[['합계'],'인구'],axis=1).format('{:,}'))        
-        subtotal = globals()[f"date_{select_year}_{month}"].iloc[4,1]
-        
-        st.info(f"인구 비율 : { (subtotal / total) * 100:.2f} %")
-        st.success('GTX 운정신도시 오픈챗 https://open.kakao.com/o/gICcjcDb')
-        st.warning('참여코드 : 2023gtxa')        
-        
-    else:
-        st.write('No Data')
+    globals()[f"date_{year}_{month}"] = csv_file(year)[c:c2].astype('int32')
     return globals()
 
 def sub(month):
     for month in range(month, month-2,-1):
         c = (18 * month) - 18
         c2 = 18 * month
-        globals()[f"date_{select_year}_{month}"] = csv_file(select_year)[c:c2].astype(int)
+        globals()[f"date_{year}_{month}"] = csv_file(year)[c:c2].astype('int32')
     return globals()
+
 try:
     c1,c2=st.columns([1,1])
-    with c1:
-        select_year = st.selectbox('Year', year, main_year)
-        if select_year:
-            csv_file(select_year)
-            
-    date = st.select_slider('월', options=[2022,1,2,3,4,5,6,7,8,9,10,11,12,],value=(2022,12))
 
-    with c2:
-        month = st.selectbox('Month',range(1,12+1),main_month-1)
-    with st.expander(f"파주시 인구 - {month}월",expanded=False):
-        if select_year :
-            m(month)
-            st.dataframe(globals()[f"date_{select_year}_{month}"].style.format("{:,}"))
+    with c1:
+        today = datetime.date.today()
+        year = today.year
+        value_date = today - datetime.timedelta(days=30)
+        date = st.slider(f"{year} 🐱‍🏍",1,12, value=value_date.month)
+
+    with st.expander(f"파주시 인구 - {year}.{date}"):
+        if date :
+            m(date)
+            st.table(globals()[f"date_{year}_{date}"].style.format("{:,}"))
         
     c3,c4 = st.columns([1,1])
-    with c3:
-        with st.expander('운정',expanded=True):
-            if select_year :
-                m(month)
-                m_output()
 
-    with c4:
-        with st.expander('전월 대비',expanded=True):
-            sub(month)    
-            g = globals()[f"date_{select_year}_{month}"] - globals()[f"date_{select_year}_{month-1}"]
-            g.rename({'합계':'전월 대비'},inplace=True)
-            st.table(g.style.applymap(color_negative_red).format('{:+,}'))
+    with st.expander('운정신도시 인구',expanded=True):
+        use_container = True
+
+        if len(globals()[f"date_{year}_{date}"]) > 0 :
+            파주합계 = globals()[f"date_{year}_{date}"][0:1]
+            
+            total = globals()[f"date_{year}_{date}"].iloc[0,1]
+
+            운정합계 = globals()[f"date_{year}_{date}"] = globals()[f"date_{year}_{date}"][11:15]
+            globals()[f"date_{year}_{date}"].loc['운정'] = globals()[f"date_{year}_{date}"][['세대수','인구','내국인','외국인']].sum().astype('int32')
+
+            subtotal = globals()[f"date_{year}_{date}"].iloc[4,1]
+
+            총합 = pd.concat([파주합계,운정합계],axis=0,sort=False)
+            
+            st.dataframe(총합.style.apply(draw_color, color='#17becf', subset=pd.IndexSlice[['운정'],'인구'],axis=1).apply(draw_color, color='#FFA07A', subset=pd.IndexSlice[['파주시'],'인구'],axis=1).format('{:,}'),use_container_width=use_container)
+
+            st.info(f"👨‍👩‍👧‍👦 운정 비율 : { (subtotal / total) * 100:.2f} %")
+        else:
+            st.write('No Data')
+
+        sub(date)    
+        g = globals()[f"date_{year}_{date}"] - globals()[f"date_{year}_{date-1}"]
+
+        if g['세대수'][0] > 0 :
+            st.dataframe(g.style.applymap(color_negative_red).format('{:+,}'),use_container_width=use_container)
+        else:
+            st.dataframe(g.fillna('-'))
+
+    st.success("📣 [GTX 운정신도시 정보공유방](%s)" % 'https://open.kakao.com/o/gICcjcDb')
+    st.warning('참여코드 : gtxa24')
+      
 except Exception as e:
     st.write(e)
