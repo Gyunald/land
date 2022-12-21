@@ -43,7 +43,7 @@ try:
         today = datetime.date.today()
         year = today.year
         value_date = today - datetime.timedelta(days=30)
-        date = st.slider(f"{year} 🐱‍🏍",1,12, value=value_date.month)
+        date = st.slider(f"{year} 🔥",1,12, value=value_date.month)
 
     with st.expander(f"파주시 인구 - {year}.{date}"):
         if date :
@@ -69,7 +69,7 @@ try:
             
             st.dataframe(총합.style.apply(draw_color, color='#17becf', subset=pd.IndexSlice[['운정'],'인구'],axis=1).apply(draw_color, color='#FFA07A', subset=pd.IndexSlice[['파주시'],'인구'],axis=1).format('{:,}'),use_container_width=use_container)
 
-            st.info(f"👨‍👩‍👧‍👦 운정 비율 : { (subtotal / total) * 100:.2f} %")
+            st.info(f"🌈 운정 비율 : { (subtotal / total) * 100:.2f} %")
         else:
             st.write('No Data')
 
@@ -81,7 +81,7 @@ try:
         else:
             st.dataframe(g.fillna('-'))
 
-    st.success("📣 [GTX 운정신도시 정보공유방](%s)" % 'https://open.kakao.com/o/gICcjcDb')
+    st.success("🎈 [GTX 운정신도시 정보공유방](%s)" % 'https://open.kakao.com/o/gICcjcDb')
     st.warning('참여코드 : gtxa24')
       
 except Exception as e:
