@@ -191,8 +191,9 @@ try:
                     
     if 오늘 == date:
         with st.expander(f'{시군구} 실거래 - {date[6:]}일 신규 {len(신규)}건',expanded=True):
-            st.info('😎신규거래')
+            st.info('신규거래😎')
             st.dataframe(신규.style.background_gradient(subset=['금액', '면적', '계약'], cmap="Reds"))
 
 except Exception as e:
+    st.write(e)
     st.error('No data.😎')
