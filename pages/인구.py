@@ -2,13 +2,12 @@ import pandas as pd
 import streamlit as st
 import datetime
 
-file_path = 'https://raw.githubusercontent.com/Gyunald/streamlit-view/main/population/'
 rename_columns = {'합계':'파주시','등록인구':'인구','등록인구.3' : '내국인', '등록인구.6': '외국인'}
 drop_colums = ['시점','등록인구.1','등록인구.2','등록인구.4','등록인구.5','등록인구.7','등록인구.8']
 drop_indexs = ['읍면동별(1)']
 
 def csv_file(year):
-    a = pd.read_csv(f'{file_path}{year}.csv',index_col=1,encoding='cp949')
+    a = pd.read_csv(st.secrets.population,index_col=1,encoding='cp949')
     a = a.drop(drop_indexs,axis=0)
     a = a.drop(drop_colums,axis=1)
     a.rename(columns=rename_columns, index=rename_columns, inplace=True)
