@@ -75,7 +75,7 @@ try:
         else:
             st.dataframe(g.fillna('-'))
 
-    st.success('🚥 [GTX 운정신도시 ](%s)' % 'https://open.kakao.com/o/gICcjcDb')
+    st.success('🚥 [GTX 운정신도시 정보유](%s)' % 'https://open.kakao.com/o/gICcjcDb')
     st.warning('🚧 참여코드 : gtxa24')
       
 except Exception as e:
