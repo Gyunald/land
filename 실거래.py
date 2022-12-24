@@ -191,9 +191,9 @@ try:
                     st.error('No data.😎')
                     
     if 오늘 == date:
-        with st.expander(f'{시군구} 실거래 - {date[6:]}일 🚀 신규 2건',expanded=True): # {len(신규)}건
+        with st.expander(f'{시군구} 실거래 - {date[6:]}일 🚀 {len(신규)}건',expanded=True):
             st.info('신규거래😎')
-            st.dataframe(고정.style.background_gradient(subset=['금액', '면적', '계약'], cmap="Reds")) # 원래는 신규
+            st.dataframe(신규.style.background_gradient(subset=['금액', '면적', '계약'], cmap="Reds"))
             
     st.success('🚥 [GTX 운정신도시 정보공유](%s)' % 'https://open.kakao.com/o/gICcjcDb')
     st.warning('🚧 참여코드 : gtxa24')
