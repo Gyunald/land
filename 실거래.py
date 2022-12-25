@@ -176,7 +176,7 @@ try:
                 전세면적별 = 당월_전세_아파트별[(당월_전세_아파트별['면적'] == 면적_라디오_전세)].reset_index(drop=True).drop(columns=['월세'])
                 
             if len(당월_전세_아파트별) > 1 :
-                st.line_chart(전월당월전세월세,x='계약',y='보증금')                
+                st.line_chart(당월_월세_아파트별,x='계약',y='보증금')                
                 st.dataframe(전세면적별.style.background_gradient(subset=['보증금','면적','계약'], cmap="Blues"),use_container_width=True)
             else:
                 st.error('No data.😎')
