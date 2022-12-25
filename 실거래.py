@@ -196,7 +196,7 @@ try:
 #             st.info('신규거래😎')
 #             st.dataframe(신규.style.background_gradient(subset=['금액', '면적', '계약'], cmap="Reds"))
             
-    st.success('🚥 [GTX 운정신도시 정보공유](%s)' % 'https://open.kakao.com/o/gICcjcDb')
+    st.success('🚥 [GTX A 정보공유](%s)' % 'https://open.kakao.com/o/gICcjcDb')
     st.warning('🚧 참여코드 : gtxa24')
 except Exception as e:
     st.write(e)
