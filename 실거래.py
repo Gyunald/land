@@ -110,14 +110,15 @@ try:
     전월 = 당월 - datetime.timedelta(days=30)
     어제 = 당월 - datetime.timedelta(days=1)
     갱신 = pd.concat([api(당월.strftime('%Y%m%d')),api(전월.strftime('%Y%m%d'))]).reset_index(drop=True)
-    고정 = pd.read_csv(st.secrets.fixed_data, encoding='cp949').drop(columns=['Unnamed: 0'])
+#     고정 = pd.read_csv(st.secrets.fixed_data, encoding='cp949').drop(columns=['Unnamed: 0'])
     
-    고정['면적'] = 고정['면적'].map('{:.2f}'.format)
-    고정['계약'] = 고정['계약'].map('{:.2f}'.format)
-    고정['금액'] = 고정['금액'].astype(int)
+#     고정['면적'] = 고정['면적'].map('{:.2f}'.format)
+#     고정['계약'] = 고정['계약'].map('{:.2f}'.format)
+#     고정['금액'] = 고정['금액'].astype(int)
+#     고정 = 고정.fillna('')
     갱신['금액'] = 갱신['금액'].astype(int)
-    고정 = 고정.fillna('')
-    신규 = pd.merge(갱신,고정, how='outer', indicator=True).query('_merge == "left_only"').drop(columns=['_merge']).reset_index(drop=True)
+    
+#     신규 = pd.merge(갱신,고정, how='outer', indicator=True).query('_merge == "left_only"').drop(columns=['_merge']).reset_index(drop=True)
 
     당월전체 = 갱신
     당월전체 = 당월전체[당월전체['계약'].str.contains(date_2)].reset_index(drop=True)
@@ -190,10 +191,10 @@ try:
             else:
                     st.error('No data.😎')
                     
-    if 오늘 == date:
-        with st.expander(f'{시군구} 실거래 - {date[6:]}일 🚀 {len(신규)}건',expanded=True):
-            st.info('신규거래😎')
-            st.dataframe(신규.style.background_gradient(subset=['금액', '면적', '계약'], cmap="Reds"))
+#     if 오늘 == date:
+#         with st.expander(f'{시군구} 실거래 - {date[6:]}일 🚀 {len(신규)}건',expanded=True):
+#             st.info('신규거래😎')
+#             st.dataframe(신규.style.background_gradient(subset=['금액', '면적', '계약'], cmap="Reds"))
             
     st.success('🚥 [GTX 운정신도시 정보공유](%s)' % 'https://open.kakao.com/o/gICcjcDb')
     st.warning('🚧 참여코드 : gtxa24')
