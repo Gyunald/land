@@ -141,17 +141,18 @@ try:
 #     고정 = 고정.fillna('')
 #     신규 = pd.merge(갱신,고정, how='outer', indicator=True).query('_merge == "left_only"').drop(columns=['_merge']).reset_index(drop=True)
     
-    아파트 = empty.selectbox('🏠 아파트',sorted([i for i in 갱신["아파트"].drop_duplicates()]))
+    아파트 = empey.selectbox('🏠 아파트',sorted([i for i in 갱신["아파트"].drop_duplicates()]))
     갱신2 = 갱신[갱신['아파트'].str.contains(아파트)]
     아파트별 = 갱신2[(갱신2['아파트'] == 아파트) & (갱신2['계약'].str.contains(date_2))].sort_values(by=['금액'], ascending=False)
     전월당월전세월세 = pd.concat([api2(당월.strftime('%Y%m%d')),api2(전월.strftime('%Y%m%d'))])
     당월_전세_전체 = 전월당월전세월세[(전월당월전세월세['계약'].str.contains(date_2)) & (전월당월전세월세['월세'] == '0')].drop(columns=['월세']).reset_index(drop=True)
     당월_월세_전체 = 전월당월전세월세[(전월당월전세월세['계약'].str.contains(date_2)) & (전월당월전세월세['월세'] != '0')].reset_index(drop=True)
     전월당월_전세_전체 = 전월당월전세월세[(전월당월전세월세['아파트'] == 아파트) & (전월당월전세월세['월세'] == '0')].drop(columns=['월세'])
-    당월_전세_아파트별 = 당월_전세_전체[당월_전세_전체['아파트'] == 아파트]
+    당월_전세_아파트별  = 당월_전세_전체[당월_전세_전체['아파트'] == 아파트]
     당월_월세_아파트별 = 당월_월세_전체[당월_월세_전체['아파트'] == 아파트]
-    
+
     with st.expander(f'{시군구} 실거래 - {date[4:5+1]}월 🍩 전체',expanded=False) :
+
         if len(갱신) == 0 :
             st.info(f'{date[4:5+1]}월 신규 등록이 없습니다😎')
 
@@ -164,19 +165,18 @@ try:
             st.dataframe(당월_전세_전체.style.background_gradient(subset=['보증금','면적','계약'], cmap="Reds"),use_container_width=True)
 
         with tab3:
-            st.dataframe(당월_월세_전체.style.background_gradient(subset=['보증금','층','건축'], cmap="Reds"),use_container_width=True)  
+            st.dataframe(당월_월세_전체.style.background_gradient(subset=['보증금','층','건축'], cmap="Reds"),use_container_width=True)
+
     with st.expander(f'{시군구} 실거래 - {date[4:5+1]}월 🍰 아파트별',expanded=False) :
         tab4, tab5, tab6 = st.tabs(["매매", "전세", "월세"])
-        
-        면적_라디오 = st.radio('매매 면적별',[i for i in 아파트별['면적'].drop_duplicates()],horizontal=True)
-        면적별 = 갱신2[갱신2['면적'] == 면적_라디오].reset_index(drop=True)
-        당월_전세면적별 = 당월_전세_아파트별[당월_전세_아파트별['면적'] == 면적_라디오].reset_index(drop=True)
-        월세면적별 = 당월_월세_아파트별[(당월_월세_아파트별['면적'] == 면적_라디오)].reset_index(drop=True)
-        
+
         if len(갱신) == 0 :
             st.info(f'{date[4:5+1]}월 신규 등록이 없습니다😎')
+
+        with tab4:
+            면적_라디오 = st.radio('🔎 면적',[i for i in 아파트별['면적'].drop_duplicates()],horizontal=True)
+            면적별 = 갱신2[갱신2['면적'] == 면적_라디오].reset_index(drop=True)
             
-        with tab4:            
             if len(면적별) > 0 :
                 st.dataframe(면적별.style.background_gradient(subset=['금액','면적','계약'], cmap='Reds'),use_container_width=True)
                 st.error('📈 시세 동향')
@@ -185,9 +185,11 @@ try:
                 st.error('No data.😎')
                 
         with tab5:
-            if len(당월_전세_아파트별) > 1:             
-                전월당월_전세면적별 = 전월당월_전세_전체[(전월당월_전세_전체['면적'] == 면적_라디오)].reset_index(drop=True)
-                전세면적별 = 전월당월_전세_전체[(전월당월_전세_전체['면적'] == 면적_라디오)].reset_index(drop=True)
+            if len(당월_전세_아파트별) > 1:
+                면적_라디오_전세 = st.radio('🔎 면적',[i for i in 당월_전세_아파트별['면적'].drop_duplicates()],horizontal=True)                
+                전월당월_전세면적별 =  전월당월_전세_전체[(전월당월_전세_전체['면적'] == 면적_라디오_전세)].reset_index(drop=True)
+                당월_전세면적별 =  당월_전세_아파트별[당월_전세_아파트별['면적'] == 면적_라디오_전세].reset_index(drop=True)
+                전세면적별 = 전월당월_전세_전체[(전월당월_전세_전체['면적'] == 면적_라디오_전세)].reset_index(drop=True)
 
                 st.dataframe(당월_전세면적별.style.background_gradient(subset=['보증금','면적','계약'], cmap="Blues"),use_container_width=True)
                 st.error('📈 시세 동향')
@@ -197,22 +199,11 @@ try:
 
         with tab6:
             if len(당월_월세_아파트별) > 1:
-                면적_라디오_월세 = st.radio('월세 면적별',[i for i in 당월_월세_아파트별['면적'].drop_duplicates()],horizontal=True)
+                면적_라디오_월세 = st.radio('🔎 면적',[i for i in 당월_월세_아파트별['면적'].drop_duplicates()],horizontal=True)
                 월세면적별 = 당월_월세_아파트별[(당월_월세_아파트별['면적'] == 면적_라디오_월세)].reset_index(drop=True)
-
-            if len(당월_월세_아파트별) > 1 :
                 st.dataframe(월세면적별.style.background_gradient(subset=['보증금','층','건축'], cmap="Blues"),use_container_width=True)
             else:
                     st.error('No data.😎')
-                    
-#     if 오늘 == date:
-#         with st.expander(f'{시군구} 실거래 - {date[6:]}일 🚀 {len(신규)}건',expanded=True):
-#             st.info('신규거래😎')
-#             st.dataframe(신규.style.background_gradient(subset=['금액', '면적', '계약'], cmap="Reds"))
-            
-    st.success('🚥 [GTX A 정보공유](%s)' % 'https://open.kakao.com/o/gICcjcDb')
-    st.warning('🚧 참여코드 : gtxa24')
-    
 except Exception as e:
     st.write(e)
     st.error('No data.😎')
