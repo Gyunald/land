@@ -187,7 +187,7 @@ try:
             면적별 = 아파트별[아파트별['면적'] == 면적_라디오].reset_index(drop=True)
             
             if len(면적별) > 0 :
-                st.line_chart(갱신2,x='계약',y='금액')
+                st.line_chart(면적별,x='계약',y='금액')
                 st.dataframe(면적별.style.background_gradient(subset=['금액','면적','계약'], cmap='Reds'),use_container_width=True)
             else:
                 st.error('No data.😎')
@@ -198,7 +198,7 @@ try:
                 전세면적별 = 당월_전세_아파트별[(당월_전세_아파트별['면적'] == 면적_라디오_전세)].reset_index(drop=True).drop(columns=['월세'])
                 
             if len(당월_전세_아파트별) > 1 :
-                st.line_chart(당월_월세_아파트별,x='계약',y='보증금')                
+                st.line_chart(전세면적별,x='계약',y='보증금')                
                 st.dataframe(전세면적별.style.background_gradient(subset=['보증금','면적','계약'], cmap="Blues"),use_container_width=True)
             else:
                 st.error('No data.😎')
