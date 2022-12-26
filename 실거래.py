@@ -178,6 +178,7 @@ try:
             
             if len(면적별) > 0 :
                 st.dataframe(면적별.style.background_gradient(subset=['금액','면적','계약'], cmap='Reds'),use_container_width=True)
+                st.error('📈 시세 동향')
                 st.line_chart(면적별,x='계약',y='금액')
             else:
                 st.error('No data.😎')
@@ -191,6 +192,7 @@ try:
                 
             if len(당월_전세_아파트별) > 1 :
                 st.dataframe(당월_전세면적별.style.background_gradient(subset=['보증금','면적','계약'], cmap="Blues"),use_container_width=True)
+                st.error('📈 시세 동향')
                 st.line_chart(전월당월_전세면적별,x='계약',y='보증금')                   
             else:
                 st.error('No data.😎')
