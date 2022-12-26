@@ -141,7 +141,7 @@ try:
 #     고정 = 고정.fillna('')
 #     신규 = pd.merge(갱신,고정, how='outer', indicator=True).query('_merge == "left_only"').drop(columns=['_merge']).reset_index(drop=True)
     
-    아파트 = empey.selectbox('🏠 아파트',sorted([i for i in 갱신["아파트"].drop_duplicates()]))
+    아파트 = empty.selectbox('🏠 아파트',sorted([i for i in 갱신["아파트"].drop_duplicates()]))
     갱신2 = 갱신[갱신['아파트'].str.contains(아파트)]
     아파트별 = 갱신2[(갱신2['아파트'] == 아파트) & (갱신2['계약'].str.contains(date_2))].sort_values(by=['금액'], ascending=False)
     전월당월전세월세 = pd.concat([api2(당월.strftime('%Y%m%d')),api2(전월.strftime('%Y%m%d'))])
