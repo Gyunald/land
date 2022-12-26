@@ -3,6 +3,8 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import urllib.request as req
 import datetime
+import requests
+from streamlit_lottie import st_lottie
 
 @st.experimental_memo
 def trade(city, date, user_key, rows):
@@ -77,6 +79,26 @@ def rent(city, date, user_key, rows):
     aptTrade['면적'] = aptTrade['면적'].astype(float).map('{:.2f}'.format)
     aptTrade['동'] = aptTrade['동'].str.split().str[0]
     return aptTrade.sort_values(by=['계약'], ascending=False).reset_index(drop=(True))
+
+@st.experimental_memo    
+def load_lottie(url:str):
+    r = requests.get(url)
+
+    if r.status_code != 200:
+        return None
+    return r.json()
+
+# lottie_url = 'https://assets7.lottiefiles.com/packages/lf20_ghunc0fe.json'
+lottie_url = 'https://assets1.lottiefiles.com/packages/lf20_9kfnbeaf.json'
+lottie_json = load_lottie(lottie_url)
+
+st_lottie(
+    lottie_json,
+    speed=2,
+    # # reverse='Ture',
+    loop=True,
+    quality='low',
+    )
 
 def api(date):
     당월전체 = trade(city, date, user_key, rows)
