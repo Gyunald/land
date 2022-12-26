@@ -87,9 +87,7 @@ def load_lottie(url:str):
     if r.status_code != 200:
         return None
     return r.json()
-
-# lottie_url = 'https://assets7.lottiefiles.com/packages/lf20_ghunc0fe.json'
-lottie_url = 'https://assets1.lottiefiles.com/packages/lf20_9kfnbeaf.json'
+lottie_url = 'https://assets9.lottiefiles.com/packages/lf20_2v2beqrh.json'
 lottie_json = load_lottie(lottie_url)
 
 st_lottie(
