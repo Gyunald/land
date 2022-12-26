@@ -130,54 +130,46 @@ try:
     전월 = 당월 - datetime.timedelta(days=30)
     어제 = 당월 - datetime.timedelta(days=1)
     갱신 = pd.concat([api(당월.strftime('%Y%m%d')),api(전월.strftime('%Y%m%d'))]).reset_index(drop=True)
+    갱신['금액'] = 갱신['금액'].astype(int)
+    갱신 = 갱신[갱신['계약'].str.contains(date_2)].replace('22.','',regex=True)
+    갱신 = 갱신.reindex(columns=["아파트", "금액", "층", "면적", "건축", "계약", "동", "거래", "파기"])
+    
 #     고정 = pd.read_csv(st.secrets.fixed_data, encoding='cp949').drop(columns=['Unnamed: 0'])
     
 #     고정['면적'] = 고정['면적'].map('{:.2f}'.format)
 #     고정['계약'] = 고정['계약'].map('{:.2f}'.format)
 #     고정['금액'] = 고정['금액'].astype(int)
 #     고정 = 고정.fillna('')
-    갱신['금액'] = 갱신['금액'].astype(int)
-    
 #     신규 = pd.merge(갱신,고정, how='outer', indicator=True).query('_merge == "left_only"').drop(columns=['_merge']).reset_index(drop=True)
 
-    당월전체 = 갱신
-    당월전체 = 당월전체[당월전체['계약'].str.contains(date_2)].reset_index(drop=True)
-    당월전체['계약'] = 당월전체['계약'].str.replace('22.','',regex=True)
-    아파트 = empey.selectbox('🏠 아파트',sorted([i for i in 당월전체["아파트"].drop_duplicates()]))
-    갱신2 = 갱신[갱신['아파트'].str.contains(아파트)].reset_index(drop=True)
+    아파트 = empey.selectbox('🏠 아파트',sorted([i for i in 갱신["아파트"].drop_duplicates()]))
+    갱신2 = 갱신[갱신['아파트'].str.contains(아파트)].reset_index(drop=True)e)
+    아파트별 = 갱신2[(갱신2['아파트'] == 아파트) & (갱신2['계약'].str.contains(date_2))].sort_values(by=['금액'], ascending=False)    전월당월전세월세 = pd.concat([api2(당월.strftime('%Y%m%d')),api2(전월.strftime('%Y%m%d'))])
+    당월_전세_전체 = 전월당월전세월세[(전월당월전세월세['계약'].str.contains(date_2)) & (전월당월전세월세['월세'] == '0')].drop(columns=['월세'])
+    당월_월세_전체 = 전월당월전세월세[(전월당월전세월세['계약'].str.contains(date_2)) & (전월당월전세월세['월세'] != '0')]
+    당월_전세_아파트별  = 당월_전세_전체[당월_전세_전체['아파트'] == 아파트]
+    당월_월세_아파트별 = 당월_월세_전체[당월_월세_전체['아파트'] == 아파트]
+    
+    with st.expander(f'{시군구} 실거래 - {date[4:5+1]}월 전체 🍰 {len(갱신)}건',expanded=False) :
 
-    아파트별 = 갱신2[(갱신2['아파트'] == 아파트) & (갱신2['계약'].str.contains(date_2))].sort_values(by=['금액'], ascending=False).reset_index(drop=True)
-
-    전월당월전세월세 = pd.concat([api2(당월.strftime('%Y%m%d')),api2(전월.strftime('%Y%m%d'))]).reset_index(drop=True)
-
-    당월_전세_전체 = 전월당월전세월세[(전월당월전세월세['계약'].str.contains(date_2)) & (전월당월전세월세['월세'] == '0')].reset_index(drop=True).drop(columns=['월세'])
-    당월_월세_전체 = 전월당월전세월세[(전월당월전세월세['계약'].str.contains(date_2)) & (전월당월전세월세['월세'] != '0')].reset_index(drop=True)
-
-    당월_전세_아파트별  = 전월당월전세월세[(전월당월전세월세['계약'].str.contains(date_2)) & (전월당월전세월세['아파트'] == 아파트) & (전월당월전세월세['월세'] == '0')].reset_index(drop=True)
-
-    당월_월세_아파트별 = 전월당월전세월세[(전월당월전세월세['계약'].str.contains(date_2)) & (전월당월전세월세['아파트'] == 아파트) & (전월당월전세월세['월세'] != '0')].reset_index(drop=True)
-
-    with st.expander(f'{시군구} 실거래 - {date[4:5+1]}월 전체 🍰 {len(당월전체)}건',expanded=False) :
-
-        if len(당월전체) == 0 :
+        if len(갱신) == 0 :
             st.info(f'{date[4:5+1]}월 신규 등록이 없습니다😎')
 
         tab1, tab2, tab3 = st.tabs(["매매", "전세", "월세"])
 
         with tab1 :
-            당월전체 = 당월전체.reindex(columns=["아파트", "금액", "층", "면적", "건축", "계약", "동", "거래", "파기"])
-            st.dataframe(당월전체.style.background_gradient(subset=['금액','면적','계약'], cmap="Reds"),use_container_width=True)
+            st.dataframe(갱신.style.background_gradient(subset=['금액','면적','계약'], cmap="Reds"),use_container_width=True)
 
         with tab2:
             st.dataframe(당월_전세_전체.style.background_gradient(subset=['보증금','면적','계약'], cmap="Reds"),use_container_width=True)
 
         with tab3:
             st.dataframe(당월_월세_전체.style.background_gradient(subset=['보증금','층','건축'], cmap="Reds"),use_container_width=True)
-
+   
     with st.expander(f'{시군구} 실거래 - {date[4:5+1]}월 🍩 아파트별',expanded=False) :
         tab4, tab5, tab6 = st.tabs(["매매", "전세", "월세"])
 
-        if len(당월전체) == 0 :
+        if len(갱신) == 0 :
             st.info(f'{date[4:5+1]}월 신규 등록이 없습니다😎')
 
         with tab4:
@@ -185,19 +177,19 @@ try:
             면적별 = 아파트별[아파트별['면적'] == 면적_라디오].reset_index(drop=True)
             
             if len(면적별) > 0 :
-                st.line_chart(면적별,x='계약',y='금액')
                 st.dataframe(면적별.style.background_gradient(subset=['금액','면적','계약'], cmap='Reds'),use_container_width=True)
+                st.line_chart(면적별,x='계약',y='금액')
             else:
                 st.error('No data.😎')
                 
         with tab5:
             if len(당월_전세_아파트별) > 1:
                 면적_라디오_전세 = st.radio('전세 면적별',[i for i in 당월_전세_아파트별['면적'].drop_duplicates()],horizontal=True)
-                전세면적별 = 당월_전세_아파트별[(당월_전세_아파트별['면적'] == 면적_라디오_전세)].reset_index(drop=True).drop(columns=['월세'])
+                전세면적별 = 당월_전세_아파트별[(당월_전세_아파트별['면적'] == 면적_라디오_전세)].reset_index(drop=True)
                 
             if len(당월_전세_아파트별) > 1 :
-                st.line_chart(전세면적별,x='계약',y='보증금')                
                 st.dataframe(전세면적별.style.background_gradient(subset=['보증금','면적','계약'], cmap="Blues"),use_container_width=True)
+                st.line_chart(전세면적별,x='계약',y='보증금')                
             else:
                 st.error('No data.😎')
 
