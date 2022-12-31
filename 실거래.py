@@ -196,6 +196,7 @@ try:
                 월세면적별 = 당월_월세_아파트별[(당월_월세_아파트별['면적'] == 면적_라디오_월세)].reset_index(drop=True)
                 st.dataframe(월세면적별.style.background_gradient(subset=['보증금','층','건축'], cmap="Blues"),use_container_width=True)
             else:
-                    st.error('No data.😎')except Exception as e:
-    st.write(e)
-    st.error('No data.😎')
+                st.error('No data.😎')
+    except Exception as e:
+        st.write(e)
+        st.error('No data.😎')
