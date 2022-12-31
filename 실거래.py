@@ -150,23 +150,16 @@ try:
     전월당월_전세_전체 = 전월당월전세월세[(전월당월전세월세['아파트'] == 아파트) & (전월당월전세월세['월세'] == '0')].drop(columns=['월세'])
     당월_전세_아파트별  = 당월_전세_전체[당월_전세_전체['아파트'] == 아파트]
     당월_월세_아파트별 = 당월_월세_전체[당월_월세_전체['아파트'] == 아파트]
-
     with st.expander(f'{시군구} 실거래 - {date[4:5+1]}월 🍩 전체',expanded=False) :
-
         if len(갱신) == 0 :
             st.info(f'{date[4:5+1]}월 신규 등록이 없습니다😎')
-
         tab1, tab2, tab3 = st.tabs([f"매매 {len(갱신)}", f"전세 {len(당월_전세_전체)}", f"월세 {len(당월_월세_전체)}"])
-
         with tab1 :
             st.dataframe(갱신.style.background_gradient(subset=['금액','면적','계약'], cmap="Reds"),use_container_width=True)
-
         with tab2:
             st.dataframe(당월_전세_전체.style.background_gradient(subset=['보증금','면적','계약'], cmap="Reds"),use_container_width=True)
-
         with tab3:
             st.dataframe(당월_월세_전체.style.background_gradient(subset=['보증금','층','건축'], cmap="Reds"),use_container_width=True)
-
     with st.expander(f'{시군구} 실거래 - {date[4:5+1]}월 🍰 아파트별',expanded=False) :
         tab4, tab5, tab6 = st.tabs(["매매", "전세", "월세"])
 
@@ -174,7 +167,7 @@ try:
             st.info(f'{date[4:5+1]}월 신규 등록이 없습니다😎')
 
         with tab4:
-            면적_라디오 = st.radio('🔎 면적',[i for i in 아파트별['면적'].drop_duplicates()],horizontal=True)
+            면적_라디오 = st.radio('🔎 면적',[i for i in 아파트별['면적'].drop_duplicates()],key='매매면적',horizontal=True)
             면적별 = 갱신2[갱신2['면적'] == 면적_라디오].reset_index(drop=True)
             
             if len(면적별) > 0 :
@@ -186,7 +179,7 @@ try:
                 
         with tab5:
             if len(당월_전세_아파트별) > 1:
-                면적_라디오_전세 = st.radio('🔎 면적 ',[i for i in 당월_전세_아파트별['면적'].drop_duplicates()],horizontal=True)                
+                면적_라디오_전세 = st.radio('🔎 면적',[i for i in 당월_전세_아파트별['면적'].drop_duplicates()],key='전세면적',horizontal=True)                
                 전월당월_전세면적별 =  전월당월_전세_전체[(전월당월_전세_전체['면적'] == 면적_라디오_전세)].reset_index(drop=True)
                 당월_전세면적별 =  당월_전세_아파트별[당월_전세_아파트별['면적'] == 면적_라디오_전세].reset_index(drop=True)
                 전세면적별 = 전월당월_전세_전체[(전월당월_전세_전체['면적'] == 면적_라디오_전세)].reset_index(drop=True)
@@ -199,11 +192,10 @@ try:
 
         with tab6:
             if len(당월_월세_아파트별) > 1:
-                면적_라디오_월세 = st.radio('🔎 면적  ',[i for i in 당월_월세_아파트별['면적'].drop_duplicates()],horizontal=True)
+                면적_라디오_월세 = st.radio('🔎 면적',[i for i in 당월_월세_아파트별['면적'].drop_duplicates()],key='월세면적',horizontal=True)
                 월세면적별 = 당월_월세_아파트별[(당월_월세_아파트별['면적'] == 면적_라디오_월세)].reset_index(drop=True)
                 st.dataframe(월세면적별.style.background_gradient(subset=['보증금','층','건축'], cmap="Blues"),use_container_width=True)
             else:
-                    st.error('No data.😎')
-except Exception as e:
+                    st.error('No data.😎')except Exception as e:
     st.write(e)
     st.error('No data.😎')
