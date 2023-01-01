@@ -199,5 +199,5 @@ try:
             else:
                 st.error('No data.😎')
 except Exception as e:
-    st.write(e)
+#     st.write(e)
     st.error('No data.😎')
