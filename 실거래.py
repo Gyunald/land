@@ -5,6 +5,7 @@ import urllib.request as req
 import datetime
 import requests
 from streamlit_lottie import st_lottie
+import altair as alt
 
 @st.experimental_memo
 def trade(city, date, user_key, rows):
