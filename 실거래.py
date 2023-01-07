@@ -171,7 +171,7 @@ try:
 #     고정 = 고정.fillna('')
 #     신규 = pd.merge(갱신,고정, how='outer', indicator=True).query('_merge == "left_only"').drop(columns=['_merge']).reset_index(drop=True)
     
-    with st.expander(f'{시군구} 실거래 - {date[4:5+1]}월 🍩 전체',expanded=False) :
+    with st.expander(f'{시군구} 실거래 - {date[4:5+1]}월 🍩 전체',expanded=True) :
         아파트 = st.multiselect('🏠 아파트별',sorted([i for i in 갱신["아파트"].drop_duplicates()]),max_selections=5)    
         전월당월전세월세 = pd.concat([api2(당월.strftime('%Y%m%d')),api2(전월.strftime('%Y%m%d'))]).reset_index(drop=True)        
         당월_전세_전체 = 전월당월전세월세[(전월당월전세월세['계약'].str.contains(date_2)) & (전월당월전세월세['월세'] == '0')].drop(columns=['월세']).reset_index(drop=True)
