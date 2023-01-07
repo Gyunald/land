@@ -9,7 +9,7 @@ from streamlit_lottie import st_lottie
 @st.experimental_memo
 def trade(city, date, user_key, rows):
     url = st.secrets.api_path
-url = url + "?&LAWD_CD=" + city
+    url = url + "?&LAWD_CD=" + city
     url = url + "&DEAL_YMD=" + date[:6]
     url = url + "&serviceKey=" + user_key
     url = url + "&numOfRows=" + rows
@@ -47,7 +47,7 @@ url = url + "?&LAWD_CD=" + city
 @st.experimental_memo
 def rent(city, date, user_key, rows):
     url = st.secrets.api_path_2
-url = url + "?&LAWD_CD=" + city
+    url = url + "?&LAWD_CD=" + city
     url = url + "&DEAL_YMD=" + date[:6]
     url = url + "&serviceKey=" + user_key
     url = url + "&numOfRows=" + rows
