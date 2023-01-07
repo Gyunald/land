@@ -130,7 +130,7 @@ def get_chart(data,):
         .mark_rule()
         .encode(
             x="계약",
-            y="금액",
+            y="면적",
             opacity=alt.condition(hover, alt.value(0.1), alt.value(0)),
             tooltip=[
                 alt.Tooltip("면적", title="면적"),
