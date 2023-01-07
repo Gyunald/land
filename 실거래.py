@@ -120,7 +120,7 @@ def get_chart(data,):
         .mark_area()
         .encode(
             x="계약",
-            y="금액",
+            y="average(금액)",
             color="아파트",
         )
     )
