@@ -176,6 +176,9 @@ try:
             아파트별멀티 = 갱신
         else:
             아파트별멀티 = 갱신[갱신["아파트"].isin(아파트)].reset_index(drop=True)
+            st.error('📈 시세 동향')
+            chart = get_chart(아파트별멀티)
+            st.altair_chart(chart,use_container_width=True)
             
         전월당월전세월세 = pd.concat([api2(당월.strftime('%Y%m%d')),api2(전월.strftime('%Y%m%d'))]).reset_index(drop=True)        
         당월_전세_전체 = 전월당월전세월세[(전월당월전세월세['계약'].str.contains(date_2)) & (전월당월전세월세['월세'] == '0')].drop(columns=['월세']).reset_index(drop=True)
@@ -185,11 +188,6 @@ try:
         
         with tab1 :
             st.dataframe(아파트별멀티.style.background_gradient(subset=['금액','면적','계약'], cmap="Reds"),use_container_width=True)
-            if len(아파트별멀티) != 0:
-                st.error('📈 시세 동향')
-                chart = get_chart(아파트별멀티)
-                st.altair_chart(chart,use_container_width=True)
-            
         with tab2:
             if not 아파트:
                 당월_전세_전체 = 당월_전세_전체
