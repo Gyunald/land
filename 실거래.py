@@ -179,17 +179,15 @@ try:
         tab1, tab2, tab3 = st.tabs([f"매매 {len(갱신)}", f"전세 {len(당월_전세_전체)}", f"월세 {len(당월_월세_전체)}"])
         
         with tab1 :
-
-            아파트별멀티 = 갱신[갱신["아파트"].isin(아파트)].reset_index(drop=True)
-
-            st.dataframe(아파트별멀티.style.background_gradient(subset=['금액','면적','계약'], cmap="Reds"),use_container_width=True)
             if not 아파트:            
                 아파트별멀티 = 갱신
             else:
-               
+                아파트별멀티 = 갱신[갱신["아파트"].isin(아파트)].reset_index(drop=True)
                 st.error('📈 시세 동향')
                 chart = get_chart(아파트별멀티)
                 st.altair_chart(chart,use_container_width=True)
+        
+            st.dataframe(아파트별멀티.style.background_gradient(subset=['금액','면적','계약'], cmap="Reds"),use_container_width=True)
         with tab2:
             if 아파트:
                 당월_전세_전체 = 당월_전세_전체[당월_전세_전체["아파트"].isin(아파트)]
