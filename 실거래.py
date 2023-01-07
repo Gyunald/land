@@ -142,7 +142,7 @@ def get_chart(data,):
 
 file_1 = pd.read_csv(st.secrets.user_path,encoding='cp949')
 user_key = st.secrets.user_key
-c1,c2,c3 = st.columns([1,1,1])
+c1,c2 = st.columns([1,1])
 rows = '9999'
 
 try:
@@ -151,10 +151,6 @@ try:
         date_2 = datetime.datetime(year=int(date[:3 + 1]),month=int(date[4:5 + 1]),day=int(date[6:])).strftime('%m.')
         
     with c2:
-        with c3:
-            empty = st.empty()
-            아파트 = empty.selectbox('아파트', ' ')
-
         시군구 = st.selectbox('🖥️ 검색 또는 선택', sorted([i for i in set(file_1["법정동명"])]),index=230) # 93 강남 230 파주
         file_2 = file_1[file_1['법정동명'].str.contains(시군구)].astype(str)
         city = file_2.iloc[0,0][:5]
@@ -185,8 +181,6 @@ try:
         당월_전세_전체 = 전월당월전세월세[(전월당월전세월세['계약'].str.contains(date_2)) & (전월당월전세월세['월세'] == '0')].drop(columns=['월세']).reset_index(drop=True)
         당월_월세_전체 = 전월당월전세월세[(전월당월전세월세['계약'].str.contains(date_2)) & (전월당월전세월세['월세'] != '0')].reset_index(drop=True)
         
-        if len(갱신) == 0 :
-            st.info(f'{date[4:5+1]}월 신규 등록이 없습니다😎')
         tab1, tab2, tab3 = st.tabs([f"매매 {len(갱신)}", f"전세 {len(당월_전세_전체)}", f"월세 {len(당월_월세_전체)}"])
         
         with tab1 :
