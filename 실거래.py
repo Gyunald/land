@@ -117,7 +117,7 @@ def get_chart(data,):
 
     lines = (
         alt.Chart(data)
-        .mark_circle()
+        .mark_area()
         .encode(
             x="계약",
             y="금액",
