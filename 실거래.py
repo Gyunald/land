@@ -191,6 +191,8 @@ try:
                 st.altair_chart(chart,use_container_width=True)
 
         with tab2:
+            st.dataframe(당월_전세_전체.style.background_gradient(subset=['금액','면적','계약'], cmap="Reds"),use_container_width=True)
+              
             if 아파트:
                 당월_전세_전체 = 당월_전세_전체[당월_전세_전체["아파트"].isin(아파트)]
                 st.dataframe(당월_전세_전체.style.background_gradient(subset=['금액','면적','계약'], cmap="Reds"),use_container_width=True)
