@@ -131,7 +131,6 @@ try:
     어제 = 당월 - datetime.timedelta(days=1)
     갱신 = pd.concat([api(당월.strftime('%Y%m%d')),api(전월.strftime('%Y%m%d'))]).reset_index(drop=True)
     갱신['금액'] = 갱신['금액'].astype(int)
-    갱신 = 갱신[갱신['계약'].str.contains(date_2)].replace('22.','',regex=True)
     갱신 = 갱신.reindex(columns=["아파트", "금액", "층", "면적", "건축", "계약", "동", "거래", "파기"])
     
 #     고정 = pd.read_csv(st.secrets.fixed_data, encoding='cp949').drop(columns=['Unnamed: 0'])    
