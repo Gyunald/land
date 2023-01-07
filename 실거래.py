@@ -21,7 +21,7 @@ def trade(city, date, user_key, rows):
     items = soup.findAll("item")
     aptTrade = pd.DataFrame()
     for item in items:
-        계약            = int(item.find('월').text) * 100 + int(item.find('일').text)
+        계약            = str(item.find('월').text + item.find('일').text)
         동                  = item.find("법정동").text
         면적            = float(item.find("전용면적").text)
         아파트              = item.find("아파트").text
@@ -59,7 +59,7 @@ def rent(city, date, user_key, rows):
     items = soup.findAll("item")
     aptTrade = pd.DataFrame()
     for item in items:
-        계약            = int(item.find('월').text) * 100 + int(item.find('일').text)
+        계약            = str(item.find('월').text + item.find('일').text)
         동                  = item.find("법정동").text
         면적            = float(item.find("전용면적").text)
         아파트              = item.find("아파트").text
