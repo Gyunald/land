@@ -188,7 +188,7 @@ try:
                 st.dataframe(아파트별멀티.style.background_gradient(subset=['금액','면적','계약'], cmap="Reds"),use_container_width=True)
                 st.error('📈 시세 동향')
                 chart = get_chart(아파트별멀티)
-                st.altair_chart(chart,use_container_width=True)
+                st.altair_chart(chart,use_container_width=False)
 
         with tab2:
             if not 아파트:
@@ -199,11 +199,11 @@ try:
                 st.dataframe(당월_전세_전체.style.background_gradient(subset=['금액','면적','계약'], cmap="Reds"),use_container_width=True)
                 st.error('📈 시세 동향')
                 chart = get_chart(당월_전세_전체)
-                st.altair_chart(chart,use_container_width=True)
+                st.altair_chart(chart,use_container_width=False)
                  
         with tab3:
             if 아파트:
-                당월_월세_전체 = 당월_월세_전체[당월_월세_전체["아파트"].isin(아파트)]                
+                당월_월세_전체 = 당월_월세_전체[당월_월세_전체["아파트"].isin(아파트)].reset_index(drop=True)      
             
             st.dataframe(당월_월세_전체.style.background_gradient(subset=['금액','층','건축'], cmap="Reds"),use_container_width=True)
             
