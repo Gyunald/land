@@ -183,7 +183,7 @@ def get_chart_2(data):
 
 
 file_1 = pd.read_csv(st.secrets.user_path,encoding='cp949')
-user_key = 'pRcMh3ZvTSWhUPu4VIMig%2BbD1mnLgAyaxyhB07a86H8XbgJ7ki8JYqk3a6Q6lM%2FN8zhvYZHQsLw0pmbjPBBE%2FA%3D%3D'
+user_key = st.secrets.user_key
 c1,c2 = st.columns([1,1])
 rows = '9999'
 
