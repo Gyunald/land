@@ -125,7 +125,7 @@ def get_chart_1(data):
         .encode(
             x="계약",
             y="금액",
-            color=alt.Color("면적",legend=alt.Legend(orient='bottom-left', direction='vertical')),
+            color=alt.Color("면적",legend=alt.Legend(orient='bottom', direction='vertical')),
         )
     )
     points = lines.transform_filter(hover).mark_circle(size=100) #65
@@ -158,9 +158,9 @@ def get_chart_2(data):
         alt.Chart(data)
         .mark_line()
         .encode(
-            x="계약",
-            y="금액",
-            color=alt.Color("아파트",legend=alt.Legend(orient='bottom-left', direction='vertical')),
+            x=alt.X("계약",title=None),
+            y=alt.Y("금액",title=None),
+            color=alt.Color("아파트",legend=alt.Legend(orient='bottom', direction='vertical')),
         )
     )
     points = lines.transform_filter(hover).mark_circle(size=100) #65
@@ -168,8 +168,8 @@ def get_chart_2(data):
         alt.Chart(data)
         .mark_point()
         .encode(
-            x="계약",
-            y="금액",
+            x=alt.X("계약",title=None),
+            y=alt.Y("금액",title=None),
             opacity=alt.condition(hover, alt.value(0.1), alt.value(0.2)),
             tooltip=[
                 alt.Tooltip("면적", title="면적"),
