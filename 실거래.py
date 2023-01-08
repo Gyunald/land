@@ -225,8 +225,7 @@ try:
         with tab1 :
             아파트 = st.multiselect('🏠 아파트별',sorted([i for i in 당월_매매_전체["아파트"].drop_duplicates()]),max_selections=5)
             당월전월매매아파트별 = 갱신[갱신["아파트"].isin(아파트)].reset_index(drop=True)
-            st.warning('🚥 단일 선택시 면적별, 다중 선택시 아파트별')
-            
+            st.warning('🚥 단일선택 면적별, 다중선택 아파트별')
             if not 아파트:            
                 아파트별멀티 = 당월_매매_전체
             else:
@@ -245,6 +244,7 @@ try:
                 
         with tab2:
             아파트 = st.multiselect('🏠 아파트별',sorted([i for i in 당월_전세_전체["아파트"].drop_duplicates()]),max_selections=5)
+            st.warning('🚥 단일선택 면적별, 다중선택 아파트별')
             전월당월전세전체 = 전월당월전세월세[(전월당월전세월세['아파트'].isin(아파트)) & (전월당월전세월세['월세'] == '0')].reset_index(drop=True)
             if not 아파트:
                 당월_전세_전체 = 당월_전세_전체
@@ -265,6 +265,7 @@ try:
                 
         with tab3:
             아파트 = st.multiselect('🏠 아파트별',sorted([i for i in 당월_월세_전체["아파트"].drop_duplicates()]),max_selections=5)
+            st.warning('🚥 단일선택 면적별, 다중선택 아파트별')
             if not 아파트:
                 당월_월세_전체 = 당월_월세_전체
             else:
