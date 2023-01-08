@@ -156,7 +156,7 @@ def get_chart_2(data):
 
     lines = (
         alt.Chart(data)
-        .mark_line()
+        .mark_circle()
         .encode(
             x="계약",
             y="금액",
@@ -166,7 +166,7 @@ def get_chart_2(data):
     points = lines.transform_filter(hover).mark_circle(size=100) #65
     tooltips = (
         alt.Chart(data)
-        .mark_point()
+        .mark_circle()
         .encode(
             x="계약",
             y="금액",
