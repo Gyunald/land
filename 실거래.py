@@ -35,7 +35,7 @@ def trade(city, date, user_key, rows):
         temp = pd.DataFrame(([[아파트, 금액, 층,면적, 건축, 계약 ,동, 거래, 파기]]), 
                             columns=["아파트", "금액", "층", "면적", "건축", "계약","동", "거래", "파기"])
         aptTrade = pd.concat([aptTrade,temp])
-    replace_word = '아파트','마을','신도시','단지',r'\(.+\)','중개거래','거래'
+    replace_word = '파주','아파트','마을','신도시','단지',r'\(.+\)','중개거래','거래'
     for i in replace_word:
         aptTrade['아파트'] = aptTrade['아파트'].str.replace(i,'',regex=True)
         aptTrade['거래'] = aptTrade['거래'].str.replace(i,'',regex=True)
@@ -75,7 +75,7 @@ def rent(city, date, user_key, rows):
                             columns=["아파트", "금액", "월세", "층", "면적", "건축", "계약", "동",])
         aptTrade = pd.concat([aptTrade,temp])
         
-    replace_word = '아파트','마을','신도시','단지','\(.+\)'
+    replace_word = '파주','아파트','마을','신도시','단지','\(.+\)'
     for i in replace_word:
         aptTrade['아파트'] = aptTrade['아파트'].str.replace(i,'',regex=True)
     aptTrade['금액'] = aptTrade['금액'].str.replace(',','').astype(int)
