@@ -189,11 +189,11 @@ rows = '9999'
 
 try:
     with c1 :
-        date = st.date_input('📆 날짜',).strftime('%Y%m%d')
+        date = st.date_input('🍳 날짜',).strftime('%Y%m%d')
         date_2 = datetime.datetime(year=int(date[:3 + 1]),month=int(date[4:5 + 1]),day=int(date[6:])).strftime('%m.')
         
     with c2:
-        시군구 = st.selectbox('🖥️ 검색 또는 선택', sorted([i for i in set(file_1["법정동명"])]),index=230) # 93 강남 230 파주
+        시군구 = st.selectbox('🍰 시군구 검색', sorted([i for i in set(file_1["법정동명"])]),index=230) # 93 강남 230 파주
         file_2 = file_1[file_1['법정동명'].str.contains(시군구)].astype(str)
         city = file_2.iloc[0,0][:5]
         
