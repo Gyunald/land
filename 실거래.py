@@ -7,6 +7,8 @@ import requests
 from streamlit_lottie import st_lottie
 import altair as alt
 
+st.set_page_config(page_title="규동산")
+
 @st.experimental_memo
 def trade(city, date, user_key, rows):
     url = st.secrets.api_path
