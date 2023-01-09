@@ -203,6 +203,7 @@ try:
         
     오늘 = datetime.datetime.now().strftime('%Y%m%d')
     당월 = datetime.datetime.now() + datetime.timedelta(hours=9)
+    당월
     # 당월 = datetime.datetime(year=int(date[:3 + 1]),month=int(date[4:5 + 1]),day=int(date[6:]))
     전월 = 당월 - datetime.timedelta(days=30)
     어제 = 당월 - datetime.timedelta(days=1)
