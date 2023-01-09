@@ -43,7 +43,7 @@ def trade(city, date, user_key, rows):
     aptTrade['파기'] = aptTrade['파기'].str.replace('22.','',regex=True)
     aptTrade['계약'] = pd.to_datetime(aptTrade['계약'],format = "%Y%m%d").dt.strftime('%y.%m.%d')
     # aptTrade['계약'] = pd.to_datetime(aptTrade['계약'],format = "%m%d").dt.strftime('%m.%d')
-    aptTrade['면적'] = aptTrade['면적'].astype(float).map('{:.2f}'.format)
+    aptTrade['면적'] = aptTrade['면적'].astype(float).map('{:.2f}'.format).str.split('.').str[0]
     aptTrade['동'] = aptTrade['동'].str.split().str[0]
     return aptTrade.sort_values(by=['계약'], ascending=False)
 
@@ -81,7 +81,7 @@ def rent(city, date, user_key, rows):
     aptTrade['금액'] = aptTrade['금액'].str.replace(',','').astype(int)
     aptTrade['계약'] = pd.to_datetime(aptTrade['계약'],format = "%Y%m%d").dt.strftime('%y.%m.%d')
     # aptTrade['계약'] = pd.to_datetime(aptTrade['계약'],format = "%m%d").dt.strftime('%m.%d')
-    aptTrade['면적'] = aptTrade['면적'].astype(float).map('{:.2f}'.format)
+    aptTrade['면적'] = aptTrade['면적'].astype(float).map('{:.2f}'.format).str.split('.').str[0]
     aptTrade['동'] = aptTrade['동'].str.split().str[0]
     return aptTrade.sort_values(by=['계약'], ascending=False).reset_index(drop=(True))
 
@@ -135,7 +135,7 @@ def get_chart_1(data):
         .encode(
             x=alt.X("계약",title=None),
             y=alt.Y("금액",title=None),
-            opacity=alt.condition(hover, alt.value(0.1), alt.value(.5)),
+            opacity=alt.condition(hover, alt.value(0.1), alt.value(.7)),
             tooltip=[
                 alt.Tooltip("면적", title="면적"),
                 alt.Tooltip("금액", title="금액"),
