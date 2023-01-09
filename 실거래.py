@@ -217,62 +217,62 @@ try:
 #     고정 = 고정.fillna('')
 #     신규 = pd.merge(갱신,고정, how='outer', indicator=True).query('_merge == "left_only"').drop(columns=['_merge']).reset_index(drop=True)
 
-    with st.expander(f'{시군구} 실거래 - {date[4:5+1]}월 🍩 전체',expanded=True):
-        if len(갱신) == 0 :
-            st.info(f'{date[4:5+1]}월 신규 등록이 없습니다😎')
-        tab1, tab2, tab3 = st.tabs([f"매매 {len(당월_매매_전체)}", f"전세 {len(당월_전세_전체)}", f"월세 {len(당월_월세_전체)}"])
-        
-        with tab1 :
-            아파트 = st.multiselect('🚀 아파트별',sorted([i for i in 당월_매매_전체["아파트"].drop_duplicates()]),max_selections=5)
-            당월전월매매아파트별 = 갱신[갱신["아파트"].isin(아파트)].reset_index(drop=True)
-            st.warning('🚥 단일선택 면적별, 다중선택 아파트별')
-            if not 아파트:            
-                아파트별멀티 = 당월_매매_전체
-            else:
-                아파트별멀티 = 당월_매매_전체[당월_매매_전체["아파트"].isin(아파트)].reset_index(drop=True)
-            st.dataframe(아파트별멀티.style.background_gradient(subset=['금액','면적'], cmap="Reds"),use_container_width=True)
-            # st.dataframe(아파트별멀티.style.background_gradient(subset=['금액','면적','계약'], cmap="Reds"),use_container_width=True)
-            
-            if len(아파트) == 1:
-                st.error('📈 시세 동향')
-                chart = get_chart_1(당월전월매매아파트별)
-                st.altair_chart(chart,use_container_width=True)
-            elif len(아파트) > 1 :
-                st.error('📈 시세 동향')
-                chart = get_chart_2(당월전월매매아파트별)
-                st.altair_chart(chart,use_container_width=True)
-                
-        with tab2:
-            아파트 = st.multiselect('🚀 아파트별',sorted([i for i in 당월_전세_전체["아파트"].drop_duplicates()]),max_selections=5)
-            st.warning('🚥 단일선택 면적별, 다중선택 아파트별')
-            전월당월전세전체 = 전월당월전세월세[(전월당월전세월세['아파트'].isin(아파트)) & (전월당월전세월세['월세'] == '0')].reset_index(drop=True)
-            if not 아파트:
-                당월_전세_전체 = 당월_전세_전체
-            else:
-                당월_전세_전체 = 당월_전세_전체[당월_전세_전체["아파트"].isin(아파트)].reset_index(drop=True)
-            
-            st.dataframe(당월_전세_전체.style.background_gradient(subset=['금액','면적'], cmap="Reds"),use_container_width=True)
-            # st.dataframe(당월_전세_전체.style.background_gradient(subset=['금액','면적','계약'], cmap="Reds"),use_container_width=True)
-            
-            if len(아파트) == 1:
-                st.error('📈 시세 동향')
-                chart = get_chart_1(전월당월전세전체)
-                st.altair_chart(chart,use_container_width=True)
-            elif len(아파트) > 1 :
-                st.error('📈 시세 동향')
-                chart = get_chart_2(전월당월전세전체)
-                st.altair_chart(chart,use_container_width=True)
-                
-        with tab3:
-            아파트 = st.multiselect('🚀 아파트별',sorted([i for i in 당월_월세_전체["아파트"].drop_duplicates()]),max_selections=5)
-            st.warning('🚥 단일선택 면적별, 다중선택 아파트별')
-            if not 아파트:
-                당월_월세_전체 = 당월_월세_전체
-            else:
-                당월_월세_전체 = 당월_월세_전체[당월_월세_전체["아파트"].isin(아파트)].reset_index(drop=True)          
-            
-            st.dataframe(당월_월세_전체.style.background_gradient(subset=['금액','층'], cmap="Reds"),use_container_width=True)
-            # st.dataframe(당월_월세_전체.style.background_gradient(subset=['금액','층','건축'], cmap="Reds"),use_container_width=True)
+#     with st.expander(f'{시군구} 실거래 - {date[4:5+1]}월 🍩 전체',expanded=True):
+    if len(갱신) == 0 :
+        st.info(f'{date[4:5+1]}월 신규 등록이 없습니다😎')
+    tab1, tab2, tab3 = st.tabs([f"매매 {len(당월_매매_전체)}", f"전세 {len(당월_전세_전체)}", f"월세 {len(당월_월세_전체)}"])
+
+    with tab1 :
+        아파트 = st.multiselect('🚀 아파트별',sorted([i for i in 당월_매매_전체["아파트"].drop_duplicates()]),max_selections=5)
+        당월전월매매아파트별 = 갱신[갱신["아파트"].isin(아파트)].reset_index(drop=True)
+        st.warning('🚥 단일선택 면적별, 다중선택 아파트별')
+        if not 아파트:            
+            아파트별멀티 = 당월_매매_전체
+        else:
+            아파트별멀티 = 당월_매매_전체[당월_매매_전체["아파트"].isin(아파트)].reset_index(drop=True)
+        st.dataframe(아파트별멀티.style.background_gradient(subset=['금액','면적'], cmap="Reds"),use_container_width=True)
+        # st.dataframe(아파트별멀티.style.background_gradient(subset=['금액','면적','계약'], cmap="Reds"),use_container_width=True)
+
+        if len(아파트) == 1:
+            st.error('📈 시세 동향')
+            chart = get_chart_1(당월전월매매아파트별)
+            st.altair_chart(chart,use_container_width=True)
+        elif len(아파트) > 1 :
+            st.error('📈 시세 동향')
+            chart = get_chart_2(당월전월매매아파트별)
+            st.altair_chart(chart,use_container_width=True)
+
+    with tab2:
+        아파트 = st.multiselect('🚀 아파트별',sorted([i for i in 당월_전세_전체["아파트"].drop_duplicates()]),max_selections=5)
+        st.warning('🚥 단일선택 면적별, 다중선택 아파트별')
+        전월당월전세전체 = 전월당월전세월세[(전월당월전세월세['아파트'].isin(아파트)) & (전월당월전세월세['월세'] == '0')].reset_index(drop=True)
+        if not 아파트:
+            당월_전세_전체 = 당월_전세_전체
+        else:
+            당월_전세_전체 = 당월_전세_전체[당월_전세_전체["아파트"].isin(아파트)].reset_index(drop=True)
+
+        st.dataframe(당월_전세_전체.style.background_gradient(subset=['금액','면적'], cmap="Reds"),use_container_width=True)
+        # st.dataframe(당월_전세_전체.style.background_gradient(subset=['금액','면적','계약'], cmap="Reds"),use_container_width=True)
+
+        if len(아파트) == 1:
+            st.error('📈 시세 동향')
+            chart = get_chart_1(전월당월전세전체)
+            st.altair_chart(chart,use_container_width=True)
+        elif len(아파트) > 1 :
+            st.error('📈 시세 동향')
+            chart = get_chart_2(전월당월전세전체)
+            st.altair_chart(chart,use_container_width=True)
+
+    with tab3:
+        아파트 = st.multiselect('🚀 아파트별',sorted([i for i in 당월_월세_전체["아파트"].drop_duplicates()]),max_selections=5)
+        st.warning('🚥 단일선택 면적별, 다중선택 아파트별')
+        if not 아파트:
+            당월_월세_전체 = 당월_월세_전체
+        else:
+            당월_월세_전체 = 당월_월세_전체[당월_월세_전체["아파트"].isin(아파트)].reset_index(drop=True)          
+
+        st.dataframe(당월_월세_전체.style.background_gradient(subset=['금액','층'], cmap="Reds"),use_container_width=True)
+        # st.dataframe(당월_월세_전체.style.background_gradient(subset=['금액','층','건축'], cmap="Reds"),use_container_width=True)
 except Exception as e:
     st.write(e)
     st.error('No data.😎')
