@@ -193,7 +193,7 @@ rows = '9999'
 
 try:
     with c1 :
-        date = st.date_input('🍳 날짜',datetime.date.today()).strftime('%Y%m%d')
+        date = st.date_input('🍳 날짜',datetime.datetime.now()+datetime.timedelta(hours=9)).strftime('%Y%m%d')
         date_2 = datetime.datetime(year=int(date[:3 + 1]),month=int(date[4:5 + 1]),day=int(date[6:])).strftime('%m.')
         
     with c2:
