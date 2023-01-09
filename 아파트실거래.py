@@ -202,7 +202,7 @@ try:
         city = file_2.iloc[0,0][:5]
         
     오늘 = datetime.datetime.now().strftime('%Y%m%d')
-    당월 = (datetime.datetime.now() + datetime.timedelta(hours=9)).strftime('%Y%m%d')
+    당월 = int(datetime.datetime.now() + datetime.timedelta(hours=9)).strftime('%Y%m%d')
     당월
     # 당월 = datetime.datetime(year=int(date[:3 + 1]),month=int(date[4:5 + 1]),day=int(date[6:]))
     전월 = 당월 - datetime.timedelta(days=30)
