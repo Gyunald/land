@@ -7,9 +7,9 @@ import requests
 from streamlit_lottie import st_lottie
 import altair as alt
 
-st.set_page_config(page_title="아파트 실거래 조회",layout='wide')
+st.set_page_config(page_title="아파트 실거래",layout='wide')
 empty = st.empty()
-empty.write('아파트 실거래 조회')
+empty.write('아파트 실거래')
 empty.empty()
 
 @st.experimental_memo
