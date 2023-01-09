@@ -52,7 +52,6 @@ def trade(city, date, user_key, rows):
     aptTrade['동'] = aptTrade['동'].str.split().str[0]
     return aptTrade.sort_values(by=['계약'], ascending=False)
 
-@st.experimental_memo
 def rent(city, date, user_key, rows):
     url = st.secrets.api_path_2
     url = url + "?&LAWD_CD=" + city
