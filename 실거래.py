@@ -123,8 +123,8 @@ def get_chart_1(data):
         alt.Chart(data)
         .mark_line()
         .encode(
-            x="계약",
-            y="금액",
+            x=alt.X("계약",title=None),
+            y=alt.Y("금액",title=None),
             color=alt.Color("면적",legend=alt.Legend(orient='bottom', direction='vertical')),
         )
     )
@@ -133,8 +133,8 @@ def get_chart_1(data):
         alt.Chart(data)
         .mark_point()
         .encode(
-            x="계약",
-            y="금액",
+            x=alt.X("계약",title=None),
+            y=alt.Y("금액",title=None),
             opacity=alt.condition(hover, alt.value(0.1), alt.value(.5)),
             tooltip=[
                 alt.Tooltip("면적", title="면적"),
