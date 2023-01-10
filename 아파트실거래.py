@@ -195,7 +195,7 @@ try:
     with c1 :
         date = st.date_input('🍳 날짜',value= datetime.date.today()+datetime.timedelta(days=1)).strftime('%Y%m%d')
         date_2 = datetime.datetime(year=int(date[:3 + 1]),month=int(date[4:5 + 1]),day=int(date[6:])).strftime('%m.')
-        
+        # date_2 = datetime.datetime(year=int(date[:3 + 1]),month=int(date[4:5 + 1]),day=datetime.datetime.now().day).strftime('%m.')
     with c2:
         시군구 = st.selectbox('🍰 시군구 검색', sorted([i for i in set(file_1["법정동명"])]),index=230) # 93 강남 230 파주
         file_2 = file_1[file_1['법정동명'].str.contains(시군구)].astype(str)
@@ -203,6 +203,7 @@ try:
         
     # 오늘 = datetime.datetime.now().strftime('%Y%m%d')    
     당월 = datetime.datetime(year=int(date[:3 + 1]),month=int(date[4:5 + 1]),day=int(date[6:]))
+    # 당월 = datetime.datetime(year=int(date[:3 + 1]),month=int(date[4:5 + 1]),day=datetime.datetime.now().day))
     전월 = 당월 - datetime.timedelta(days=30)
     # 어제 = datetime.datetime.now() - datetime.timedelta(days=1)
     갱신 = pd.concat([api(당월.strftime('%Y%m%d')),api(전월.strftime('%Y%m%d'))]).reset_index(drop=True)
