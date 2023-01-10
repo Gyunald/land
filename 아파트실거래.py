@@ -16,7 +16,7 @@ empty.empty()
 def trade(city, date, user_key, rows):
     url = st.secrets.api_path
     url = url + "?&LAWD_CD=" + city
-    url = url + "&DEAL_YMD=" + date
+    url = url + "&DEAL_YMD=" + date[:6]
     url = url + "&serviceKey=" + user_key
     url = url + "&numOfRows=" + rows
     
@@ -56,7 +56,7 @@ def trade(city, date, user_key, rows):
 def rent(city, date, user_key, rows):
     url = st.secrets.api_path_2
     url = url + "?&LAWD_CD=" + city
-    url = url + "&DEAL_YMD=" + date
+    url = url + "&DEAL_YMD=" + date[:6]
     url = url + "&serviceKey=" + user_key
     url = url + "&numOfRows=" + rows
     
@@ -193,7 +193,7 @@ rows = '9999'
 
 try:
     with c1 :
-        date = st.date_input('🍳 날짜',value= datetime.date.today()+datetime.timedelta(days=1)).strftime('%Y%m')
+        date = st.date_input('🍳 날짜',value= datetime.date.today()+datetime.timedelta(days=1)).strftime('%Y%m%d')
         date_2 = datetime.datetime(year=int(date[:3 + 1]),month=int(date[4:5 + 1]),day=int(date[6:])).strftime('%m.')
         
     with c2:
