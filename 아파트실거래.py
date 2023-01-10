@@ -16,7 +16,7 @@ empty.empty()
 def trade(city, date, user_key, rows):
     url = st.secrets.api_path
     url = url + "?&LAWD_CD=" + city
-    url = url + "&DEAL_YMD=" + date
+    url = url + "&DEAL_YMD=" + date[:6]
     url = url + "&serviceKey=" + user_key
     url = url + "&numOfRows=" + rows
     
@@ -56,7 +56,7 @@ def trade(city, date, user_key, rows):
 def rent(city, date, user_key, rows):
     url = st.secrets.api_path_2
     url = url + "?&LAWD_CD=" + city
-    url = url + "&DEAL_YMD=" + date
+    url = url + "&DEAL_YMD=" + date[:6]
     url = url + "&serviceKey=" + user_key
     url = url + "&numOfRows=" + rows
     
