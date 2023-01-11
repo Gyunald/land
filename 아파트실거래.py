@@ -51,7 +51,7 @@ def 매매(city, date, user_key, rows):
     # aptTrade['계약'] = pd.to_datetime(aptTrade['계약'],format = "%m%d").dt.strftime('%m.%d')
     aptTrade['면적'] = aptTrade['면적'].astype(float).map('{:.2f}'.format).str.split('.').str[0]
     aptTrade['동'] = aptTrade['동'].str.split().str[0]
-    return aptTrade.sort_values(by=['아파트'], ascending=False)
+    return aptTrade.sort_values(by=['아파트'], ascending=True)
 
 @st.experimental_singleton
 # @st.experimental_memo   
@@ -90,7 +90,7 @@ def 임대(city, date, user_key, rows):
     # aptTrade['계약'] = pd.to_datetime(aptTrade['계약'],format = "%m%d").dt.strftime('%m.%d')
     aptTrade['면적'] = aptTrade['면적'].astype(float).map('{:.2f}'.format).str.split('.').str[0]
     aptTrade['동'] = aptTrade['동'].str.split().str[0]
-    return aptTrade.sort_values(by=['아파트'], ascending=False).reset_index(drop=(True))
+    return aptTrade.sort_values(by=['아파트'], ascending=True)
 
 @st.experimental_memo     
 def load_lottie(url:str):
@@ -201,12 +201,10 @@ with st_lottie_spinner(lottie_json):
     전월 = 당월 - datetime.timedelta(days=30)
     # 어제 = datetime.datetime.now() - datetime.timedelta(days=1)
     갱신 = pd.concat([매매(city, 당월.strftime('%Y%m%d'), user_key, rows),매매(city, 전월.strftime('%Y%m%d'), user_key, rows),]).reset_index(drop=True)
-    갱신['금액'] = 갱신['금액'].astype(int)
-    갱신 = 갱신.reindex(columns=["아파트", "금액", "층", "면적", "건축", "계약", "동", "거래", "파기"])
 
     당월_매매_전체 = 갱신[갱신['계약'].str.contains(date_2)]
     전월당월전세월세 = pd.concat([임대(city, 당월.strftime('%Y%m%d'), user_key, rows),임대(city, 전월.strftime('%Y%m%d'), user_key, rows),]).reset_index(drop=True)
-    전월당월전세월세 = 전월당월전세월세.reindex(columns=["아파트","금액", "층", "월세",  "면적", "건축", "계약", "동", "거래", "파기"])
+    전월당월전세월세 = 전월당월전세월세.reindex(columns=["아파트","금액", "층", "월세",  "면적", "건축", "계약", "동"])
     
     당월_전세_전체 = 전월당월전세월세[(전월당월전세월세['계약'].str.contains(date_2)) & (전월당월전세월세['월세'] == '0')].drop(columns=['월세']).reset_index(drop=True)
     당월_월세_전체 = 전월당월전세월세[(전월당월전세월세['계약'].str.contains(date_2)) & (전월당월전세월세['월세'] != '0')].reset_index(drop=True)
