@@ -272,7 +272,7 @@ try:
             else:
                 당월_월세_전체 = 당월_월세_전체[당월_월세_전체["아파트"].isin(아파트)].reset_index(drop=True)          
 
-            st.dataframe(당월_월세_전체.style.background_gradient(subset=['금액','층'], cmap="Reds"),use_container_width=True)
+            st.dataframe(당월_월세_전체.style.background_gradient(subset=['금액','월세'], cmap="Reds"),use_container_width=True)
             # st.dataframe(당월_월세_전체.style.background_gradient(subset=['금액','층','건축'], cmap="Reds"),use_container_width=True)
 except Exception as e:
     st.write(e)
