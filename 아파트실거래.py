@@ -197,8 +197,8 @@ try:
         city = file_2.iloc[0,0][:5]
         
     # 오늘 = datetime.datetime.now().strftime('%Y%m%d')    
-    당월 = datetime.datetime(year=int(date[:3 + 1]),month=int(date[4:5 + 1]),day=int(date[6:]))
-    # 당월 = datetime.datetime(year=int(date[:3 + 1]),month=int(date[4:5 + 1]),day=datetime.datetime.now().day))
+#     당월 = datetime.datetime(year=int(date[:3 + 1]),month=int(date[4:5 + 1]),day=int(date[6:]))
+    당월 = datetime.datetime(year=int(date[:3 + 1]),month=int(date[4:5 + 1]),day=datetime.datetime.now().day))
     전월 = 당월 - datetime.timedelta(days=30)
     # 어제 = datetime.datetime.now() - datetime.timedelta(days=1)
     갱신 = pd.concat([매매(city, 당월.strftime('%Y%m%d'), user_key, rows),매매(city, 전월.strftime('%Y%m%d'), user_key, rows),]).reset_index(drop=True)
