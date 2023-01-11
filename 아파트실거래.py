@@ -305,7 +305,7 @@ try:
                 아파트별멀티 = 당월_매매_전체
             else:
                 아파트별멀티 = 당월_매매_전체[당월_매매_전체["아파트"].isin(아파트)].reset_index(drop=True)
-            st.dataframe(아파트별멀티.set_index(['아파트']),use_container_width=True)
+            st.dataframe(아파트별멀티.style.background_gradient(subset=['금액','면적'], cmap="Reds"),use_container_width=True)
 
             if len(아파트) == 1:
                 st.error('📈 시세 동향')
@@ -325,7 +325,7 @@ try:
                 당월_전세_전체 = 당월_전세_전체
             else:
                 당월_전세_전체 = 당월_전세_전체[당월_전세_전체["아파트"].isin(아파트)].reset_index(drop=True)
-            st.dataframe(당월_전세_전체.set_index(['아파트']),use_container_width=True)
+            st.dataframe(당월_전세_전체.style.background_gradient(subset=['보증금','면적'], cmap="Reds"),use_container_width=True)
 
             if len(아파트) == 1:
                 st.error('📈 시세 동향')
@@ -346,7 +346,8 @@ try:
 
 
             col_loc = 당월_월세_전체.columns.get_loc('보증금') ## 원하는 칼럼의 인덱스
-            st.dataframe(당월_월세_전체.set_index(['아파트']),use_container_width=True)
+            st.dataframe(당월_월세_전체.style.background_gradient(subset=['보증금','월세'], cmap="Reds"),use_container_width=True)
+            # .set_index(['아파트'])
             # .style.background_gradient(subset=['보증금','월세'], cmap="Reds")
 except Exception as e:
     st.write(e)
