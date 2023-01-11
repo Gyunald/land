@@ -275,7 +275,7 @@ try:
     with st_lottie_spinner(lottie_json):
         with c1 :
             date = st.date_input('🍳 날짜',value= datetime.datetime.now()+ datetime.timedelta(hours=9))
-            date
+            st.write(datetime.datetime.now()+datetime.timedelta(hours=9))
             date_2 = datetime.datetime(year=int(date[:3 + 1]),month=int(date[4:5 + 1]),day=datetime.datetime.now().day).strftime('%m.')
             
         with c2:
