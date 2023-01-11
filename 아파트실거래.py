@@ -207,6 +207,7 @@ try:
    
     당월_매매_전체 = 갱신[갱신['계약'].str.contains(date_2)]
     전월당월전세월세 = pd.concat([임대(city, 당월.strftime('%Y%m%d'), user_key, rows),임대(city, 전월.strftime('%Y%m%d'), user_key, rows),]).reset_index(drop=True)
+    전월당월전세월세 = 전월당월전세월세.reindex(columns=["아파트","금액", "층", "월세",  "면적", "건축", "계약", "동", "거래", "파기"])
     당월_전세_전체 = 전월당월전세월세[(전월당월전세월세['계약'].str.contains(date_2)) & (전월당월전세월세['월세'] == '0')].drop(columns=['월세']).reset_index(drop=True)
     당월_월세_전체 = 전월당월전세월세[(전월당월전세월세['계약'].str.contains(date_2)) & (전월당월전세월세['월세'] != '0')].reset_index(drop=True)
     
