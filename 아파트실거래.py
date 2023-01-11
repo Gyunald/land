@@ -274,9 +274,9 @@ c1,c2 = st.columns([1,1])
 try:
     with st_lottie_spinner(lottie_json):
         with c1 :
-            date = st.date_input('🍳 날짜',value= datetime.datetime.now()+ datetime.timedelta(hours=23)).strftime('%Y%m%d')
+            date = st.date_input('🍳 날짜',value= datetime.datetime.now()+ datetime.timedelta(hours=9)).strftime('%Y%m%d')
             date_2 = datetime.datetime(year=int(date[:3 + 1]),month=int(date[4:5 + 1]),day=datetime.datetime.now().day).strftime('%m.')
-
+            date
         with c2:
             시군구 = st.selectbox('🍰 시군구 검색', sorted([i for i in set(file_1["법정동명"])]),index=230) # 93 강남 230 파주
 
