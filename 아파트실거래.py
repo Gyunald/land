@@ -107,11 +107,11 @@ st_lottie(
     loop=True,
     quality='low',
     )
-
+@st.experimental_memo    
 def api(date):
     당월전체 = trade(city, date, user_key, rows)
     return 당월전체
-
+@st.experimental_memo    
 def api2(date):
     당월전체 = rent(city, date, user_key, rows)
     return 당월전체
