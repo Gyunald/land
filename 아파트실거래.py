@@ -12,8 +12,8 @@ empty = st.empty()
 empty.write('아파트 실거래')
 empty.empty()
 
-# @st.experimental_singleton
-@st.experimental_memo   
+@st.experimental_singleton
+# @st.experimental_memo   
 def 매매(city, date, user_key, rows):
     url = st.secrets.api_path
     url = url + "?&LAWD_CD=" + city
@@ -53,8 +53,8 @@ def 매매(city, date, user_key, rows):
     aptTrade['동'] = aptTrade['동'].str.split().str[0]
     return aptTrade.sort_values(by=['계약'], ascending=False)
 
-# @st.experimental_singleton
-@st.experimental_memo   
+@st.experimental_singleton
+# @st.experimental_memo   
 def 임대(city, date, user_key, rows):
     url = st.secrets.api_path_2
     url = url + "?&LAWD_CD=" + city
@@ -187,7 +187,7 @@ rows = '9999'
 
 try:
     with c1 :
-        date = st.date_input('🍳 날짜',value= datetime.datetime.now()).strftime('%Y%m%d')
+        date = st.date_input('🍳 날짜',value= datetime.datetime.now()).strftime('%Y%m')
         
         date_2 = datetime.datetime(year=int(date[:3 + 1]),month=int(date[4:5 + 1]),day=int(date[6:])).strftime('%m.')
         # date_2 = datetime.datetime(year=int(date[:3 + 1]),month=int(date[4:5 + 1]),day=datetime.datetime.now().day).strftime('%m.')
