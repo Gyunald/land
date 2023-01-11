@@ -102,13 +102,13 @@ def load_lottie(url:str):
 lottie_url = 'https://assets1.lottiefiles.com/packages/lf20_yJ8wNO.json'
 lottie_json = load_lottie(lottie_url)
 
-st_lottie(
-    lottie_json,
-    speed=2,
-    # # reverse='Ture',
-    loop=True,
-    quality='low',
-    )
+# st_lottie(
+#     lottie_json,
+#     speed=2,
+#     # # reverse='Ture',
+#     loop=True,
+#     quality='low',
+#     )
 
 def get_chart_1(data):
     hover = alt.selection_single(
