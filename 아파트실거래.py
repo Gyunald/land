@@ -53,7 +53,7 @@ def trade(city, date, user_key, rows):
     return aptTrade.sort_values(by=['계약'], ascending=False)
 
 # @st.experimental_singleton
-def rent(city, date, user_key, rows):
+def 임대(city, date, user_key, rows):
     url = st.secrets.api_path_2
     url = url + "?&LAWD_CD=" + city
     url = url + "&DEAL_YMD=" + date[:6]
