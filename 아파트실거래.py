@@ -4,15 +4,13 @@ import pandas as pd
 import urllib.request as req
 import datetime
 import requests
-from streamlit_lottie import st_lottie
+from streamlit_lottie import st_lottie,st_lottie_spinner
 import altair as alt
 
 st.set_page_config(page_title="🎈아파트 실거래가 매매/전세/월세 ",layout='wide')
 empty = st.empty()
 empty.write('아파트 실거래')
 empty.empty()
-
-st.balloons()
 
 @st.experimental_singleton
 # @st.experimental_memo   
@@ -186,6 +184,7 @@ file_1 = pd.read_csv(st.secrets.user_path,encoding='cp949')
 user_key = st.secrets.user_key
 c1,c2 = st.columns([1,1])
 rows = '9999'
+
 with st_lottie_spinner(lottie_json):
     with c1 :
         date = st.date_input('🍳 날짜',value= datetime.date.today()).strftime('%Y%m')
