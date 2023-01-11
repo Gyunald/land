@@ -101,7 +101,7 @@ def load_lottie(url:str):
     if r.status_code != 200:
         return None
     return r.json()
-lottie_url = 'https://assets9.lottiefiles.com/packages/lf20_2v2beqrh.json'
+lottie_url = 'https://assets1.lottiefiles.com/packages/lf20_yJ8wNO.json'
 lottie_json = load_lottie(lottie_url)
 
 st_lottie(
@@ -186,33 +186,32 @@ file_1 = pd.read_csv(st.secrets.user_path,encoding='cp949')
 user_key = st.secrets.user_key
 c1,c2 = st.columns([1,1])
 rows = '9999'
-
-try:
+with st_lottie_spinner(lottie_json):
     with c1 :
-        date = st.date_input('🍳 날짜',value= datetime.datetime.now()).strftime('%Y%m')
-        
-#         date_2 = datetime.datetime(year=int(date[:3 + 1]),month=int(date[4:5 + 1]),day=int(date[6:])).strftime('%m.')
+        date = st.date_input('🍳 날짜',value= datetime.date.today()).strftime('%Y%m')
         date_2 = datetime.datetime(year=int(date[:3 + 1]),month=int(date[4:5 + 1]),day=datetime.datetime.now().day).strftime('%m.')
+            
     with c2:
         시군구 = st.selectbox('🍰 시군구 검색', sorted([i for i in set(file_1["법정동명"])]),index=230) # 93 강남 230 파주
+        
         file_2 = file_1[file_1['법정동명'].str.contains(시군구)].astype(str)
         city = file_2.iloc[0,0][:5]
         
-    # 오늘 = datetime.datetime.now().strftime('%Y%m%d')    
-    # 당월 = datetime.datetime(year=int(date[:3 + 1]),month=int(date[4:5 + 1]),day=int(date[6:]))
+        # 오늘 = datetime.datetime.now().strftime('%Y%m%d')    
     당월 = datetime.datetime(year=int(date[:3 + 1]),month=int(date[4:5 + 1]),day=datetime.datetime.now().day)
     전월 = 당월 - datetime.timedelta(days=30)
     # 어제 = datetime.datetime.now() - datetime.timedelta(days=1)
     갱신 = pd.concat([매매(city, 당월.strftime('%Y%m%d'), user_key, rows),매매(city, 전월.strftime('%Y%m%d'), user_key, rows),]).reset_index(drop=True)
     갱신['금액'] = 갱신['금액'].astype(int)
     갱신 = 갱신.reindex(columns=["아파트", "금액", "층", "면적", "건축", "계약", "동", "거래", "파기"])
-   
+
     당월_매매_전체 = 갱신[갱신['계약'].str.contains(date_2)]
     전월당월전세월세 = pd.concat([임대(city, 당월.strftime('%Y%m%d'), user_key, rows),임대(city, 전월.strftime('%Y%m%d'), user_key, rows),]).reset_index(drop=True)
     전월당월전세월세 = 전월당월전세월세.reindex(columns=["아파트","금액", "층", "월세",  "면적", "건축", "계약", "동", "거래", "파기"])
+    
     당월_전세_전체 = 전월당월전세월세[(전월당월전세월세['계약'].str.contains(date_2)) & (전월당월전세월세['월세'] == '0')].drop(columns=['월세']).reset_index(drop=True)
     당월_월세_전체 = 전월당월전세월세[(전월당월전세월세['계약'].str.contains(date_2)) & (전월당월전세월세['월세'] != '0')].reset_index(drop=True)
-    
+
 #     고정 = pd.read_csv(st.secrets.fixed_data, encoding='cp949').drop(columns=['Unnamed: 0'])    
 #     고정['면적'] = 고정['면적'].map('{:.2f}'.format)
 #     고정['계약'] = 고정['계약'].map('{:.2f}'.format)
@@ -220,6 +219,7 @@ try:
 #     고정 = 고정.fillna('')
 #     신규 = pd.merge(갱신,고정, how='outer', indicator=True).query('_merge == "left_only"').drop(columns=['_merge']).reset_index(drop=True)
 
+try:
     with st.expander(f'{시군구} 실거래 - {date[4:5+1]}월 🍩 전체',expanded=True):
         if len(갱신) == 0 :
             st.info(f'{date[4:5+1]}월 신규 등록이 없습니다😎')
