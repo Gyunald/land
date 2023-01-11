@@ -13,7 +13,7 @@ empty.write('아파트 실거래')
 empty.empty()
 
 # @st.experimental_singleton
-def trade(city, date, user_key, rows):
+def 매매(city, date, user_key, rows):
     url = st.secrets.api_path
     url = url + "?&LAWD_CD=" + city
     url = url + "&DEAL_YMD=" + date[:6]
