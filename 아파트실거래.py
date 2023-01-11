@@ -13,6 +13,7 @@ empty.write('아파트 실거래')
 empty.empty()
 
 # @st.experimental_singleton
+@st.experimental_memo   
 def 매매(city, date, user_key, rows):
     url = st.secrets.api_path
     url = url + "?&LAWD_CD=" + city
@@ -53,6 +54,7 @@ def 매매(city, date, user_key, rows):
     return aptTrade.sort_values(by=['계약'], ascending=False)
 
 # @st.experimental_singleton
+@st.experimental_memo   
 def 임대(city, date, user_key, rows):
     url = st.secrets.api_path_2
     url = url + "?&LAWD_CD=" + city
