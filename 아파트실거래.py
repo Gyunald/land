@@ -13,7 +13,7 @@ empty.write('아파트 실거래')
 empty.empty()
 
 # @st.experimental_singleton
-# @st.experimental_memo   
+@st.experimental_memo   
 def 매매(city, date, user_key, rows):
     url = st.secrets.api_path
     url = url + "?&LAWD_CD=" + city
@@ -54,7 +54,7 @@ def 매매(city, date, user_key, rows):
     return aptTrade.sort_values(by=['아파트'], ascending=True)
 
 # @st.experimental_singleton
-# @st.experimental_memo   
+@st.experimental_memo   
 def 임대(city, date, user_key, rows):
     url = st.secrets.api_path_2
     url = url + "?&LAWD_CD=" + city
@@ -274,8 +274,7 @@ c1,c2 = st.columns([1,1])
 try:
     with st_lottie_spinner(lottie_json):
         with c1 :
-            date = st.date_input('🍳 날짜',value= datetime.datetime.now()+ datetime.timedelta(hours=9))
-            st.write(datetime.datetime.now()+datetime.timedelta(hours=9))
+            date = st.date_input('🍳 날짜',value= datetime.datetime.now()+ datetime.timedelta(hours=9)).strftime('%Y%m%d')
             date_2 = datetime.datetime(year=int(date[:3 + 1]),month=int(date[4:5 + 1]),day=datetime.datetime.now().day).strftime('%m.')
             
         with c2:
