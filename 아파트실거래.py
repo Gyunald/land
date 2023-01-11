@@ -274,7 +274,7 @@ c1,c2 = st.columns([1,1])
 try:
     with st_lottie_spinner(lottie_json):
         with c1 :
-            date = st.date_input('🍳 날짜',value= datetime.date.today()+ datetime.timedelta(hours=17)).strftime('%Y%m%d')
+            date = st.date_input('🍳 날짜',value= datetime.date.today()+ datetime.timedelta(hours=18)).strftime('%Y%m%d')
             date_2 = datetime.datetime(year=int(date[:3 + 1]),month=int(date[4:5 + 1]),day=datetime.datetime.now().day).strftime('%m.')
 
         with c2:
