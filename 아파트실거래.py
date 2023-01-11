@@ -107,6 +107,8 @@ def load_lottie(url:str):
     return r.json()
 lottie_url = 'https://assets1.lottiefiles.com/packages/lf20_yJ8wNO.json'
 lottie_json = load_lottie(lottie_url)
+lottie_url2 = 'https://assets9.lottiefiles.com/packages/lf20_2v2beqrh.json'
+lottie_json2 = load_lottie(lottie_url2)
 
 # st_lottie(
 #     lottie_json,
@@ -258,8 +260,17 @@ def 임대차트다중(data):
 
 file_1 = pd.read_csv(st.secrets.user_path,encoding='cp949')
 user_key = st.secrets.user_key
-c1,c2 = st.columns([1,1])
 rows = '9999'
+
+st_lottie(
+    lottie_json2,
+    speed=2,
+    # # reverse='Ture',
+    loop=True,
+    quality='low',
+    )
+
+c1,c2 = st.columns([1,1])
 try:
     with st_lottie_spinner(lottie_json):
         with c1 :
