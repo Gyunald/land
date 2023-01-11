@@ -51,7 +51,7 @@ def 매매(city, date, user_key, rows):
     # aptTrade['계약'] = pd.to_datetime(aptTrade['계약'],format = "%m%d").dt.strftime('%m.%d')
     aptTrade['면적'] = aptTrade['면적'].astype(float).map('{:.2f}'.format).str.split('.').str[0]
     aptTrade['동'] = aptTrade['동'].str.split().str[0]
-    return aptTrade.sort_values(by=['계약'], ascending=False)
+    return aptTrade.sort_values(by=['아파트'], ascending=False)
 
 @st.experimental_singleton
 # @st.experimental_memo   
@@ -90,7 +90,7 @@ def 임대(city, date, user_key, rows):
     # aptTrade['계약'] = pd.to_datetime(aptTrade['계약'],format = "%m%d").dt.strftime('%m.%d')
     aptTrade['면적'] = aptTrade['면적'].astype(float).map('{:.2f}'.format).str.split('.').str[0]
     aptTrade['동'] = aptTrade['동'].str.split().str[0]
-    return aptTrade.sort_values(by=['계약'], ascending=False).reset_index(drop=(True))
+    return aptTrade.sort_values(by=['아파트'], ascending=False).reset_index(drop=(True))
 
 @st.experimental_memo     
 def load_lottie(url:str):
