@@ -6,7 +6,7 @@ import datetime
 import requests
 from streamlit_lottie import st_lottie
 import altair as alt
-
+st.balloons()
 st.set_page_config(page_title="🎈아파트 실거래가 조회-매매/전세/월세",layout='wide')
 empty = st.empty()
 empty.write('아파트 실거래')
