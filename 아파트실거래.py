@@ -107,14 +107,6 @@ st_lottie(
     loop=True,
     quality='low',
     )
-@st.experimental_singleton
-def api(date):
-    당월전체 = trade(city, date, user_key, rows)
-    return 당월전체
-@st.experimental_singleton
-def api2(date):
-    당월전체 = rent(city, date, user_key, rows)
-    return 당월전체
 
 def get_chart_1(data):
     hover = alt.selection_single(
@@ -207,12 +199,12 @@ try:
     # 당월 = datetime.datetime(year=int(date[:3 + 1]),month=int(date[4:5 + 1]),day=datetime.datetime.now().day))
     전월 = 당월 - datetime.timedelta(days=30)
     # 어제 = datetime.datetime.now() - datetime.timedelta(days=1)
-    갱신 = pd.concat([api(당월.strftime('%Y%m%d')),api(전월.strftime('%Y%m%d'))]).reset_index(drop=True)
+    갱신 = pd.concat([매매(city, 당월.strftime('%Y%m%d'), user_key, rows),매매(city, 전월.strftime('%Y%m%d'), user_key, rows),]).reset_index(drop=True)
     갱신['금액'] = 갱신['금액'].astype(int)
     갱신 = 갱신.reindex(columns=["아파트", "금액", "층", "면적", "건축", "계약", "동", "거래", "파기"])
    
     당월_매매_전체 = 갱신[갱신['계약'].str.contains(date_2)]
-    전월당월전세월세 = pd.concat([api2(당월.strftime('%Y%m%d')),api2(전월.strftime('%Y%m%d'))]).reset_index(drop=True)
+    전월당월전세월세 = pd.concat([임대(city, 당월.strftime('%Y%m%d'), user_key, rows),임대(city, 전월.strftime('%Y%m%d'), user_key, rows),]).reset_index(drop=True)
     당월_전세_전체 = 전월당월전세월세[(전월당월전세월세['계약'].str.contains(date_2)) & (전월당월전세월세['월세'] == '0')].drop(columns=['월세']).reset_index(drop=True)
     당월_월세_전체 = 전월당월전세월세[(전월당월전세월세['계약'].str.contains(date_2)) & (전월당월전세월세['월세'] != '0')].reset_index(drop=True)
     
