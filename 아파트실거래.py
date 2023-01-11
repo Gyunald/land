@@ -11,7 +11,7 @@ st.set_page_config(page_title="아파트 실거래",layout='wide')
 empty = st.empty()
 empty.write('아파트 실거래')
 empty.empty()
-
+@st.experimental_memo 
 def trade(city, date, user_key, rows):
     url = st.secrets.api_path
     url = url + "?&LAWD_CD=" + city
@@ -51,7 +51,7 @@ def trade(city, date, user_key, rows):
     aptTrade['동'] = aptTrade['동'].str.split().str[0]
     return aptTrade.sort_values(by=['계약'], ascending=False)
 
-
+@st.experimental_memo 
 def rent(city, date, user_key, rows):
     url = st.secrets.api_path_2
     url = url + "?&LAWD_CD=" + city
@@ -106,11 +106,11 @@ st_lottie(
     loop=True,
     quality='low',
     )
-@st.experimental_memo
+
 def api(date):
     당월전체 = trade(city, date, user_key, rows)
     return 당월전체
-@st.experimental_memo
+
 def api2(date):
     당월전체 = rent(city, date, user_key, rows)
     return 당월전체
