@@ -216,11 +216,11 @@ try:
 
             if len(아파트) == 1:
                 st.error('📈 시세 동향')
-                chart = 매매차트단일(당월전월매매아파트별)
+                chart = 차트(당월전월매매아파트별, y= '금액',color='아파트 )
                 st.altair_chart(chart,use_container_width=True)
             elif len(아파트) > 1 :
                 st.error('📈 시세 동향')
-                chart = 매매차트다중(당월전월매매아파트별)
+                chart = 차트(당월전월매매아파트별, y= '금액',color='아파트 )
                 st.altair_chart(chart,use_container_width=True)
 
         with tab2:
@@ -236,11 +236,11 @@ try:
 
             if len(아파트) == 1:
                 st.error('📈 시세 동향')
-                chart = 임대차트단일(전월당월전세전체)
+                chart = 차트(전월당월전세전체,y= '금액',color='아파트)
                 st.altair_chart(chart,use_container_width=True)
             elif len(아파트) > 1 :
                 st.error('📈 시세 동향')
-                chart = 임대차트다중(전월당월전세전체)
+                chart = 차트(전월당월전세전체, y= '금액',color='아파트)
                 st.altair_chart(chart,use_container_width=True)
         with tab3:
             아파트 = st.multiselect('🚀 아파트별',sorted([i for i in 당월_월세_전체["아파트"].drop_duplicates()]),max_selections=5)
