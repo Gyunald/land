@@ -89,7 +89,7 @@ def 임대(city, date, user_key, rows):
     replace_word = '파주','아파트','마을','신도시','단지','\(.+\)'
     for i in replace_word:
         aptTrade['아파트'] = aptTrade['아파트'].str.replace(i,'',regex=True)
-    aptTrade['보증금'] = aptTrade['보증금'].str.replace(',','')
+    aptTrade['보증금'] = aptTrade['보증금'].str.replace(',','').astype(int)
     aptTrade['종전보증금'] = aptTrade['종전보증금'].str.replace(',','')
     aptTrade['기간'] = aptTrade['기간'].str[6:]
     aptTrade['계약'] = pd.to_datetime(aptTrade['계약'],format = "%Y%m%d").dt.strftime('%y.%m.%d')
@@ -124,6 +124,7 @@ def 매매차트단일(data):
         nearest=True,
         on="mouseover",
         empty="none",
+        
     )
 
     lines = (
@@ -131,18 +132,19 @@ def 매매차트단일(data):
         .mark_line()
         .encode(
             x=alt.X("계약",title=None),
-            y=alt.Y("금액",title=None),
+            y=alt.Y("금액",title=None,scale=alt.Scale(zero=False)),
             color=alt.Color("면적",legend=alt.Legend(orient='bottom', direction='vertical')),
         )
     )
     points = lines.transform_filter(hover).mark_circle(size=100) #65
     tooltips = (
         alt.Chart(data)
-        .mark_point()
+        .mark_circle(size=50,color='random')
         .encode(
             x=alt.X("계약",title=None),
             y=alt.Y("금액",title=None),
-            opacity=alt.condition(hover, alt.value(0.1), alt.value(.7)),
+            opacity=alt.condition(hover, alt.value(0.1), alt.value(.5)),
+            color= alt.Color('면적'),
             tooltip=[
                 alt.Tooltip("면적", title="면적"),
                 alt.Tooltip("금액", title="금액"),
@@ -166,7 +168,7 @@ def 매매차트다중(data):
         .mark_line()
         .encode(
             x=alt.X("계약",title=None),
-            y=alt.Y("금액",title=None),
+            y=alt.Y("금액",title=None, scale=alt.Scale(zero=False)),
             color=alt.Color("아파트",legend=alt.Legend(orient='bottom', direction='vertical')),
         )
     )
@@ -177,7 +179,8 @@ def 매매차트다중(data):
         .encode(
             x=alt.X("계약",title=None),
             y=alt.Y("금액",title=None),
-            opacity=alt.condition(hover, alt.value(0.1), alt.value(0.2)),
+            opacity=alt.condition(hover, alt.value(0.1), alt.value(.5)),
+            color= alt.Color('아파트'),
             tooltip=[
                 alt.Tooltip("면적", title="면적"),
                 alt.Tooltip("금액", title="금액"),
@@ -198,21 +201,22 @@ def 임대차트단일(data):
 
     lines = (
         alt.Chart(data)
-        .mark_line()
+        .mark_line(size=2)
         .encode(
             x=alt.X("계약",title=None),
-            y=alt.Y("보증금",title=None),
+            y=alt.Y("보증금",title=None,scale=alt.Scale(zero=False)),
             color=alt.Color("면적",legend=alt.Legend(orient='bottom', direction='vertical')),
         )
     )
     points = lines.transform_filter(hover).mark_circle(size=100) #65
     tooltips = (
         alt.Chart(data)
-        .mark_point()
+        .mark_circle()
         .encode(
             x=alt.X("계약",title=None),
             y=alt.Y("보증금",title=None),
-            opacity=alt.condition(hover, alt.value(0.1), alt.value(.7)),
+            opacity=alt.condition(hover, alt.value(0.1), alt.value(.5)),
+            color= alt.Color('면적'),
             tooltip=[
                 alt.Tooltip("면적", title="면적"),
                 alt.Tooltip("보증금", title="보증금"),
@@ -233,21 +237,22 @@ def 임대차트다중(data):
 
     lines = (
         alt.Chart(data)
-        .mark_point()
+        .mark_line(size=2)
         .encode(
             x=alt.X("계약",title=None),
-            y=alt.Y("보증금",title=None),
+            y=alt.Y("보증금",title=None, scale=alt.Scale(zero=False)),
             color=alt.Color("아파트",legend=alt.Legend(orient='bottom', direction='vertical')),
         )
     )
-    points = lines.transform_filter(hover).mark_circle(size=100) #65
+    points = lines.transform_filter(hover).mark_circle(size=100) 
     tooltips = (
         alt.Chart(data)
-        .mark_point()
+        .mark_circle()
         .encode(
             x=alt.X("계약",title=None),
             y=alt.Y("보증금",title=None),
-            opacity=alt.condition(hover, alt.value(0.1), alt.value(0.2)),
+            opacity=alt.condition(hover, alt.value(0.1), alt.value(.5)),
+            color= alt.Color('아파트'),
             tooltip=[
                 alt.Tooltip("면적", title="면적"),
                 alt.Tooltip("보증금", title="보증금"),
