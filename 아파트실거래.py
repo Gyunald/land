@@ -118,44 +118,7 @@ lottie_json2 = load_lottie(lottie_url2)
 #     quality='low',
 #     )
 
-def 매매차트단일(data):
-    hover = alt.selection_single(
-        fields=["금액"],
-        nearest=True,
-        on="mouseover",
-        empty="none",
-        
-    )
-
-    lines = (
-        alt.Chart(data)
-        .mark_line()
-        .encode(
-            x=alt.X("계약",title=None),
-            y=alt.Y("금액",title=None,scale=alt.Scale(zero=False)),
-            color=alt.Color("면적",legend=alt.Legend(orient='bottom', direction='vertical')),
-        )
-    )
-    points = lines.transform_filter(hover).mark_circle(size=100) #65
-    tooltips = (
-        alt.Chart(data)
-        .mark_circle(size=50,color='random')
-        .encode(
-            x=alt.X("계약",title=None),
-            y=alt.Y("금액",title=None),
-            opacity=alt.condition(hover, alt.value(0.1), alt.value(.5)),
-            color= alt.Color('면적'),
-            tooltip=[
-                alt.Tooltip("면적", title="면적"),
-                alt.Tooltip("금액", title="금액"),
-                alt.Tooltip("아파트", title="아파트"),
-            ],
-        )
-        .add_selection(hover)
-    )
-    return (lines + points + tooltips).interactive()
-
-def 매매차트다중(data):
+def 차트(data,y,color):
     hover = alt.selection_single(
         fields=["금액"],
         nearest=True,
@@ -168,95 +131,23 @@ def 매매차트다중(data):
         .mark_line()
         .encode(
             x=alt.X("계약",title=None),
-            y=alt.Y("금액",title=None, scale=alt.Scale(zero=False)),
-            color=alt.Color("아파트",legend=alt.Legend(orient='bottom', direction='vertical')),
+            y=alt.Y(y,title=None,scale=alt.Scale(zero=True)),
+            color=alt.Color(color,legend=alt.Legend(orient='bottom', direction='vertical')),
         )
     )
-    points = lines.transform_filter(hover).mark_circle(size=100) #65
-    tooltips = (
-        alt.Chart(data)
-        .mark_point()
-        .encode(
-            x=alt.X("계약",title=None),
-            y=alt.Y("금액",title=None),
-            opacity=alt.condition(hover, alt.value(0.1), alt.value(.5)),
-            color= alt.Color('아파트'),
-            tooltip=[
-                alt.Tooltip("면적", title="면적"),
-                alt.Tooltip("금액", title="금액"),
-                alt.Tooltip("아파트", title="아파트"),
-            ],
-        )
-        .add_selection(hover)
-    )
-    return (lines + points + tooltips).interactive()
-
-def 임대차트단일(data):
-    hover = alt.selection_single(
-        fields=["보증금"],
-        nearest=True,
-        on="mouseover",
-        empty="none",
-    )
-
-    lines = (
-        alt.Chart(data)
-        .mark_line(size=2)
-        .encode(
-            x=alt.X("계약",title=None),
-            y=alt.Y("보증금",title=None,scale=alt.Scale(zero=False)),
-            color=alt.Color("면적",legend=alt.Legend(orient='bottom', direction='vertical')),
-        )
-    )
-    points = lines.transform_filter(hover).mark_circle(size=100) #65
+    points = lines.transform_filter(hover).mark_circle(size=150) #65
     tooltips = (
         alt.Chart(data)
         .mark_circle()
         .encode(
             x=alt.X("계약",title=None),
-            y=alt.Y("보증금",title=None),
+            y=alt.Y(y,title=None),
             opacity=alt.condition(hover, alt.value(0.1), alt.value(.5)),
-            color= alt.Color('면적'),
+            color= alt.Color(color),
             tooltip=[
+                alt.Tooltip(color, title=color),
+                alt.Tooltip(y, title=y),
                 alt.Tooltip("면적", title="면적"),
-                alt.Tooltip("보증금", title="보증금"),
-                alt.Tooltip("아파트", title="아파트"),
-            ],
-        )
-        .add_selection(hover)
-    )
-    return (lines + points + tooltips).interactive()
-
-def 임대차트다중(data):
-    hover = alt.selection_single(
-        fields=["보증금"],
-        nearest=True,
-        on="mouseover",
-        empty="none",
-    )
-
-    lines = (
-        alt.Chart(data)
-        .mark_line(size=2)
-        .encode(
-            x=alt.X("계약",title=None),
-            y=alt.Y("보증금",title=None, scale=alt.Scale(zero=False)),
-            color=alt.Color("아파트",legend=alt.Legend(orient='bottom', direction='vertical')),
-        )
-    )
-    points = lines.transform_filter(hover).mark_circle(size=100) 
-    tooltips = (
-        alt.Chart(data)
-        .mark_circle()
-        .encode(
-            x=alt.X("계약",title=None),
-            y=alt.Y("보증금",title=None),
-            opacity=alt.condition(hover, alt.value(0.1), alt.value(.5)),
-            color= alt.Color('아파트'),
-            tooltip=[
-                alt.Tooltip("면적", title="면적"),
-                alt.Tooltip("보증금", title="보증금"),
-                alt.Tooltip("아파트", title="아파트"),
             ],
         )
         .add_selection(hover)
