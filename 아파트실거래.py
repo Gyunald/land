@@ -160,6 +160,13 @@ file_1 = pd.read_csv(st.secrets.user_path,encoding='cp949')
 user_key = st.secrets.user_key
 rows = '9999'
 
+st_lottie(
+    lottie_json2,
+    speed=2,
+    # # reverse='Ture',
+    loop=True,
+    quality='low',
+    )
 c1,c2 = st.columns([1,1])
 
 with st_lottie_spinner(lottie_json):
@@ -188,13 +195,6 @@ with st_lottie_spinner(lottie_json):
     당월_전세_전체 = 전월당월전세월세[(전월당월전세월세['계약'].str.contains(date[4:])) & (전월당월전세월세['월세'] == '0')].drop(columns=['월세']).reset_index(drop=True)
     당월_월세_전체 = 전월당월전세월세[(전월당월전세월세['계약'].str.contains(date[4:])) & (전월당월전세월세['월세'] != '0')].reset_index(drop=True)
 
-st_lottie(
-    lottie_json2,
-    speed=2,
-    # # reverse='Ture',
-    loop=True,
-    quality='low',
-    )
 #     고정 = pd.read_csv(st.secrets.fixed_data, encoding='cp949').drop(columns=['Unnamed: 0'])    
 #     고정['면적'] = 고정['면적'].map('{:.2f}'.format)
 #     고정['계약'] = 고정['계약'].map('{:.2f}'.format)
