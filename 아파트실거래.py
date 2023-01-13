@@ -92,16 +92,16 @@ def 임대(city, date, user_key, rows):
     return aptTrade.sort_values(by=['아파트'], ascending=True)
 
 
-@st.experimental_memo    
+@st.experimental_memo
 def load_lottie(url:str):
     r = requests.get(url)
-
     if r.status_code != 200:
         return None
     return r.json()
 lottie_url = 'https://assets1.lottiefiles.com/packages/lf20_yJ8wNO.json'
 lottie_json = load_lottie(lottie_url)
-
+lottie_url2 = 'https://assets9.lottiefiles.com/packages/lf20_2v2beqrh.json'
+lottie_json2 = load_lottie(lottie_url2)
 # st_lottie(
 #     lottie_json,
 #     speed=2,
