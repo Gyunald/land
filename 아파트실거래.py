@@ -126,7 +126,7 @@ def 차트(data,y,t):
         .mark_line()
         .encode(
             x=alt.X("계약", title=None),
-            y=alt.Y(y, title=None),
+            y=alt.Y(y, scale=alt.Scale(zero=true), title=None),
             color=alt.Color('아파트',legend=alt.Legend(orient='bottom', direction='vertical')),
             tooltip=[
                 alt.Tooltip('면적', title='면적'),
@@ -142,7 +142,7 @@ def 차트(data,y,t):
         .mark_circle(size=100)
         .encode(
             x=alt.X("계약", title=None),
-            y=alt.Y(y, title=None),
+            y=alt.Y(y, scale=alt.Scale(zero=true),title=None),
             opacity=alt.condition(hover, alt.value(0.1), alt.value(.1)),
             color=alt.Color('아파트',legend=alt.Legend(orient='bottom', direction='vertical')),
             tooltip=[
