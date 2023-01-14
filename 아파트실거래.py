@@ -1,7 +1,6 @@
 import streamlit as st
 from bs4 import BeautifulSoup
 import pandas as pd
-import urllib.request as req
 import datetime
 import requests
 from streamlit_lottie import st_lottie,st_lottie_spinner
@@ -23,8 +22,8 @@ def 매매(city, date, user_key, rows):
     url = url + "&serviceKey=" + user_key
     url = url + "&numOfRows=" + rows
     
-    xml = req.urlopen(url)
-    result = xml.read()
+    xml = requests.get(url)
+    result = xml.text
     soup = BeautifulSoup(result, 'lxml-xml')    
     
     items = soup.findAll("item")
@@ -62,8 +61,8 @@ def 임대(city, date, user_key, rows):
     url = url + "&serviceKey=" + user_key
     url = url + "&numOfRows=" + rows
     
-    xml = req.urlopen(url)
-    result = xml.read()
+    xml = requests.get(url)
+    result = xml.text
     soup = BeautifulSoup(result, 'lxml-xml')    
     
     items = soup.findAll("item")
