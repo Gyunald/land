@@ -12,6 +12,8 @@ empty = st.empty()
 empty.write('아파트 실거래')
 empty.empty()
 
+st.experimental_singleton.clear()
+
 @st.experimental_singleton
 #@st.experimental_memo   
 def 매매(city, date, user_key, rows):
