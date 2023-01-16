@@ -13,7 +13,7 @@ empty.empty()
 
 # st.experimental_singleton.clear()
 
-@st.experimental_singleton
+@st.experimental_singleton(ttl=600)
 #@st.experimental_memo   
 def 매매(city, date, user_key, rows):
     url = st.secrets.api_path
@@ -52,7 +52,7 @@ def 매매(city, date, user_key, rows):
     aptTrade['동'] = aptTrade['동'].str.split().str[0]
     return aptTrade.sort_values(by=['아파트'], ascending=True)
 
-@st.experimental_singleton
+@st.experimental_singleton(ttl=600)
 #@st.experimental_memo   
 def 임대(city, date, user_key, rows):
     url = st.secrets.api_path_2
