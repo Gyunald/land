@@ -184,16 +184,12 @@ with st_lottie_spinner(lottie_json):
 
     전월 = 당월 - datetime.timedelta(days=30)
     # 어제 = datetime.datetime.now() - datetime.timedelta(days=1)
-    갱신 = pd.concat([매매(city, date, user_key, rows),매매(city, 전월.strftime('%Y%m'), user_key, rows),]).reset_index(drop=True).drop_duplicates()
+    갱신 = pd.concat([매매(city, date, user_key, rows),매매(city, 전월.strftime('%Y%m'), user_key, rows),]).drop_duplicates()
 
-
-    당월_매매_전체 = 갱신[갱신['계약'].str.contains(date[4:])]
     #전월당월전세월세 = pd.concat([임대(city, date, user_key, rows),임대(city, 전월.strftime('%Y%m'), user_key, rows),]).reset_index(drop=True).drop_duplicates()
-    전월당월전세월세 = 임대(city, date, user_key, rows).drop_duplicates()
-    
-    당월_전세_전체 = 전월당월전세월세[(전월당월전세월세['계약'].str.contains(date[4:])) & (전월당월전세월세['월세'] == '0')].drop(columns=['월세']).reset_index(drop=True)
-    당월_월세_전체 = 전월당월전세월세[(전월당월전세월세['계약'].str.contains(date[4:])) & (전월당월전세월세['월세'] != '0')].reset_index(drop=True)
-
+    전월당월전세월세 = 임대(city, date, user_key, rows)
+    당월_전세_전체 = 전월당월전세월세[(전월당월전세월세['계약'].str.contains(date[4:])) & (전월당월전세월세['월세'] == '0')]
+    당월_월세_전체 = 전월당월전세월세[(전월당월전세월세['계약'].str.contains(date[4:])) & (전월당월전세월세['월세'] != '0')]
 #     고정 = pd.read_csv(st.secrets.fixed_data, encoding='cp949').drop(columns=['Unnamed: 0'])    
 #     고정['면적'] = 고정['면적'].map('{:.2f}'.format)
 #     고정['계약'] = 고정['계약'].map('{:.2f}'.format)
