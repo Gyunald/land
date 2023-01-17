@@ -14,9 +14,8 @@ empty.empty()
 # st.experimental_singleton.clear()
 
 @st.experimental_singleton(ttl=600)
-#@st.experimental_memo   
 def 매매(city, date, user_key, rows):
-    url = st.secrets.api_path
+    url = 'http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptTradeDev'
     url = url + "?&LAWD_CD=" + city
     url = url + "&DEAL_YMD=" + date[:6]
     url = url + "&serviceKey=" + user_key
@@ -24,12 +23,11 @@ def 매매(city, date, user_key, rows):
     
     xml = requests.get(url)
     result = xml.text
-    soup = BeautifulSoup(result, 'lxml-xml')    
-    
+    soup = BeautifulSoup(result, 'lxml-xml')
     items = soup.findAll("item")
     aptTrade = pd.DataFrame()
     for item in items:
-        계약            =   item.find("월").text.zfill(2)+'-'+item.find("일").text.zfill(2)
+        계약            =   item.find("년").text + item.find("월").text.zfill(2) + item.find("일").text.zfill(2)
         동                  = item.find("법정동").text
         면적            = float(item.find("전용면적").text)
         아파트              = item.find("아파트").text
@@ -47,15 +45,14 @@ def 매매(city, date, user_key, rows):
         aptTrade['거래'] = aptTrade['거래'].str.replace(i,'',regex=True)
     aptTrade['금액'] = aptTrade['금액'].str.replace(',','').astype(int)
     aptTrade['파기'] = aptTrade['파기'].str.replace('22.','',regex=True)
-    # aptTrade['계약'] = pd.to_datetime(aptTrade['계약'],format = "%Y%m%d").dt.strftime('%m.%d')
+    aptTrade['계약'] = pd.to_datetime(aptTrade['계약'],format = "%Y%m%d").dt.strftime('%y.%m.%d')
     aptTrade['면적'] = aptTrade['면적'].astype(float).map('{:.0f}'.format)
     aptTrade['동'] = aptTrade['동'].str.split().str[0]
     return aptTrade.sort_values(by=['아파트'], ascending=True)
 
 @st.experimental_singleton(ttl=600)
-#@st.experimental_memo   
 def 임대(city, date, user_key, rows):
-    url = st.secrets.api_path_2
+    url = 'http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptRent?'
     url = url + "?&LAWD_CD=" + city
     url = url + "&DEAL_YMD=" + date[:6]
     url = url + "&serviceKey=" + user_key
@@ -68,7 +65,7 @@ def 임대(city, date, user_key, rows):
     items = soup.findAll("item")
     aptTrade = pd.DataFrame()
     for item in items:
-        계약            = item.find("월").text.zfill(2)+'-'+item.find("일").text.zfill(2)
+        계약            = item.find("년").text+item.find("월").text.zfill(2)+item.find("일").text.zfill(2)
         동                  = item.find("법정동").text
         면적            = float(item.find("전용면적").text)
         아파트              = item.find("아파트").text
@@ -88,6 +85,7 @@ def 임대(city, date, user_key, rows):
         aptTrade['아파트'] = aptTrade['아파트'].str.replace(i,'',regex=True)
     aptTrade['보증금'] = aptTrade['보증금'].str.replace(',','').astype(int)
     aptTrade['종전보증금'] = aptTrade['종전보증금'].str.replace(',','')
+    aptTrade['계약'] = pd.to_datetime(aptTrade['계약'],format = "%Y%m%d").dt.strftime('%y.%m.%d')
     aptTrade['면적'] = aptTrade['면적'].map('{:.0f}'.format)
     aptTrade['동'] = aptTrade['동'].str.split().str[0]
     return aptTrade.sort_values(by=['아파트'], ascending=True)
@@ -221,11 +219,11 @@ try:
 
             if  아파트 :
                 st.error('📈 시세 동향')
-                chart = 차트(아파트별멀티,y='금액',t=아파트별멀티)
+                chart = 차트(당월전월매매아파트별,y='금액',t=당월전월매매아파트별)
                 st.altair_chart(chart,use_container_width=True)
 
         with tab2:
-            아파트 = st.multiselect('🚀 아파트별',sorted([i for i in 당월_전세_전체["아파트"].drop_duplicates()]),max_selections=5)
+            아파트 = st.multiselect('🚀 아파트별',sorted([i for i in 당월_전세_전체["아파트"].drop_duplicates()]),max_selections=3)
             st.warning('🚥 다중선택')
             전월당월전세전체 = 전월당월전세월세[(전월당월전세월세['아파트'].isin(아파트)) & (전월당월전세월세['월세'] == '0')].reset_index(drop=True)
             당월_전세_전체 = 당월_전세_전체.reindex(columns=["아파트", "보증금", "층", "면적", "건축", "동", "계약", "종전보증금", "갱신권"])
