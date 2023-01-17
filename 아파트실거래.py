@@ -170,7 +170,7 @@ c1,c2 = st.columns([1,1])
 
 with st_lottie_spinner(lottie_json):
     with c1 :
-        date = st.date_input('🍳 날짜',value= datetime.datetime.utcnow() + datetime.timedelta(hours=9)).strftime('%Y%m-')
+        date = st.date_input('🍳 날짜',value= datetime.datetime.utcnow() + datetime.timedelta(hours=9)).strftime('%Y%m.')
         date_2 = datetime.datetime(year=int(date[:3 + 1]),month=int(date[4:5 + 1]),day=datetime.datetime.now().day)
 
     with c2:
