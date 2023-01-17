@@ -128,7 +128,7 @@ def 차트(data,y,t):
             y=alt.Y(y, scale=alt.Scale(zero=False), title=None),
             color=alt.Color('아파트',legend=alt.Legend(orient='bottom', direction='vertical')),
             tooltip=[
-                alt.Tooltip('면적', title='면적'),
+                alt.Tooltip("층", title="층"),
                 alt.Tooltip(y, title=y),
                 alt.Tooltip("아파트", title="아파트"),
             ]
