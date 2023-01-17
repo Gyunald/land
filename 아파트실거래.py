@@ -199,7 +199,7 @@ with st_lottie_spinner(lottie_json):
 try:
     with st.expander(f'{시군구} 실거래 - {date[4:5+1]}월 🍩 전체',expanded=True):
         당월_매매_전체 = 갱신[갱신['계약'].str.contains(date[4:])]
-        아파트 = st.multiselect('🚀 아파트별',sorted([i for i in 당월_매매_전체["아파트"].drop_duplicates()]),max_selections=3)
+        아파트 = st.multiselect('🍉 아파트별',sorted([i for i in 당월_매매_전체["아파트"].drop_duplicates()]),max_selections=3)
         st.warning('🚥 다중선택가능')
         tab1, tab2, tab3 = st.tabs([f"매매 {len(당월_매매_전체)}", f"전세 {len(당월_전세_전체)}", f"월세 {len(당월_월세_전체)}"])
         with tab1 :
