@@ -10,7 +10,7 @@ from firebase_admin import credentials
 from firebase_admin import firestore
 
 def 매매(city, date, user_key, rows, dong):
-    url = 
+    url = "http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptTradeDev"
     url = url + "?&LAWD_CD=" + city
     url = url + "&DEAL_YMD=" + date[:6]
     url = url + "&serviceKey=" + user_key
@@ -55,8 +55,8 @@ app = firebase_admin.initialize_app(cred)
 
 db = firestore.client()
 
-file_1 = 
-user_key = 
+file_1 = pd.read_csv('https://raw.githubusercontent.com/Gyunald/land/main/address.csv',encoding='cp949')
+user_key = 'pRcMh3ZvTSWhUPu4VIMig%2BbD1mnLgAyaxyhB07a86H8XbgJ7ki8JYqk3a6Q6lM%2FN8zhvYZHQsLw0pmbjPBBE%2FA%3D%3D'
 rows = '9999'
 당월 = datetime.now().date()
 전월 = 당월 - timedelta(days=30)
@@ -72,11 +72,11 @@ for city,dong in zip(file_1['법정동코드'].astype(str).str[:5],file_1['법�
     전월합 = pd.concat([전월합,전월매매])
     당월전월합 = pd.concat([당월합,전월합])
 
-db = db.collection('kdongsan').document('부동산매매').set(
-    {
-        datetime.now().strftime('%Y.%m.%d') :
+    db = db.collection('kdongsan').document('부동산매매').set(
         {
-            '매매' : [i for i in 당월전월합.set_index('시군구').to_csv().split('\n')]
+            datetime.now().strftime('%Y.%m.%d') :
+            {
+                dong.split()[0] : [i for i in 당월전월합[당월전월합['시군구'].str.contains(dong)].set_index('시군구').to_csv().split('\n')]
+            }
         }
-    }
 )
