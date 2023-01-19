@@ -10,7 +10,7 @@ from firebase_admin import credentials
 from firebase_admin import firestore
 
 def 매매(city, date, user_key, rows, dong):
-    url = "http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptTradeDev"
+    url = 
     url = url + "?&LAWD_CD=" + city
     url = url + "&DEAL_YMD=" + date[:6]
     url = url + "&serviceKey=" + user_key
@@ -55,8 +55,8 @@ app = firebase_admin.initialize_app(cred)
 
 db = firestore.client()
 
-file_1 = pd.read_csv('https://raw.githubusercontent.com/Gyunald/land/main/address.csv',encoding='cp949')
-user_key = 'pRcMh3ZvTSWhUPu4VIMig%2BbD1mnLgAyaxyhB07a86H8XbgJ7ki8JYqk3a6Q6lM%2FN8zhvYZHQsLw0pmbjPBBE%2FA%3D%3D'
+file_1 = 
+user_key = 
 rows = '9999'
 당월 = datetime.now().date()
 전월 = 당월 - timedelta(days=30)
