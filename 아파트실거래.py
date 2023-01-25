@@ -31,7 +31,7 @@ def 매매(city, date, user_key, rows):
         동                  = item.find("법정동").text
         면적            = float(item.find("전용면적").text)
         아파트              = item.find("아파트").text
-        층                  = int(item.find("층").text)
+        층                  = int(item.find("층").text).astype('int32')
         금액            = item.find("거래금액").text
         건축            = int(item.find("건축년도").text)
         거래            = item.find("거래유형").text
@@ -43,7 +43,7 @@ def 매매(city, date, user_key, rows):
     for i in replace_word:
         aptTrade['아파트'] = aptTrade['아파트'].str.replace(i,'',regex=True)
         aptTrade['거래'] = aptTrade['거래'].str.replace(i,'',regex=True)
-    aptTrade['금액'] = aptTrade['금액'].str.replace(',','').astype(int)
+    aptTrade['금액'] = aptTrade['금액'].str.replace(',','').astype('int32')
     aptTrade['파기'] = aptTrade['파기'].str.replace('22.','',regex=True)
     aptTrade['계약'] = pd.to_datetime(aptTrade['계약'],format = "%Y%m%d").dt.strftime('%y.%m.%d')
     aptTrade['면적'] = aptTrade['면적'].astype(float).map('{:.0f}'.format)
