@@ -190,8 +190,8 @@ with st_lottie_spinner(lottie_json):
     # 어제 = datetime.datetime.now() - datetime.timedelta(days=1)
     갱신 = pd.concat([매매(city, date, user_key, rows),매매(city, 전월.strftime('%Y%m'), user_key, rows),]).drop_duplicates()
 
-    #전월당월전세월세 = pd.concat([임대(city, date, user_key, rows),임대(city, 전월.strftime('%Y%m'), user_key, rows),]).reset_index(drop=True).drop_duplicates()
-    전월당월전세월세 = 임대(city, date, user_key, rows)
+    전월당월전세월세 = pd.concat([임대(city, date, user_key, rows),임대(city, 전월.strftime('%Y%m'), user_key, rows),]).reset_index(drop=True).drop_duplicates()
+#     전월당월전세월세 = 임대(city, date, user_key, rows)
     당월_전세_전체 = 전월당월전세월세[(전월당월전세월세['계약'].str.contains(date[4:])) & (전월당월전세월세['월세'] == '0')].drop_duplicates()
     당월_월세_전체 = 전월당월전세월세[(전월당월전세월세['계약'].str.contains(date[4:])) & (전월당월전세월세['월세'] != '0')].drop_duplicates()
 #     고정 = pd.read_csv(st.secrets.fixed_data, encoding='cp949').drop(columns=['Unnamed: 0'])    
