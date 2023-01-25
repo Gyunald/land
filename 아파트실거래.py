@@ -74,7 +74,7 @@ def 임대(city, date, user_key, rows):
         건축            = int(item.find("건축년도").text)
         월세            = item.find("월세금액").text
         갱신권            = item.find("갱신요구권사용").text
-        종전보증금        = item.find("종전계약보증금").text.replace(' ','0').astype(int)
+        종전보증금        = item.find("종전계약보증금").text..str.replace(',','')replace(' ','0').astype(int)
         종전월세        = item.find("종전계약월세").text.replace(' ','0').astype(int) 
         temp = pd.DataFrame(([[아파트, 보증금, 층, 월세, 면적, 건축, 동, 계약, 종전보증금, 종전월세, 갱신권,]]), 
                             columns=["아파트", "보증금", "층", "월세", "면적", "건축","동", "계약", "종전보증금", "종전월세", "갱신권"])
@@ -84,7 +84,6 @@ def 임대(city, date, user_key, rows):
     for i in replace_word:
         aptTrade['아파트'] = aptTrade['아파트'].str.replace(i,'',regex=True)
     aptTrade['보증금'] = aptTrade['보증금'].str.replace(',','').astype(int)
-    aptTrade['종전보증금'] = aptTrade['종전보증금'].str.replace(',','')
     aptTrade['계약'] = pd.to_datetime(aptTrade['계약'],format = "%Y%m%d").dt.strftime('%y.%m.%d')
     aptTrade['면적'] = aptTrade['면적'].map('{:.0f}'.format)
     aptTrade['동'] = aptTrade['동'].str.split().str[0]
