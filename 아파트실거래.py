@@ -33,7 +33,7 @@ def 매매(city, date, user_key, rows):
         아파트              = item.find("아파트").text
         층                  = item.find("층").text
         금액            = item.find("거래금액").text
-        건축            = int(item.find("건축년도").text)
+        건축            = item.find("건축년도").text
         거래            = item.find("거래유형").text
         파기      = item.find("해제사유발생일").text
         temp = pd.DataFrame(([[아파트, 금액, 층,면적, 건축, 계약 ,동, 거래, 파기]]), 
@@ -49,6 +49,7 @@ def 매매(city, date, user_key, rows):
     aptTrade['면적'] = aptTrade['면적'].astype(float).map('{:.0f}'.format)
     aptTrade['동'] = aptTrade['동'].str.split().str[0]
     aptTrade['층'] = aptTrade['층'].astype('int32')
+    aptTrade['건축'] = aptTrade['건축'].astype('int32')
     return aptTrade.sort_values(by=['아파트'], ascending=True)
 
 @st.experimental_singleton(ttl=600)
