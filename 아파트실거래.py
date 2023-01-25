@@ -74,8 +74,8 @@ def 임대(city, date, user_key, rows):
         건축            = int(item.find("건축년도").text)
         월세            = item.find("월세금액").text
         갱신권            = item.find("갱신요구권사용").text
-        종전보증금        = item.find("종전계약보증금").text
-        종전월세        = item.find("종전계약월세").text 
+        종전보증금        = item.find("종전계약보증금").text.replace(' ','0').astype(int)
+        종전월세        = item.find("종전계약월세").text.replace(' ','0').astype(int) 
         temp = pd.DataFrame(([[아파트, 보증금, 층, 월세, 면적, 건축, 동, 계약, 종전보증금, 종전월세, 갱신권,]]), 
                             columns=["아파트", "보증금", "층", "월세", "면적", "건축","동", "계약", "종전보증금", "종전월세", "갱신권"])
         aptTrade = pd.concat([aptTrade,temp])
@@ -224,7 +224,7 @@ try:
             else:
                 당월_전세_전체 = 당월_전세_전체[당월_전세_전체["아파트"].isin(아파트)]
 
-            st.dataframe(당월_전세_전체.reset_index(drop=True).style.background_gradient(subset=['보증금','면적'], cmap="Reds"),use_container_width=True)
+            st.dataframe(당월_전세_전체.reset_index(drop=True).style.background_gradient(subset=['보증금','면적','종전보증금'], cmap="Reds"),use_container_width=True)
 
             if 아파트 :
                 st.error('📈 시세 동향')
@@ -236,7 +236,7 @@ try:
                 당월_월세_전체 = 당월_월세_전체
             else:
                 당월_월세_전체 = 당월_월세_전체[당월_월세_전체["아파트"].isin(아파트)]
-            st.dataframe(당월_월세_전체.reset_index(drop=True).style.background_gradient(subset=['보증금','월세'], cmap="Reds"),use_container_width=True)
+            st.dataframe(당월_월세_전체.reset_index(drop=True).style.background_gradient(subset=['보증금','월세','종전보증금','종전월세'], cmap="Reds"),use_container_width=True)
 
 except Exception as e:
     st.write(e)
