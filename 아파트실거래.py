@@ -74,7 +74,7 @@ def 임대(city, date, user_key, rows):
         건축            = int(item.find("건축년도").text)
         월세            = item.find("월세금액").text
         갱신권            = item.find("갱신요구권사용").text
-        종전보증금        = item.find("종전계약보증금").text..str.replace(',','')replace(' ','0').astype(int)
+        종전보증금        = item.find("종전계약보증금").text.str.replace(',','')replace(' ','0').astype(int)
         종전월세        = item.find("종전계약월세").text.replace(' ','0').astype(int) 
         temp = pd.DataFrame(([[아파트, 보증금, 층, 월세, 면적, 건축, 동, 계약, 종전보증금, 종전월세, 갱신권,]]), 
                             columns=["아파트", "보증금", "층", "월세", "면적", "건축","동", "계약", "종전보증금", "종전월세", "갱신권"])
