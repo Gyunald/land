@@ -31,7 +31,7 @@ def 매매(city, date, user_key, rows):
         동                  = item.find("법정동").text
         면적            = float(item.find("전용면적").text)
         아파트              = item.find("아파트").text
-        층                  = int(item.find("층").text).astype('int32')
+        층                  = item.find("층").text.astype('int32')
         금액            = item.find("거래금액").text
         건축            = int(item.find("건축년도").text)
         거래            = item.find("거래유형").text
