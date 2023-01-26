@@ -13,7 +13,7 @@ empty.empty()
 
 # st.experimental_singleton.clear()
 
-@st.experimental_singleton(ttl=600)
+@st.experimental_singleton(ttl=6000)
 def 매매(city, date, user_key, rows):
     url = 'http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptTradeDev'
     url = url + "?&LAWD_CD=" + city
@@ -51,7 +51,7 @@ def 매매(city, date, user_key, rows):
     aptTrade['건축'] = aptTrade['건축'].astype(int)
     return aptTrade.sort_values(by=['아파트'], ascending=True)
 
-@st.experimental_singleton(ttl=600)
+@st.experimental_singleton(ttl=6000)
 def 임대(city, date, user_key, rows):
     url = 'http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptRent?'
     url = url + "?&LAWD_CD=" + city
