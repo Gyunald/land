@@ -32,7 +32,7 @@ def 매매(city, date, user_key, rows):
         면적            = float(item.find("전용면적").text)
         아파트              = item.find("아파트").text
         층                  = item.find("층").text
-        금액            = item.find("거래금액").text
+        금액            = item.find("거래금액").text.strip()
         건축            = item.find("건축년도").text
         거래            = item.find("거래유형").text
         파기      = item.find("해제사유발생일").text
@@ -43,12 +43,12 @@ def 매매(city, date, user_key, rows):
     for i in replace_word:
         aptTrade['아파트'] = aptTrade['아파트'].str.replace(i,'',regex=True)
         aptTrade['거래'] = aptTrade['거래'].str.replace(i,'',regex=True)
-    aptTrade['금액'] = aptTrade['금액'].str.replace(',','').astype('int32')
+    aptTrade['금액'] = aptTrade['금액'].str.replace(',','').astype(int)
     aptTrade['계약'] = pd.to_datetime(aptTrade['계약'],format = "%Y%m%d").dt.strftime('%y.%m.%d')
-    aptTrade['면적'] = aptTrade['면적'].astype(float).map('{:.0f}'.format)
+    aptTrade['면적'] = aptTrade['면적'].astype(float).map('{:.0f}'.format).astype(int)
     aptTrade['동'] = aptTrade['동'].str.split().str[0]
-    aptTrade['층'] = aptTrade['층'].astype('int32')
-    aptTrade['건축'] = aptTrade['건축'].astype('int32')
+    aptTrade['층'] = aptTrade['층'].astype(int)
+    aptTrade['건축'] = aptTrade['건축'].astype(int)
     return aptTrade.sort_values(by=['아파트'], ascending=True)
 
 @st.experimental_singleton(ttl=600)
@@ -87,11 +87,11 @@ def 임대(city, date, user_key, rows):
     aptTrade['보증금'] = aptTrade['보증금'].str.replace(',','').astype('int32')
     aptTrade['계약'] = pd.to_datetime(aptTrade['계약'],format = "%Y%m%d").dt.strftime('%y.%m.%d')
     aptTrade['종전보증금'] = aptTrade['종전보증금'].str.replace(',','',regex=True).replace(' ','0',regex=True).astype('int32')
-    aptTrade['종전월세'] = aptTrade['종전월세'].replace(' ','0',regex=True).astype('int32')
-    aptTrade['면적'] = aptTrade['면적'].map('{:.0f}'.format)
+    aptTrade['종전월세'] = aptTrade['종전월세'].replace(' ','0',regex=True).astype(int)
+    aptTrade['면적'] = aptTrade['면적'].map('{:.0f}'.format).astype(int)
     aptTrade['동'] = aptTrade['동'].str.split().str[0]
-    aptTrade['층'] = aptTrade['층'].astype('int32')
-    aptTrade['건축'] = aptTrade['건축'].astype('int32')
+    aptTrade['층'] = aptTrade['층'].astype(int)
+    aptTrade['건축'] = aptTrade['건축'].astype(int)
     return aptTrade.sort_values(by=['아파트'], ascending=True)
 
 
