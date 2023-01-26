@@ -73,7 +73,7 @@ def 임대(city, date, user_key, rows):
         층                  = int(item.find("층").text)
         보증금            = item.find("보증금액").text
         건축            = int(item.find("건축년도").text)
-        월세            = int(item.find("월세금액").text)
+        월세            = int(item.find("월세금액").text.replace(',','').replace(' ','0'))
         갱신권            = item.find("갱신요구권사용").text
         종전보증금        = item.find("종전계약보증금").text
         종전월세        = item.find("종전계약월세").text
