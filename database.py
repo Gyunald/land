@@ -58,8 +58,8 @@ def 실거래(url, city, date, user_key, rows, dong):
         aptTrade['동'] = aptTrade['동'].str.split().str[0]
     return aptTrade
 
-cred = credentials.Certificate('kdongsan-8cc40-firebase-adminsdk-vr6ws-d96491c757.json')
-app = firebase_admin.initialize_app(cred)
+# cred = credentials.Certificate('kdongsan-8cc40-firebase-adminsdk-vr6ws-d96491c757.json')
+# app = firebase_admin.initialize_app(cred)
 db = firestore.client()
 
 urls= {'매매' : 'http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptTradeDev','임대' : 'http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptRent?'}
@@ -71,22 +71,22 @@ rows = '9999'
 당월 = datetime.now().date()
 전월 = 당월 - timedelta(days=30)
 
-# c = 0
-# for i,j in urls.items():
-#     당월합= pd.DataFrame()
-#     전월합= pd.DataFrame()
-#     start = datetime.now()
-#     for city,dong in zip(file_1['법정동코드'].astype(str).str[:5],file_1['법정동명']):
-#         합_당월매매 = {}
-#         print(f"{c:.1f}% {dong} complete...")
-#         당월매매 = 실거래(j, city, 당월.strftime('%Y%m'), user_key, rows, dong)
-#         전월매매 = 실거래(j, city, 전월.strftime('%Y%m'), user_key, rows, dong)
-#         당월합 = pd.concat([당월합,당월매매])
-#         전월합 = pd.concat([전월합,전월매매])
-#         당월전월합 = pd.concat([당월합,전월합]).reset_index(drop=True)
-#         합_당월매매[dong] = 당월전월합[당월전월합['시군구'].str.contains(dong)].set_index('시군구').to_csv().strip().split('\n')
-#         db.collection(f"{i} {당월.strftime('%y.%m')}").document(dong).set(합_당월매매)
-#         c += (50/len(file_1['법정동코드']))
-# end = datetime.now()
-# print(f"100% complete! >>> {end-start} seconds")
+c = 0
+for i,j in urls.items():
+    당월합= pd.DataFrame()
+    전월합= pd.DataFrame()
+    start = datetime.now()
+    for city,dong in zip(file_1['법정동코드'].astype(str).str[:5],file_1['법정동명']):
+        합_당월매매 = {}
+        print(f"{c:.1f}% {dong} complete...")
+        당월매매 = 실거래(j, city, 당월.strftime('%Y%m'), user_key, rows, dong)
+        전월매매 = 실거래(j, city, 전월.strftime('%Y%m'), user_key, rows, dong)
+        당월합 = pd.concat([당월합,당월매매])
+        전월합 = pd.concat([전월합,전월매매])
+        당월전월합 = pd.concat([당월합,전월합]).reset_index(drop=True)
+        합_당월매매[dong] = 당월전월합[당월전월합['시군구'].str.contains(dong)].set_index('시군구').to_csv().strip().split('\n')
+        db.collection(f"{i} {당월.strftime('%y.%m.%d')}").document(dong).set(합_당월매매)
+        c += (50/len(file_1['법정동코드']))
+end = datetime.now()
+print(f"100% complete! >>> {end-start} seconds")
 
