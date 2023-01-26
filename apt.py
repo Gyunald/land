@@ -9,62 +9,8 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 
-st.set_page_config(page_title="🎈아파트 실거래가 실거래/전세/월세 ",layout='wide')
 
 urls= ['http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptTradeDev','http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptRent?']
-
-# @st.experimental_singleton(ttl=600)
-# def 실거래(url, city, date, user_key, rows):
-#     url = url + "?&LAWD_CD=" + city
-#     url = url + "&DEAL_YMD=" + date[:6]
-#     url = url + "&serviceKey=" + user_key
-#     url = url + "&numOfRows=" + rows
-
-#     xml = requests.get(url)
-#     result = xml.text
-#     soup = BeautifulSoup(result, 'lxml-xml')
-#     items = soup.findAll("item")
-#     aptTrade = pd.DataFrame()
-    
-#     for item in items:                
-#         계약            =   item.find("년").text + item.find("월").text.zfill(2) + item.find("일").text.zfill(2)
-#         동                  = item.find("법정동").text
-#         면적            = float(item.find("전용면적").text)
-#         아파트              = item.find("아파트").text
-#         층                  = int(item.find("층").text)
-#         건축            = int(item.find("건축년도").text)
-        
-#         if 'getRTMSDataSvcAptRent' in url:
-#             보증금            = item.find("보증금액").text
-#             월세            = item.find("월세금액").text
-#             갱신권            = item.find("갱신요구권사용").text
-#             종전보증금        = item.find("종전계약보증금").text
-#             종전월세        = item.find("종전계약월세").text
-#             temp = pd.DataFrame(([[아파트, 보증금, 층, 월세, 면적, 건축, 동, 계약, 종전보증금, 종전월세, 갱신권,]]), 
-#                         columns=["아파트", "보증금", "층", "월세", "면적", "건축","동", "계약", "종전보증금", "종전월세", "갱신권"])
-#         else:
-#             거래            = item.find("거래유형").text
-#             금액            = item.find("거래금액").text
-#             파기      = item.find("해제사유발생일").text        
-#             temp = pd.DataFrame(([[아파트, 금액, 층,면적, 건축, 계약 ,동, 거래, 파기]]), 
-#                             columns=["아파트", "금액", "층", "면적", "건축", "계약", "동", "거래", "파기"])            
-#         aptTrade = pd.concat([aptTrade,temp])
-
-#     replace_word = '아파트','마을','신도시',r'\(.+\)'
-#     for i in replace_word:
-#         aptTrade['아파트'] = aptTrade['아파트'].str.replace(i,'',regex=True)
-
-#     aptTrade['계약'] = pd.to_datetime(aptTrade['계약'],format = "%Y%m%d").dt.strftime('%y.%m.%d')
-#     aptTrade['면적'] = aptTrade['면적'].astype(float).map('{:.0f}'.format)
-#     aptTrade['동'] = aptTrade['동'].str.split().str[0]
-    
-#     if 'getRTMSDataSvcAptRent' in url:
-#         aptTrade['보증금'] = aptTrade['보증금'].str.replace(',','').astype(int)
-#         aptTrade['종전보증금'] = aptTrade['종전보증금'].str.replace(',','')
-#     else :                
-#         aptTrade['금액'] = aptTrade['금액'].str.replace(',','').astype(int)
-#         aptTrade['거래'] = aptTrade['거래'].str.replace(i,'',regex=True)
-#     return aptTrade.sort_values(by=['아파트'], ascending=True)
 
 @st.experimental_memo
 def load_lottie(url:str):
@@ -141,13 +87,12 @@ st_lottie(
     )
 # @st.experimental_singleton
 def 매매():
-    매매 = db.collection(f'매매 {date}').document(시군구).get()
+    매매 = db.collection(f'매매 {standard}').document(시군구).get()
     for doc in 매매.to_dict().values():
         temp = pd.DataFrame(
             [doc.split(',') for doc in doc[1:]],
             columns=["시군구", "아파트", "금액", "층", "면적", "건축", "계약", "동", "거래", "파기"])
         temp = temp[["아파트", "금액", "층", "면적", "건축", "계약", "동", "거래", "파기"]]
-        temp['면적'] = temp['면적'].astype(float).map('{:.0f}'.format).astype(int)
         temp['금액']= temp['금액'].astype(int)
         temp['층']= temp['층'].astype(int)
         temp['건축']= temp['건축'].astype(int)
@@ -155,39 +100,36 @@ def 매매():
 
 # @st.experimental_singleton
 def 임대():
-    임대 = db.collection(f'임대 {date}').document(시군구).get()
+    임대 = db.collection(f'임대 {standard}').document(시군구).get()
     for doc2 in 임대.to_dict().values():
         temp2 = pd.DataFrame(
             [doc.split(',') for doc in doc2[1:]],
             columns=["시군구", "아파트", "보증금", "층", "월세", "면적", "건축", "동", "계약", "종전보증금", "종전월세", "갱신권"])
         temp2 = temp2[["아파트", "보증금", "층", "월세", "면적", "건축", "동", "계약", "종전보증금", "종전월세", "갱신권"]]
-        temp2['면적'] = temp2['면적'].astype(float).map('{:.0f}'.format).astype(int)
         temp2['보증금']= temp2['보증금'].astype(int)
-        temp2['종전보증금'] = temp2['종전보증금'].replace(' ','0').astype(int)
-        temp2['종전월세'] = temp2['종전월세'].replace(' ','0').astype(int)
         temp2['층']= temp2['층'].astype(int)
+        temp2['월세']= temp2['월세'].astype(int)
         temp2['건축']= temp2['건축'].astype(int)
     return temp2
 
 c1,c2 = st.columns([1,1])
 try:
     with c1 :
-        date = st.date_input('🍳 날짜', (datetime.utcnow() + timedelta(hours=9))).strftime('%y.%m')
-        date2 = (datetime.utcnow() + timedelta(hours=9)).strftime('%y.%m.')
-        
+        standard = st.date_input('🍳 날짜', (datetime.utcnow() + timedelta(hours=9))).strftime('%y.%m.%d')
+        date = standard[:5]
     with c2:
         시군구 = st.selectbox('🍰 시군구 검색', sorted([i for i in set(file_1["법정동명"])]),index=228) # 93 강남 230 파주
         
     temp = 매매()
     temp2 = 임대()
         
-    전세_당월 = temp2[(temp2['계약'].str.contains(date2)) & (temp2['월세'] == '0')].drop_duplicates()
+    전세_당월 = temp2[(temp2['계약'].str.contains(date)) & (temp2['월세'] == 0)].drop_duplicates()
     전세_당월 = 전세_당월.reindex(columns=["아파트", "보증금", "층", "면적", "건축", "동", "계약", "종전보증금", "갱신권"])
     
-    월세_당월 = temp2[(temp2['계약'].str.contains(date2)) & (temp2['월세'] != '0')].drop_duplicates()
+    월세_당월 = temp2[(temp2['계약'].str.contains(date)) & (temp2['월세'] != 0)].drop_duplicates()
         
-    with st.expander(f'{시군구} 실거래 - {date2[3:5]}월 🍩 전체',expanded=True):
-        매매_당월 = temp[temp['계약'].str.contains(date2)].drop_duplicates()
+    with st.expander(f'{시군구} 실거래 - {date[3:5]}월 🍩 전체',expanded=True):
+        매매_당월 = temp[temp['계약'].str.contains(date)].drop_duplicates()
         st.warning('🚥 다중선택가능')
         tab1, tab2, tab3 = st.tabs([f"매매 {len(매매_당월)}", f"전세 {len(전세_당월)}", f"월세 {len(월세_당월)}"])
         
@@ -214,7 +156,7 @@ try:
         st.dataframe(전세_당월.sort_values(by=['아파트'], ascending=True).reset_index(drop=True).style.background_gradient(subset=['보증금','면적','종전보증금'], cmap="Reds"),use_container_width=True)
 
         if 아파트 :
-            전세_전월당월_전체 = temp2[(temp2['아파트'].isin(아파트)) & (temp2['월세'] == '0')]
+            전세_전월당월_전체 = temp2[(temp2['아파트'].isin(아파트)) & (temp2['월세'] == 0)]
             st.error('📈 시세 동향')
             chart = 차트(전세_전월당월_전체,y='보증금',t=전세_전월당월_전체)
             st.altair_chart(chart,use_container_width=True)
