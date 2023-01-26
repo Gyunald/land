@@ -84,9 +84,9 @@ def 임대(city, date, user_key, rows):
     replace_word = '파주','아파트','마을','신도시','단지','\(.+\)'
     for i in replace_word:
         aptTrade['아파트'] = aptTrade['아파트'].str.replace(i,'',regex=True)
-    aptTrade['보증금'] = aptTrade['보증금'].str.replace(',','').astype('int32')
+    aptTrade['보증금'] = aptTrade['보증금'].str.replace(',','').astype(int)
     aptTrade['계약'] = pd.to_datetime(aptTrade['계약'],format = "%Y%m%d").dt.strftime('%y.%m.%d')
-    aptTrade['종전보증금'] = aptTrade['종전보증금'].str.replace(',','',regex=True).replace(' ','0',regex=True).astype('int32')
+    aptTrade['종전보증금'] = aptTrade['종전보증금'].str.replace(',','',regex=True).replace(' ','0',regex=True).astype(int)
     aptTrade['종전월세'] = aptTrade['종전월세'].replace(' ','0',regex=True).astype(int)
     aptTrade['면적'] = aptTrade['면적'].map('{:.0f}'.format).astype(int)
     aptTrade['동'] = aptTrade['동'].str.split().str[0]
