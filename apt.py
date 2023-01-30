@@ -63,30 +63,28 @@ def 차트(data,y,t):
 
 # @st.experimental_singleton(ttl=6000)
 def 매매():
-    매매 = db.collection(f'{standard.day}_trade_{standard_str[:-3]}').document(시군구).get()
+    매매 = db.collection(f"{standard.day}_trade_{standard_str[:-3]}").document(시군구).get()
     for doc in 매매.to_dict().values():
         temp = pd.DataFrame(
             [doc.split(',') for doc in doc[1:]],
             columns=["시군구", "아파트", "금액", "층", "면적", "건축", "계약", "동", "거래", "파기"])
         temp = temp[["아파트", "금액", "층", "면적", "건축", "계약", "동", "거래", "파기"]]
-        temp['금액']= temp['금액'].astype('int64')
-        temp['면적']= temp['면적'].astype('int64')
-        temp['층']= temp['층'].astype('int64')
-        temp['건축']= temp['건축'].astype('int64')
+        temp['금액']= temp['금액'].astype(int)
+        temp['층']= temp['층'].astype(int)
+        temp['건축']= temp['건축'].astype(int)
     return temp.sort_values(by=['아파트'], ascending=True)
 
 # @st.experimental_singleton(ttl=6000)
 def 매매_전일():    
-    매매_전일 = db.collection(f'매매 {standard_previous}').document(시군구).get()
+    매매_전일 = db.collection(f"{standard_previous.strftime('%d')}_trade_{standard_previous[:-3]}").document(시군구).get()
     for doc2 in 매매_전일.to_dict().values():
         temp3 = pd.DataFrame(
             [doc2.split(',') for doc2 in doc2[1:]],
             columns=["시군구", "아파트", "금액", "층", "면적", "건축", "계약", "동", "거래", "파기"])
         temp3 = temp3[["아파트", "금액", "층", "면적", "건축", "계약", "동", "거래", "파기"]]
-        temp3['금액']= temp3['금액'].astype('int64')
-        temp3['면적']= temp3['면적'].astype('int64')
-        temp3['층']= temp3['층'].astype('int64')
-        temp3['건축']= temp3['건축'].astype('int64')
+        temp3['금액']= temp3['금액'].astype(int)
+        temp3['층']= temp3['층'].astype(int)
+        temp3['건축']= temp3['건축'].astype(int)
     return temp3.sort_values(by=['아파트'], ascending=True)
 
 # @st.experimental_singleton(ttl=6000)
@@ -97,12 +95,10 @@ def 임대():
             [doc.split(',') for doc in doc2[1:]],
             columns=["시군구", "아파트", "보증금", "층", "월세", "면적", "건축", "동", "계약", "종전보증금", "종전월세", "갱신권"])
         temp2 = temp2[["아파트", "보증금", "층", "월세", "면적", "건축", "동", "계약", "종전보증금", "종전월세", "갱신권"]]
-        temp2['보증금']= temp2['보증금'].astype('int64')
-        temp2['종전보증금']= temp2['종전보증금'].astype('int64')
-        temp2['면적']= temp2['면적'].astype('int64')
-        temp2['층']= temp2['층'].astype('int64')
-        temp2['월세']= temp2['월세'].astype('int64')
-        temp2['건축']= temp2['건축'].astype('int64')
+        temp2['보증금']= temp2['보증금'].astype(int)
+        temp2['층']= temp2['층'].astype(int)
+        temp2['월세']= temp2['월세'].astype(int)
+        temp2['건축']= temp2['건축'].astype(int)
     return temp2.sort_values(by=['아파트'], ascending=True)
 
 @st.experimental_singleton(ttl=6000)
@@ -184,20 +180,23 @@ try:
     with c1 :
         standard = st.date_input('🍳 날짜', datetime.utcnow())
         standard_str = standard.strftime('%y.%m.%d')
-        standard_previous = (datetime.utcnow() - timedelta(days=1)).strftime('%y.%m.%d')        
+        standard_previous = standard - timedelta(days=1)
+        standard_previous_str = standard_previous.strftime('%y.%m.%d')
         day_num = datetime.isoweekday(standard)
-        
+
         if day_num == 1 :
             standard = standard-timedelta(days=2)
-        elif day_num == 7:
+            standard_previous = standard_previous-timedelta(days=2)
+        elif day_num == 2:
+            standard_previous = standard_previous-timedelta(days=2)
+        elif day_num == 7:            
             standard = standard-timedelta(days=1)
-        else:
-            standard = standard
+            standard_previous = standard_previous-timedelta(days=1) 
 
     with c2:
         시군구 = st.selectbox('🍰 시군구 검색', [i for i in file_1["법정동명"]],index=22) # 93 강남 230 파주
         
-    시군구데이터 = db.collection(f'{standard.day}_trade_{standard_str[:-3]}').document(시군구).get()
+    시군구데이터 = db.collection(f"{standard.strftime('%d')}_trade_{standard_str[:-3]}").document(시군구).get()
     file_2 = file_1[file_1['법정동명'].str.contains(시군구)].astype(str)
     city = file_2.iloc[0,0][:5]
     
@@ -234,7 +233,7 @@ try:
                     매매_전월당월_전체 = temp[temp["아파트"].isin(아파트)]
                     st.error('📈 시세 동향')
                     chart = 차트(매매_전월당월_전체,y='금액',t=매매_전월당월_전체)
-                    st.altair_chart(chart,use_container_width=True)                
+                    st.altair_chart(chart,use_container_width=True)
 
         with tab2:
             아파트 = st.multiselect('🚀 아파트별',sorted([i for i in 전세_당월["아파트"].drop_duplicates()]),max_selections=3)
