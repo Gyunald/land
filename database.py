@@ -71,22 +71,30 @@ rows = '9999'
 당월 = datetime.now().date()
 전월 = 당월 - timedelta(days=30)
 
-# c = 0
-# for i,j in urls.items():
-#     당월합= pd.DataFrame()
-#     전월합= pd.DataFrame()
-#     start = datetime.now()
-#     for city,dong in zip(file_1['법정동코드'].astype(str).str[:5],file_1['법정동명']):
-#         합_당월매매 = {}
-#         print(f"{c:.1f}% {dong} complete...")
-#         당월매매 = 실거래(j, city, 당월.strftime('%Y%m'), user_key, rows, dong)
-#         전월매매 = 실거래(j, city, 전월.strftime('%Y%m'), user_key, rows, dong)
-#         당월합 = pd.concat([당월합,당월매매])
-#         전월합 = pd.concat([전월합,전월매매])
-#         당월전월합 = pd.concat([당월합,전월합]).reset_index(drop=True)
-#         합_당월매매[dong] = 당월전월합[당월전월합['시군구'].str.contains(dong)].set_index('시군구').to_csv().strip().split('\n')
-#         db.collection(f"{i} {당월.strftime('%y.%m.%d')}").document(dong).set(합_당월매매)
-#         c += (50/len(file_1['법정동코드']))
-# end = datetime.now()
-# print(f"100% complete! >>> {end-start} seconds")
+c = 0
+for i,j in urls.items():
+    당월합= pd.DataFrame()
+    전월합= pd.DataFrame()
+    start = datetime.now()
+    for city,dong in zip(file_1['법정동코드'].astype(str).str[:5],file_1['법정동명']):
+        합_당월매매 = {}
+        print(f"{c:.1f}% {dong} complete...")
+        당월매매 = 실거래(j, city, 당월.strftime('%Y%m'), user_key, rows, dong)
+        전월매매 = 실거래(j, city, 전월.strftime('%Y%m'), user_key, rows, dong)
+        당월합 = pd.concat([당월합,당월매매])
+        전월합 = pd.concat([전월합,전월매매])
+        당월전월합 = pd.concat([당월합,전월합]).reset_index(drop=True)
+        합_당월매매[dong] = 당월전월합[당월전월합['시군구'].str.contains(dong)].set_index('시군구').to_csv().strip().split('\n')
+        db.collection(f"{당월.strftime('%d')}_{i}_{당월.strftime('%Y.%m')}").document(dong).set(합_당월매매)        
+        c += (50/len(file_1['법정동코드']))
+end = datetime.now()
+print(f"100% complete! >>> {end-start} seconds")
 
+del_list = ['trade', 'rent']
+a = datetime.utcnow()- timedelta(days=1)
+b = a.date().strftime('%y.%m')
+
+for i in del_list:
+    db = db.collection(f"{a.day}_{i}_{b}").stream()
+    for j in db:
+        j.reference.delete()
