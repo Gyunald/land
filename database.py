@@ -69,7 +69,7 @@ user_key = 'pRcMh3ZvTSWhUPu4VIMig%2BbD1mnLgAyaxyhB07a86H8XbgJ7ki8JYqk3a6Q6lM%2FN
 rows = '9999'
 
 당월 = datetime.now().date()
-전월 = 당월 - timedelta(days=30)
+전월 = 당월.replace(day=1) - timedelta(days=1)
 
 c = 0
 for i,j in urls.items():
