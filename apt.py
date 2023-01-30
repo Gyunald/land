@@ -69,9 +69,10 @@ def 매매():
             [doc.split(',') for doc in doc[1:]],
             columns=["시군구", "아파트", "금액", "층", "면적", "건축", "계약", "동", "거래", "파기"])
         temp = temp[["아파트", "금액", "층", "면적", "건축", "계약", "동", "거래", "파기"]]
-        temp['금액']= temp['금액'].astype(int)
-        temp['층']= temp['층'].astype(int)
-        temp['건축']= temp['건축'].astype(int)
+        temp['금액']= temp['금액'].astype('int64')
+        temp['면적']= temp['면적'].astype('int64')
+        temp['층']= temp['층'].astype('int64')
+        temp['건축']= temp['건축'].astype('int64')
     return temp.sort_values(by=['아파트'], ascending=True)
 
 # @st.experimental_singleton(ttl=6000)
@@ -82,9 +83,10 @@ def 매매_전일():
             [doc2.split(',') for doc2 in doc2[1:]],
             columns=["시군구", "아파트", "금액", "층", "면적", "건축", "계약", "동", "거래", "파기"])
         temp3 = temp3[["아파트", "금액", "층", "면적", "건축", "계약", "동", "거래", "파기"]]
-        temp3['금액']= temp3['금액'].astype(int)
-        temp3['층']= temp3['층'].astype(int)
-        temp3['건축']= temp3['건축'].astype(int)
+        temp3['금액']= temp3['금액'].astype('int64')
+        temp3['면적']= temp3['면적'].astype('int64')
+        temp3['층']= temp3['층'].astype('int64')
+        temp3['건축']= temp3['건축'].astype('int64')
     return temp3.sort_values(by=['아파트'], ascending=True)
 
 # @st.experimental_singleton(ttl=6000)
@@ -95,10 +97,12 @@ def 임대():
             [doc.split(',') for doc in doc2[1:]],
             columns=["시군구", "아파트", "보증금", "층", "월세", "면적", "건축", "동", "계약", "종전보증금", "종전월세", "갱신권"])
         temp2 = temp2[["아파트", "보증금", "층", "월세", "면적", "건축", "동", "계약", "종전보증금", "종전월세", "갱신권"]]
-        temp2['보증금']= temp2['보증금'].astype(int)
-        temp2['층']= temp2['층'].astype(int)
-        temp2['월세']= temp2['월세'].astype(int)
-        temp2['건축']= temp2['건축'].astype(int)
+        temp2['보증금']= temp2['보증금'].astype('int64')
+        temp2['종전보증금']= temp2['종전보증금'].astype('int64')
+        temp2['면적']= temp2['면적'].astype('int64')
+        temp2['층']= temp2['층'].astype('int64')
+        temp2['월세']= temp2['월세'].astype('int64')
+        temp2['건축']= temp2['건축'].astype('int64')
     return temp2.sort_values(by=['아파트'], ascending=True)
 
 @st.experimental_singleton(ttl=6000)
