@@ -1,5 +1,5 @@
 {
-  "type": st.secrets.type ,
+  "type": "123",
   "project_id": st.secrets.project_id,
   "private_key_id": st.secrets.private_key_id,
   "private_key": st.secrets.private_key,
