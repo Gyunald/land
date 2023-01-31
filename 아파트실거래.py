@@ -9,7 +9,7 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 
-@st.experimental_singleton
+@st.experimental_memo
 def load_lottie(url:str):
     r = requests.get(url)
     if r.status_code != 200:
