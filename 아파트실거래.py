@@ -62,12 +62,15 @@ def 차트(data,y,t):
     return (lines + points + tooltips).interactive()
 
 def 매매():
-    매매 = db.collection(f"{standard.day}_trade_{standard_str[:-3]}").document(시군구).get()
+    매매 = db.collection(f"{datetime.now().day}_trade_{standard_str[:-3]}").document(시군구).get()
     for doc in 매매.to_dict().values():
         temp = pd.DataFrame(
             [doc.split(',') for doc in doc[1:]],
             columns=["시군구", "아파트", "금액", "층", "면적", "건축", "계약", "동", "거래", "파기"])
         temp = temp[["아파트", "금액", "층", "면적", "건축", "계약", "동", "거래", "파기"]]
+        replace_word = '단지','\(.+\)'
+        for i in replace_word:
+            temp['아파트'] = temp['아파트'].str.replace(i,'',regex=True)
         temp['금액']= temp['금액'].astype('int64')
         temp['층']= temp['층'].astype('int64')
         temp['건축']= temp['건축'].astype('int64')
@@ -81,6 +84,9 @@ def 매매_전일():
             [doc2.split(',') for doc2 in doc2[1:]],
             columns=["시군구", "아파트", "금액", "층", "면적", "건축", "계약", "동", "거래", "파기"])
         temp3 = temp3[["아파트", "금액", "층", "면적", "건축", "계약", "동", "거래", "파기"]]
+        replace_word = '단지','\(.+\)'
+        for i in replace_word:
+            temp3['아파트'] = temp3['아파트'].str.replace(i,'',regex=True)
         temp3['금액']= temp3['금액'].astype('int64')
         temp3['층']= temp3['층'].astype('int64')
         temp3['건축']= temp3['건축'].astype('int64')
@@ -88,12 +94,15 @@ def 매매_전일():
     return temp3.sort_values(by=['아파트'], ascending=True)
 
 def 임대():
-    임대 = db.collection(f'{standard.day}_rent_{standard_str[:-3]}').document(시군구).get()  
+    임대 = db.collection(f'{datetime.now().day}_rent_{standard_str[:-3]}').document(시군구).get()  
     for doc2 in 임대.to_dict().values():
         temp2 = pd.DataFrame(
             [doc.split(',') for doc in doc2[1:]],
             columns=["시군구", "아파트", "보증금", "층", "월세", "면적", "건축", "동", "계약", "종전보증금", "종전월세", "갱신권"])
         temp2 = temp2[["아파트", "보증금", "층", "월세", "면적", "건축", "동", "계약", "종전보증금", "종전월세", "갱신권"]]
+        replace_word = '단지','\(.+\)'
+        for i in replace_word:
+            temp2['아파트'] = temp2['아파트'].str.replace(i,'',regex=True)
         temp2['보증금']= temp2['보증금'].astype('int64')
         temp2['층']= temp2['층'].astype('int64')
         temp2['월세']= temp2['월세'].astype('int64')
@@ -207,7 +216,7 @@ try:
         standard_previous_str = standard_previous.strftime('%y.%m.%d')
 
     with c2:
-        시군구 = st.selectbox('🍰 시군구 검색', [i for i in file_1["법정동명"]],index=22) # 93 강남 230 파주
+        시군구 = st.selectbox('🍰 시군구 검색', [i for i in file_1["법정동명"]],index=22) # 22 강남 105 파주
         
     시군구데이터 = db.collection(f"{standard.strftime('%d')}_trade_{standard_str[:-3]}").document(시군구).get()
     file_2 = file_1[file_1['법정동명'].str.contains(시군구)].astype(str)
