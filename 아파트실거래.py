@@ -172,7 +172,7 @@ db = firestore.client()
 file_1 = pd.read_csv(st.secrets.user_path,encoding='cp949')
 user_key = st.secrets.user_key
 rows = '9999'
-urls= [st.secrets.api_path, st.secrets.api_path2]
+urls= [st.secrets.api_path, st.secrets.api_path_2]
 
 lottie_url = 'https://assets1.lottiefiles.com/packages/lf20_yJ8wNO.json'
 lottie_json = load_lottie(lottie_url)
