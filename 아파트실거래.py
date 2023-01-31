@@ -153,9 +153,9 @@ def 실거래(url, city, date, user_key, rows):
         
     return aptTrade.sort_values(by=['아파트'], ascending=True)
 
-# if not firebase_admin._apps:
-#     cred = credentials.Certificate('kdongsan-8cc40-firebase-adminsdk-vr6ws-d96491c757.json')
-#     app = firebase_admin.initialize_app(cred)
+if not firebase_admin._apps:
+    cred = credentials.Certificate('kdongsan-8cc40-firebase-adminsdk-vr6ws-d96491c757.json')
+    app = firebase_admin.initialize_app(cred)
     
 db = firestore.client()
 
