@@ -227,14 +227,15 @@ try:
     if 시군구데이터.exists:
         temp = 매매()
         temp2 = 임대()
-        temp3 = 매매_전일()
+        if standard == datetime.now().date():
+            temp3 = 매매_전일()
+            신규 = pd.merge(temp,temp3, how='outer', indicator=True).query('_merge == "left_only"').drop(columns=['_merge']).reset_index(drop=True)
             
         매매_당월 = temp[temp['계약'].str.contains(standard_str[:5])].drop_duplicates()
         전세_당월 = temp2[(temp2['계약'].str.contains(standard_str[:5])) & (temp2['월세'] == 0)].drop_duplicates()
         전세_당월 = 전세_당월.reindex(columns=["아파트", "보증금", "층", "면적", "건축", "동", "계약", "종전보증금", "갱신권"])
         
         월세_당월 = temp2[(temp2['계약'].str.contains(standard_str[:5])) & (temp2['월세'] != 0)].drop_duplicates()
-        신규 = pd.merge(temp,temp3, how='outer', indicator=True).query('_merge == "left_only"').drop(columns=['_merge']).reset_index(drop=True)
 
         if standard_str[-2:] == str(datetime.now().day):
             if len(신규) >= 1:
