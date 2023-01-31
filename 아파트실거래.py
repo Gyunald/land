@@ -170,18 +170,21 @@ def 실거래(url, city, date, user_key, rows):
     return aptTrade.sort_values(by=['아파트'], ascending=True)
 
 if not firebase_admin._apps:
-    cred = credentials.Certificate({
-    "type": st.secrets.type,
-    "project_id": st.secrets.project_id,
-    "private_key_id": st.secrets.private_key_id,
-    "private_key": st.secrets.private_key,
-    "client_email": st.secrets.client_email,
-    "client_id": st.secrets.client_id,
-    "auth_uri": st.secrets.auth_uri,
-    "token_uri": st.secrets.token_uri,
-    "auth_provider_x509_cert_url": st.secrets.auth_provider_x509_cert_url,
-    "client_x509_cert_url": st.secrets.client_x509_cert_url
-    })
+    cred = credentials.Certificate(
+{
+  "type": "service_account",
+  "project_id": "kdongsan-8cc40",
+  "private_key_id": "d96491c757022e0548945ec1000ac1c6fa791379",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC2xZh1KFh6Zz41\n4U53yxrkNh/OxkRLc9/SFdX1DOgCg1XDtbRd+K5I+2AEemmicDEnyrJxem6SIRme\nMK8C02gpgbUJm7oAzn5AQQlHbChfvddYiVv4ohFsTmo0WdiimiuyMO2RmqvYKez7\nGXUdxz5agjUXQcn9aWHqkWqDlskN7nQnRltN4c3W58e3pAn6ZRouyxEgNHb8pRJV\nAhbjmDNa0oqxUn4sQByak6mdDXSF2nRzGMRglC2WrS208JsZCT7X+57DGUdxtBD9\nUxi9Z2VDWtO/jnnhihE5oDzfNSirR6E3oS5YQDoMwtPFMwUiyHGFcE4o4LwuSVUk\ndESYYSAfAgMBAAECggEAUO+ohz0SDUY55Mc8pczBwEx9gmYHKTiLZW94+1a3SSGa\nsZt931035Ka4itMggyfWhK38nkbevwQ8YXJilchDaJoBLtuQnznR66dBMikhqeAa\nBCFzomM2fvUsj7k3ty25auPC2EcbkRJj2IAZ/lFUeeUOGJnwFjF8BFFXzyTPLMTr\nRKYyx19S98vNhhlUOgZgSRV7UY8Ni7ZP1F0XVLHjan4RpCIU0/C07YLmKKfx0t1J\nuCI0ZrXK3JPeDp3y8t9fvfoAkzdbCgpwGVauUJkCSnduJMZ5ZMHGCMY3FqPmZp3E\nLSUTw/BqlmwFqjQ7xU5ltKsniQlz7KEwCXOZJr0+fQKBgQDjlfctRW4RH7FzrBXG\nXRQLX3V3K/Q8HtDc5Yy5cCs4vGT20IZON/bnza3iwkLwDkl+9nUaZiQyS6kpb3w9\nYY/D9HWUYCPk8sgC6wOwl3M/389vLG3NLVqG36Krd8pP7yD+Q9TEz4Tvmy+m/wp0\njCOmsYbgxzWJDwwRB+pVtYeHtQKBgQDNl0yQpJMsIPul21dXZsMQDvVOqoaV7+Qr\niD8NWU39WrxHIPpCjsFipnc+Pz1mBdyqMg26WdOWlrUCgdoqL4s0dVwb+Uq1XtTR\nsGPCkgI3cz1WwBVDW0E94IXB4HyAZ7/q0pXDIjz+xzRJQDUVA5mMvYHyHnK0pSex\nVjxvWBQFAwKBgE8XtydMkcvxr8H7dDXT8ztgmXopFGAwdXXPcPChQuQc1RnRrltQ\np8Y3fM7ppEm5LWGqVVgvVzUDhm6YCB1s4oG/W32NS+wtU8Vv14BvoeX46iZA0ogT\n0vo8jlP49Z6CBH1ZJYCgfhqnXBA1YnTOnzU3TSChGsHfMNpaXd4bkFZhAoGBAIXb\nUqCCZsg+mVn9m7puT+auto0HfiU1Ucv+I39fe+XPI/Lzx716EPNYCx9eMW2xt2Cg\nwktonNjZOvVs8kyxM+Nt3hDgmQHJwqrcO7e9NPBBedh3q+B1E99jxfLbZHR+GHid\nr6CjNC92J9bhlS4fb+QwpuCrbmereFKAIU0lfbNdAoGARBUJCCdJRkPzYS2QJlt1\noHfvb6LREhJ27pI+oqUrqIwcjfPY7uRsf3tKwv6wbe/XGexBoRcAwk5D5lXu/Cca\nK4rKj1Nhe6x3/stwXQ/bONmyufohSld5mxrCRMdFlzuNNyZPi1WALAMsyGh1FQ3S\ng3DFlMW09F78JEgDb4ZoI0I=\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-vr6ws@kdongsan-8cc40.iam.gserviceaccount.com",
+  "client_id": "113863751594410741120",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-vr6ws%40kdongsan-8cc40.iam.gserviceaccount.com"
+}
+
+    )
     app = firebase_admin.initialize_app(cred)
     
 db = firestore.client()
