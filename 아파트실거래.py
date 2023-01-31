@@ -161,6 +161,7 @@ def 실거래(url, city, date, user_key, rows):
         return Exception
         
     return aptTrade.sort_values(by=['아파트'], ascending=True)
+
 if not firebase_admin._apps:
     cred = credentials.Certificate({
     "type": st.secrets.type,
@@ -183,20 +184,21 @@ user_key = st.secrets.user_key
 rows = '9999'
 urls= [st.secrets.api_path, st.secrets.api_path_2]
 
-lottie_url = 'https://assets1.lottiefiles.com/packages/lf20_yJ8wNO.json'
-lottie_json = load_lottie(lottie_url)
-lottie_url2 = 'https://assets9.lottiefiles.com/packages/lf20_2v2beqrh.json'
-lottie_json2 = load_lottie(lottie_url2)
+# lottie_url = 'https://assets1.lottiefiles.com/packages/lf20_yJ8wNO.json'
+# lottie_json = load_lottie(lottie_url)
+# lottie_url2 = 'https://assets9.lottiefiles.com/packages/lf20_2v2beqrh.json'
+# lottie_json2 = load_lottie(lottie_url2)
 
-st_lottie(
-    lottie_json2,
-    speed=2,
-    # reverse='Ture',
-    loop=True,
-    quality='low',
-    )
+# st_lottie(
+#     lottie_json2,
+#     speed=2,
+#     # reverse='Ture',
+#     loop=True,
+#     quality='low',
+#     )
 
 c1,c2 = st.columns([1,1])
+
 try:
     with c1 :
         standard = st.date_input('🍳 날짜', datetime.utcnow())
