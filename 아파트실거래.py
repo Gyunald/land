@@ -155,7 +155,7 @@ def 실거래(url, city, date, user_key, rows):
 if not firebase_admin._apps:
     cred = credentials.Certificate({
     "type": st.secrets.type,
-    "project_id": st.secrets.project_id",
+    "project_id": st.secrets.project_id,
     "private_key_id": st.secrets.private_key_id,
     "private_key": st.secrets.private_key,
     "client_email": st.secrets.client_emai,
