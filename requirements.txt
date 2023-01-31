@@ -3,3 +3,5 @@ lxml
 matplotlib
 requests
 streamlit_lottie
+firebase_admin
+altair
