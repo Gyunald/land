@@ -153,16 +153,16 @@ def 실거래(url, city, date, user_key, rows):
         
     return aptTrade.sort_values(by=['아파트'], ascending=True)
 
-if not firebase_admin._apps:
-    cred = credentials.Certificate('kdongsan-8cc40-firebase-adminsdk-vr6ws-d96491c757.json')
-    app = firebase_admin.initialize_app(cred)
+# if not firebase_admin._apps:
+#     cred = credentials.Certificate('kdongsan-8cc40-firebase-adminsdk-vr6ws-d96491c757.json')
+#     app = firebase_admin.initialize_app(cred)
     
 db = firestore.client()
 
-file_1 = pd.read_csv('https://raw.githubusercontent.com/Gyunald/land/main/address.csv',encoding='cp949')
-user_key = 'pRcMh3ZvTSWhUPu4VIMig%2BbD1mnLgAyaxyhB07a86H8XbgJ7ki8JYqk3a6Q6lM%2FN8zhvYZHQsLw0pmbjPBBE%2FA%3D%3D'
+file_1 = pd.read_csv(st.secrets.user_path,encoding='cp949')
+user_key = st.secrets.user_key
 rows = '9999'
-urls= ['http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptTradeDev','http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptRent?']
+urls= [st.secrets.api_path, st.secrets.api_path2]
 
 lottie_url = 'https://assets1.lottiefiles.com/packages/lf20_yJ8wNO.json'
 lottie_json = load_lottie(lottie_url)
