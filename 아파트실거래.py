@@ -293,7 +293,7 @@ try:
                     월세_당월 = 월세_당월[월세_당월["아파트"].isin(아파트)]
                 st.dataframe(월세_당월.sort_values(by=['아파트'], ascending=True).reset_index(drop=True).style.background_gradient(subset=['보증금','월세','종전보증금','종전월세'], cmap="Reds"),use_container_width=True)
     else:
-        with st_lottie_spinner(lottie_json):
+        with st_lottie_spinner(lottie_json2):
             당월 = datetime(year=int(standard_str[:5].replace(standard_str[:3],'20'+str(standard_str[:5][:2]))[:4]),month=int(standard_str[3:5]),day=datetime.now().day)
             전월 = 당월.replace(day=1) - timedelta(days=1)
 
