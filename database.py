@@ -95,7 +95,7 @@ if not db.collection('test').document('가평군').get().exists:
         당월합= pd.DataFrame()
         전월합= pd.DataFrame()
         start = datetime.now()
-        for city,dong in zip(file_1['법정동코드'][1:2].astype(str).str[:5],file_1['법정동명'][1:2]):
+        for city,dong in zip(file_1['법정동코드'][:3].astype(str).str[:5],file_1['법정동명'][:3]):
             합_당월매매 = {}
             print(f"{c:.1f}% {dong} complete...")
             당월매매 = 실거래(j, city, 당월.strftime('%Y%m'), user_key, rows, dong)
