@@ -77,7 +77,6 @@ if not firebase_admin._apps:
     app = firebase_admin.initialize_app(cred)
     
 if login_code == st.secrets.login_code :
-    empty.empty()
     db = firestore.client()
 
     urls= {'매매' : st.secrets.api_path,'임대' : st.secrets.api_path_2}
