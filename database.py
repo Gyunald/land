@@ -58,43 +58,55 @@ def 실거래(url, city, date, user_key, rows, dong):
         aptTrade['동'] = aptTrade['동'].str.split().str[0]
     return aptTrade
 
-cred = credentials.Certificate('kdongsan-8cc40-firebase-adminsdk-vr6ws-d96491c757.json')
+cred = credentials.Certificate('kdongsan.json')
 app = firebase_admin.initialize_app(cred)
 db = firestore.client()
 
-urls= {'매매' : 'http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptTradeDev','임대' : 'http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptRent?'}
+urls= {'trade' : 'http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptTradeDev','rent' : 'http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptRent?'}
 
-file_1 = pd.read_csv('/Users/kyu-deokkim/Downloads/address.csv',encoding='cp949')
+file_1 = pd.read_csv('https://raw.githubusercontent.com/Gyunald/land/main/address.csv',encoding='cp949')
 user_key = 'pRcMh3ZvTSWhUPu4VIMig%2BbD1mnLgAyaxyhB07a86H8XbgJ7ki8JYqk3a6Q6lM%2FN8zhvYZHQsLw0pmbjPBBE%2FA%3D%3D'
 rows = '9999'
+
+오늘 = datetime.now().date()
 
 당월 = datetime.now().date()
 전월 = 당월.replace(day=1) - timedelta(days=1)
 
+if 당월.day == 1 :
+    당월 = 당월 - timedelta(days=1)
+    전월 = 당월.replace(day=1) - timedelta(days=1)
+
 c = 0
-for i,j in urls.items():
-    당월합= pd.DataFrame()
-    전월합= pd.DataFrame()
-    start = datetime.now()
-    for city,dong in zip(file_1['법정동코드'].astype(str).str[:5],file_1['법정동명']):
-        합_당월매매 = {}
-        print(f"{c:.1f}% {dong} complete...")
-        당월매매 = 실거래(j, city, 당월.strftime('%Y%m'), user_key, rows, dong)
-        전월매매 = 실거래(j, city, 전월.strftime('%Y%m'), user_key, rows, dong)
-        당월합 = pd.concat([당월합,당월매매])
-        전월합 = pd.concat([전월합,전월매매])
-        당월전월합 = pd.concat([당월합,전월합]).reset_index(drop=True)
-        합_당월매매[dong] = 당월전월합[당월전월합['시군구'].str.contains(dong)].set_index('시군구').to_csv().strip().split('\n')
-        db.collection(f"{당월.strftime('%d')}_{i}_{당월.strftime('%Y.%m')}").document(dong).set(합_당월매매)        
-        c += (50/len(file_1['법정동코드']))
-end = datetime.now()
-print(f"100% complete! >>> {end-start} seconds")
+if not db.collection(f"{오늘.strftime('%d')}_trade_{오늘.strftime('%y.%m')}").document('가평군').get().exists:
+    for i,j in urls.items():
+        당월합= pd.DataFrame()
+        전월합= pd.DataFrame()
+        start = datetime.now()
+        for city,dong in zip(file_1['법정동코드'][1:2].astype(str).str[:5],file_1['법정동명'][1:2]):
+            합_당월매매 = {}
+            print(f"{c:.1f}% {dong} complete...")
+            당월매매 = 실거래(j, city, 당월.strftime('%Y%m'), user_key, rows, dong)
+            전월매매 = 실거래(j, city, 전월.strftime('%Y%m'), user_key, rows, dong)
+            당월합 = pd.concat([당월합,당월매매])
+            전월합 = pd.concat([전월합,전월매매])
+            당월전월합 = pd.concat([당월합,전월합]).reset_index(drop=True)
+            합_당월매매[dong] = 당월전월합[당월전월합['시군구'].str.contains(dong)].set_index('시군구').to_csv().strip().split('\r\n') # 맥 \n 윈도우 \r\n
+            # db.collection(f"{오늘.strftime('%d')}_{i}_{오늘.strftime('%y.%m')}").document(dong).set(합_당월매매)        
+            c += (50/len(file_1['법정동코드']))
+    end = datetime.now()
+    print(f"100% complete! >>> {end-start} seconds")
+else:
+    print('오류, 데이터 중복\n날짜를 확인하세요.')
 
-del_list = ['trade', 'rent']
-a = datetime.utcnow()- timedelta(days=1)
-b = a.date().strftime('%y.%m')
 
-for i in del_list:
-    db = db.collection(f"{a.day}_{i}_{b}").stream()
-    for j in db:
-        j.reference.delete()
+
+
+# del_list = ['trade', 'rent']
+# a = datetime.utcnow()- timedelta(days=1)
+# b = a.date().strftime('%y.%m')
+
+# for i in del_list:
+#     db = db.collection(f"{a.day}_{i}_{b}").stream()
+#     for j in db:
+#         j.reference.delete()
