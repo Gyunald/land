@@ -77,6 +77,7 @@ if not firebase_admin._apps:
     app = firebase_admin.initialize_app(cred)
     
 if login_code == st.secrets.login_code :
+    empty.empty()
     st.success('접속 완료')
     db = firestore.client()
 
