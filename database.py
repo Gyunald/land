@@ -114,8 +114,9 @@ if login_code == st.secrets.login_code :
         st.write(f"100% complete! >>> {end-start} seconds")
     else:
         st.write('데이터 중복!!! 날짜 확인')
-else:
+elif login_code != st.secrets.login_code :
     st.error('코드 확인')
+    
     # del_list = ['trade', 'rent']
     # a = datetime.utcnow()- timedelta(days=1)
     # b = a.date().strftime('%y.%m')
