@@ -85,7 +85,7 @@ def 매매():
     return temp.sort_values(by=['아파트'], ascending=True)
 
 def 매매_전일():    
-    매매_전일 = db.collection(f"{standard_previous.day}_trade_{standard_previous_str[:-3]}").document(시군구).get()
+    매매_전일 = db.collection(f"{standard_previous.strftime('%d')}_trade_{standard_previous_str[:-3]}").document(시군구).get()
     for doc2 in 매매_전일.to_dict().values():
         temp3 = pd.DataFrame(
             [doc2.split(',') for doc2 in doc2[1:]],
