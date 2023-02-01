@@ -109,7 +109,7 @@ if not db.collection('test').document('서울특별시 종로구').get().exists:
     end = datetime.now()
     st.write(f"100% complete! >>> {end-start} seconds")
 else:
-    st.write('데이터 중복,\n날짜를 확인하세요.')
+    st.write('데이터 중복!!! 날짜를 확인하세요.')
 
 # del_list = ['trade', 'rent']
 # a = datetime.utcnow()- timedelta(days=1)
