@@ -107,9 +107,9 @@ if not db.collection('test').document('가평군').get().exists:
             db.collection('test').document(dong).set(합_당월매매)
             c += (50/len(file_1['법정동코드']))
     end = datetime.now()
-    print(f"100% complete! >>> {end-start} seconds")
+    st.write(f"100% complete! >>> {end-start} seconds")
 else:
-    print('오류, 데이터 중복\n날짜를 확인하세요.')
+    st.write('오류, 데이터 중복\n날짜를 확인하세요.')
 
 # del_list = ['trade', 'rent']
 # a = datetime.utcnow()- timedelta(days=1)
