@@ -60,25 +60,25 @@ def 실거래(url, city, date, user_key, rows, dong):
         aptTrade['면적'] = aptTrade['면적'].astype(float).map('{:.0f}'.format).astype(int)
         aptTrade['동'] = aptTrade['동'].str.split().str[0]
     return aptTrade
-
-if not firebase_admin._apps:
-    cred = credentials.Certificate({
-    "type": st.secrets.type,
-    "project_id": st.secrets.project_id,
-    "private_key_id": st.secrets.private_key_id,
-    "private_key": st.secrets.private_key,
-    "client_email": st.secrets.client_email,
-    "client_id": st.secrets.client_id,
-    "auth_uri": st.secrets.auth_uri,
-    "token_uri": st.secrets.token_uri,
-    "auth_provider_x509_cert_url": st.secrets.auth_provider_x509_cert_url,
-    "client_x509_cert_url": st.secrets.client_x509_cert_url
-    })
-    app = firebase_admin.initialize_app(cred)
-    
 if login_code == st.secrets.login_code :
     empty.empty()
     st.success('접속 완료')
+
+    if not firebase_admin._apps:
+        cred = credentials.Certificate({
+        "type": st.secrets.type,
+        "project_id": st.secrets.project_id,
+        "private_key_id": st.secrets.private_key_id,
+        "private_key": st.secrets.private_key,
+        "client_email": st.secrets.client_email,
+        "client_id": st.secrets.client_id,
+        "auth_uri": st.secrets.auth_uri,
+        "token_uri": st.secrets.token_uri,
+        "auth_provider_x509_cert_url": st.secrets.auth_provider_x509_cert_url,
+        "client_x509_cert_url": st.secrets.client_x509_cert_url
+        })
+        app = firebase_admin.initialize_app(cred)
+    
     db = firestore.client()
 
     urls= {'매매' : st.secrets.api_path,'임대' : st.secrets.api_path_2}
@@ -96,7 +96,7 @@ if login_code == st.secrets.login_code :
         전월 = 당월.replace(day=1) - timedelta(days=1)
 
     c = 0
-    if not db.collection(f"{당월.strftime('%d')}_trade_{당월.strftime('%Y.%m')}").document('서울특별시 종로구').get().exists:
+    if not db.collection(f"{오늘.strftime('%d')}_trade_{오늘.strftime('%y.%m')}").document('서울특별시 종로구').get().exists:
         for i,j in urls.items():
             당월합= pd.DataFrame()
             전월합= pd.DataFrame()
@@ -110,12 +110,12 @@ if login_code == st.secrets.login_code :
                 전월합 = pd.concat([전월합,전월매매])
                 당월전월합 = pd.concat([당월합,전월합]).reset_index(drop=True)
                 합_당월매매[dong] = 당월전월합[당월전월합['시군구'].str.contains(dong)].set_index('시군구').to_csv().strip().split('\n') # 맥 \n 윈도우 \r\n
-                db.collection(f"{당월.strftime('%d')}_{i}_{당월.strftime('%Y.%m')}").document(dong).set(합_당월매매)
+                db.collection(f"{오늘.strftime('%d')}_{i}_{오늘.strftime('%y.%m')}").document(dong).set(합_당월매매)
                 c += (50/len(file_1['법정동코드']))
         end = datetime.now()
         st.write(f"100% complete! >>> {end-start} seconds")
     else:
-        st.write('데이터 중복!!! 날짜 확인')
+        st.error('데이터 중복!!! 날짜 확인')
 elif login_code != st.secrets.login_code :
     st.info('코드 입력')
     
