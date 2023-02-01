@@ -90,7 +90,7 @@ if 당월.day == 1 :
     전월 = 당월.replace(day=1) - timedelta(days=1)
 
 c = 0
-if not db.collection('test').document('종로구').get().exists:
+if not db.collection('test').document('서울특별시 종로구').get().exists:
     for i,j in urls.items():
         당월합= pd.DataFrame()
         전월합= pd.DataFrame()
