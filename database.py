@@ -9,6 +9,7 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 
+
 def 실거래(url, city, date, user_key, rows, dong):
     url = url + "?&LAWD_CD=" + city
     url = url + "&DEAL_YMD=" + date[:6]
@@ -90,7 +91,7 @@ if 당월.day == 1 :
     전월 = 당월.replace(day=1) - timedelta(days=1)
 
 c = 0
-if not db.collection('test').document('서울특별시 종로구').get().exists:
+if not db.collection(f"{당월.strftime('%d')}_{i}_{당월.strftime('%Y.%m')}").document(dong).get().exists:
     for i,j in urls.items():
         당월합= pd.DataFrame()
         전월합= pd.DataFrame()
@@ -104,7 +105,7 @@ if not db.collection('test').document('서울특별시 종로구').get().exists:
             전월합 = pd.concat([전월합,전월매매])
             당월전월합 = pd.concat([당월합,전월합]).reset_index(drop=True)
             합_당월매매[dong] = 당월전월합[당월전월합['시군구'].str.contains(dong)].set_index('시군구').to_csv().strip().split('\n') # 맥 \n 윈도우 \r\n
-            db.collection('test').document(dong).set(합_당월매매)
+            db.collection(f"{당월.strftime('%d')}_{i}_{당월.strftime('%Y.%m')}").document(dong).set(합_당월매매)
             c += (50/len(file_1['법정동코드']))
     end = datetime.now()
     st.write(f"100% complete! >>> {end-start} seconds")
