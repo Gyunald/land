@@ -222,7 +222,11 @@ try:
         elif day_num == 7:            
             standard = standard-timedelta(days=1)
             standard_previous = standard_previous-timedelta(days=1)
-
+            
+        if standard.day == 1 :
+            standard = standard-timedelta(days=1)
+            standard_previous = standard.replace(day=1) - timedelta(days=1)
+        
         standard_str = standard.strftime('%y.%m.%d')
         standard_previous_str = standard_previous.strftime('%y.%m.%d')
 
