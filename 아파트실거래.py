@@ -101,7 +101,7 @@ def 매매_전일():
     return temp3.sort_values(by=['아파트'], ascending=True)
 
 def 임대():
-    임대 = db.collection(f'{datetime.now().day}_rent_{standard_str[:-3]}').document(시군구).get()  
+    임대 = db.collection(f"{standard.strftime('%d')}_rent_{standard_str[:-3]}").document(시군구).get()  
     for doc2 in 임대.to_dict().values():
         temp2 = pd.DataFrame(
             [doc.split(',') for doc in doc2[1:]],
@@ -164,32 +164,21 @@ def 실거래(url, city, date, user_key, rows):
         aptTrade['계약'] = pd.to_datetime(aptTrade['계약'],format = "%Y%m%d").dt.strftime('%y.%m.%d')
         aptTrade['면적'] = aptTrade['면적'].astype(float).map('{:.0f}'.format).astype(int)
         aptTrade['동'] = aptTrade['동'].str.split().str[0]
+
     else:
         return Exception
-        
+
     return aptTrade.sort_values(by=['아파트'], ascending=True)
 
 if not firebase_admin._apps:
-    cred = credentials.Certificate({
-    "type": st.secrets.type,
-    "project_id": st.secrets.project_id,
-    "private_key_id": st.secrets.private_key_id,
-    "private_key": st.secrets.private_key,
-    "client_email": st.secrets.client_email,
-    "client_id": st.secrets.client_id,
-    "auth_uri": st.secrets.auth_uri,
-    "token_uri": st.secrets.token_uri,
-    "auth_provider_x509_cert_url": st.secrets.auth_provider_x509_cert_url,
-    "client_x509_cert_url": st.secrets.client_x509_cert_url
-    })
+    cred = credentials.Certificate('kdongsan.json')
     app = firebase_admin.initialize_app(cred)
     
 db = firestore.client()
 
-file_1 = pd.read_csv(st.secrets.user_path,encoding='cp949')
-user_key = st.secrets.user_key
+file_1 = pd.read_csv('https://raw.githubusercontent.com/Gyunald/land/main/address.csv',encoding='cp949')
+user_key = 'pRcMh3ZvTSWhUPu4VIMig%2BbD1mnLgAyaxyhB07a86H8XbgJ7ki8JYqk3a6Q6lM%2FN8zhvYZHQsLw0pmbjPBBE%2FA%3D%3D'
 rows = '9999'
-urls= [st.secrets.api_path, st.secrets.api_path_2]
 
 lottie_url = 'https://assets9.lottiefiles.com/packages/lf20_2v2beqrh.json'
 lottie_json = load_lottie(lottie_url)
@@ -209,7 +198,8 @@ c1,c2 = st.columns([1,1])
 
 try:
     with c1 :
-        standard = st.date_input('🍳 날짜', datetime.utcnow())
+        empty = st.empty()
+        standard = empty.date_input('🍳 날짜', datetime.utcnow(),key='standard_date_1')
         standard_previous = standard - timedelta(days=1)
         day_num = datetime.isoweekday(standard)
 
@@ -228,10 +218,9 @@ try:
     with c2:
         시군구 = st.selectbox('🍰 시군구 검색', [i for i in file_1["법정동명"]],index=22) # 22 강남 105 파주
         
-    시군구데이터 = db.collection(f"{standard.day}_trade_{standard_str[:-3]}").document(시군구).get()
+    시군구데이터 = db.collection(f"{standard.strftime('%d')}_trade_{standard_str[:-3]}").document(시군구).get()
     file_2 = file_1[file_1['법정동명'].str.contains(시군구)].astype(str)
-    city = file_2.iloc[0,0][:5]
-    
+
     if 시군구데이터.exists:
         temp = 매매()
         temp2 = 임대()
@@ -294,19 +283,30 @@ try:
                 st.dataframe(월세_당월.sort_values(by=['아파트'], ascending=True).reset_index(drop=True).style.background_gradient(subset=['보증금','월세','종전보증금','종전월세'], cmap="Reds"),use_container_width=True)
     else:
         with st_lottie_spinner(lottie_json2):
-            당월 = datetime(year=int(standard_str[:5].replace(standard_str[:3],'20'+str(standard_str[:5][:2]))[:4]),month=int(standard_str[3:5]),day=datetime.now().day)
-            전월 = 당월.replace(day=1) - timedelta(days=1)
+            # empty.empty()
+            standard = empty.date_input('🍳 날짜', datetime.utcnow(),key='standard_date_2')
+            standard_previous = standard.replace(day=1) - timedelta(days=1)
 
-            api_trade = pd.concat([실거래(urls[0], city, 당월.strftime('%Y%m'), user_key, rows),실거래(urls[0], city, 전월.strftime('%Y%m'), user_key, rows)]).drop_duplicates()
+            if standard.day == 1 :
+                standard = standard-timedelta(days=1)
+                standard_previous = standard.replace(day=1) - timedelta(days=1)
 
-            api_rent = pd.concat([실거래(urls[1], city, 당월.strftime('%Y%m'), user_key, rows),실거래(urls[1], city, 전월.strftime('%Y%m'), user_key, rows)]).reset_index(drop=True).drop_duplicates()
+            standard_str = standard.strftime('%Y.%m')
+            standard_previous_str = standard_previous.strftime('%Y.%m')
+
+            urls= ['http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptTradeDev', 'http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptRent?']
+            city = file_2.iloc[0,0][:5]
+
+            api_trade = pd.concat([실거래(urls[0], city, standard.strftime('%Y%m'), user_key, rows),실거래(urls[0], city, standard_previous.strftime('%Y%m'), user_key, rows)]).drop_duplicates()
+
+            api_rent = pd.concat([실거래(urls[1], city, standard.strftime('%Y%m'), user_key, rows),실거래(urls[1], city, standard_previous.strftime('%Y%m'), user_key, rows)]).reset_index(drop=True).drop_duplicates()
         
-        매매_계약월별 = api_trade[api_trade['계약'].str.contains(standard_str[:5])]
-        전세_계약월별 = api_rent[(api_rent['계약'].str.contains(standard_str[:5])) & (api_rent['월세'] == 0)].reindex(columns=["아파트", "보증금", "층", "면적", "건축", "동", "계약", "종전보증금", "갱신권"])
-        월세_계약월별 = api_rent[(api_rent['계약'].str.contains(standard_str[:5])) & (api_rent['월세'] != 0)]
+        매매_계약월별 = api_trade[api_trade['계약'].str.contains(standard_str[2:])]
+        전세_계약월별 = api_rent[(api_rent['계약'].str.contains(standard_str[2:])) & (api_rent['월세'] == 0)].reindex(columns=["아파트", "보증금", "층", "면적", "건축", "동", "계약", "종전보증금", "갱신권"])
+        월세_계약월별 = api_rent[(api_rent['계약'].str.contains(standard_str[4:])) & (api_rent['월세'] != 0)]
         매매_임대_계약월별 = pd.concat([매매_계약월별,전세_계약월별,월세_계약월별])
         
-        with st.expander(f'{시군구} 실거래 - {standard_str[3:5]}월 🍩 전체',expanded=True):
+        with st.expander(f'{시군구} 실거래 - {standard_str[5:]}월 🍩 전체',expanded=True):
             아파트 = st.multiselect('🍉 아파트별',sorted([i for i in 매매_임대_계약월별["아파트"].drop_duplicates()]),max_selections=3)
             st.warning('🚥 다중선택가능')
             
