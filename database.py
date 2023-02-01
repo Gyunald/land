@@ -75,7 +75,7 @@ if not firebase_admin._apps:
     
 db = firestore.client()
 
-urls= {'매매' : st.secrets.api_path,'임대' : st.secrets.api_path2}
+urls= {'매매' : st.secrets.api_path,'임대' : st.secrets.api_path_2}
 file_1 = pd.read_csv(st.secrets.user_path,encoding='cp949')
 user_key = st.secrets.user_key
 rows = '9999'
