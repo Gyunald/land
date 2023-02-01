@@ -90,14 +90,14 @@ if 당월.day == 1 :
     전월 = 당월.replace(day=1) - timedelta(days=1)
 
 c = 0
-if not db.collection('test').document('가평군').get().exists:
+if not db.collection('test').document('종로구').get().exists:
     for i,j in urls.items():
         당월합= pd.DataFrame()
         전월합= pd.DataFrame()
         start = datetime.now()
         for city,dong in zip(file_1['법정동코드'][:3].astype(str).str[:5],file_1['법정동명'][:3]):
             합_당월매매 = {}
-            print(f"{c:.1f}% {dong} complete...")
+            st.write(f"{c:.1f}% {dong} complete...")
             당월매매 = 실거래(j, city, 당월.strftime('%Y%m'), user_key, rows, dong)
             전월매매 = 실거래(j, city, 전월.strftime('%Y%m'), user_key, rows, dong)
             당월합 = pd.concat([당월합,당월매매])
