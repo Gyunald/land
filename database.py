@@ -9,7 +9,8 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 
-login_code = st.text_input('login_code', type='password')
+empty = st.empty()
+login_code = empty.text_input('login_code', type='password')
 
 def 실거래(url, city, date, user_key, rows, dong):
     url = url + "?&LAWD_CD=" + city
@@ -74,7 +75,9 @@ if not firebase_admin._apps:
     "client_x509_cert_url": st.secrets.client_x509_cert_url
     })
     app = firebase_admin.initialize_app(cred)
-if login_code == st.secrets.login_code :  
+    
+if login_code == st.secrets.login_code :
+    empty.empty()
     db = firestore.client()
 
     urls= {'매매' : st.secrets.api_path,'임대' : st.secrets.api_path_2}
