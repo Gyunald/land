@@ -9,7 +9,7 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 
-login_code = st.text_input('login_code')
+login_code = st.text_input('login_code', type='password')
 
 def 실거래(url, city, date, user_key, rows, dong):
     url = url + "?&LAWD_CD=" + city
