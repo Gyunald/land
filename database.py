@@ -77,6 +77,7 @@ if not firebase_admin._apps:
     app = firebase_admin.initialize_app(cred)
     
 if login_code == st.secrets.login_code :
+    st.success('접속 완료')
     db = firestore.client()
 
     urls= {'매매' : st.secrets.api_path,'임대' : st.secrets.api_path_2}
@@ -115,7 +116,9 @@ if login_code == st.secrets.login_code :
     else:
         st.write('데이터 중복!!! 날짜 확인')
 elif login_code != st.secrets.login_code :
-    st.error('코드 확인')
+    st.error('접속 거부')
+else:
+    st.info('코드 입력')
     
     # del_list = ['trade', 'rent']
     # a = datetime.utcnow()- timedelta(days=1)
