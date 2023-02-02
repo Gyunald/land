@@ -81,7 +81,7 @@ if login_code == st.secrets.login_code :
     
     db = firestore.client()
 
-    urls= {'매매' : st.secrets.api_path,'임대' : st.secrets.api_path_2}
+    urls= {'trade' : st.secrets.api_path,'rent' : st.secrets.api_path_2}
     file_1 = pd.read_csv(st.secrets.user_path,encoding='cp949')
     user_key = st.secrets.user_key
     rows = '9999'
