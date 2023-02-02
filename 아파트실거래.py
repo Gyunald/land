@@ -257,12 +257,12 @@ try:
         if standard_str[-2:] == str(datetime.utcnow().strftime('%d')):
             if len(신규) >= 1:
                 with st.expander(f'{시군구.split()[-1]} - 신규 {len(신규)}건',expanded=True):
-                    st.success('🔥 신규매매')
+                    st.success('🍞 신규매매')
                     st.dataframe(신규.reset_index(drop=True).style.background_gradient(subset=['금액','면적'], cmap="Reds"),use_container_width=True)
         
         with st.expander(f'{시군구.split()[-1]} 실거래 - {standard_str[3:5]}월 🍩 전체',expanded=True):
-            아파트 = st.multiselect('🚀 아파트별',sorted([i for i in 매매_임대["아파트"].drop_duplicates()]),max_selections=3)
-            st.warning('🚥 다중선택가능')
+            아파트 = st.multiselect('🍪 아파트별',sorted([i for i in 매매_임대["아파트"].drop_duplicates()]),max_selections=3)
+            st.warning('🍔 다중선택가능')
             tab1, tab2, tab3 = st.tabs([f"매매 {len(매매_당월)}", f"전세 {len(전세_당월)}", f"월세 {len(월세_당월)}"])
             
             with tab1:
