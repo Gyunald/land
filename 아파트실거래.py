@@ -257,7 +257,7 @@ try:
         if standard_str[-2:] == str(datetime.utcnow().strftime('%d')):
             if len(신규) >= 1:
                 with st.expander(f'{시군구.split()[-1]} - 신규 {len(신규)}건',expanded=True):
-                    st.success('🍕 신규매매')
+                    st.success('🧁 신규매매')
                     st.dataframe(신규.reset_index(drop=True).style.background_gradient(subset=['금액','면적'], cmap="Reds"),use_container_width=True)
         
         with st.expander(f'{시군구.split()[-1]} 실거래 - {standard_str[3:5]}월 🍩 전체',expanded=True):
@@ -275,7 +275,7 @@ try:
                 
                 if 아파트 :
                     매매_전월당월_전체 = temp[temp["아파트"].isin(아파트)]
-                    st.error('📈 시세 동향')
+                    st.error('🥯 시세 동향')
                     chart = 차트(매매_전월당월_전체,y='금액',t=매매_전월당월_전체)
                     st.altair_chart(chart,use_container_width=True)
                     
@@ -290,7 +290,7 @@ try:
 
                 if 아파트 :
                     전세_전월당월_전체 = temp2[(temp2['아파트'].isin(아파트)) & (temp2['월세'] == 0)]
-                    st.error('📈 시세 동향')
+                    st.error('🥯 시세 동향')
                     chart = 차트(전세_전월당월_전체,y='보증금',t=전세_전월당월_전체)
                     st.altair_chart(chart,use_container_width=True)
                     
@@ -342,7 +342,7 @@ try:
 
                 if 아파트 :                
                     매매_차트 = api_trade[api_trade["아파트"].isin(아파트)]
-                    st.error('📈 시세 동향')
+                    st.error('🥯 시세 동향')
                     chart = 차트(매매_차트,y='금액',t=매매_차트)
                     st.altair_chart(chart,use_container_width=True)
                     
@@ -356,7 +356,7 @@ try:
 
                 if 아파트 :
                     전세_차트 = api_rent[(api_rent['아파트'].isin(아파트)) & (api_rent['월세'] == '0')]
-                    st.error('📈 시세 동향')
+                    st.error('🥯 시세 동향')
                     chart = 차트(전세_차트,y='보증금',t=전세_차트)
                     st.altair_chart(chart,use_container_width=True)
                     
