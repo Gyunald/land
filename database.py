@@ -86,9 +86,9 @@ if login_code == st.secrets.login_code :
     user_key = st.secrets.user_key
     rows = '9999'
 
-    오늘 = datetime.now(tz='Asia/Seoul').date()
+    오늘 = datetime.utcnow().date()
 
-    당월 = datetime.now(tz='Asia/Seoul').date()
+    당월 = datetime.utcnow().date()
     전월 = 당월.replace(day=1) - timedelta(days=1)
 
     if 당월.day == 1 :
@@ -100,7 +100,7 @@ if login_code == st.secrets.login_code :
         for i,j in urls.items():
             당월합= pd.DataFrame()
             전월합= pd.DataFrame()
-            start = datetime.now(tz='Asia/Seoul')
+            start = datetime.utcnow()
             for city,dong in zip(file_1['법정동코드'][1:2].astype(str).str[:5],file_1['법정동명'][1:2]):
                 합_당월매매 = {}
                 st.write(f"{c:.1f}% {dong} complete...")
@@ -112,7 +112,7 @@ if login_code == st.secrets.login_code :
                 합_당월매매[dong] = 당월전월합[당월전월합['시군구'].str.contains(dong)].set_index('시군구').to_csv().strip().split('\n') # 맥 \n 윈도우 \r\n
                 db.collection(f"{오늘.strftime('%d')}_{i}_{오늘.strftime('%y.%m')}").document(dong).set(합_당월매매)
                 c += (50/len(file_1['법정동코드']))
-        end = datetime.now(tz='Asia/Seoul')
+        end = datetime.utcnow()
         st.write(f"100% complete! >>> {end-start} seconds")
     else:
         st.error('데이터 중복!!! 날짜 확인')
