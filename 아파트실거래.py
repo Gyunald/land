@@ -215,7 +215,7 @@ c1,c2 = st.columns([1,1])
 try:
     with c1 :
         empty = st.empty()
-        standard = empty.date_input('🧀 날짜', datetime.utcnow(),key='standard_date_1')
+        standard = empty.date_input('🧁 날짜', datetime.utcnow(),key='standard_date_1')
         standard_previous = standard - timedelta(days=1)
         day_num = datetime.isoweekday(standard)
 
@@ -257,7 +257,7 @@ try:
         if standard_str[-2:] == str(datetime.utcnow().strftime('%d')):
             if len(신규) >= 1:
                 with st.expander(f'{시군구.split()[-1]} - 신규 {len(신규)}건',expanded=True):
-                    st.success('🧁 신규매매')
+                    st.success('🧀 신규매매')
                     st.dataframe(신규.reset_index(drop=True).style.background_gradient(subset=['금액','면적'], cmap="Reds"),use_container_width=True)
         
         with st.expander(f'{시군구.split()[-1]} 실거래 - {standard_str[3:5]}월 🍩 전체',expanded=True):
