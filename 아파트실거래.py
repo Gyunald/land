@@ -244,7 +244,7 @@ try:
     if 시군구데이터.exists:
         temp = 매매()
         temp2 = 임대()
-        if standard == datetime.utcnow().date():
+        if standard == (datetime.utcnow()+timedelta(hours=9)).date():
             temp3 = 매매_전일()
             신규 = pd.merge(temp,temp3, how='outer', indicator=True).query('_merge == "left_only"').drop(columns=['_merge']).reset_index(drop=True)
             
@@ -254,13 +254,13 @@ try:
         월세_당월 = temp2[(temp2['계약'].str.contains(standard_str[:5])) & (temp2['월세'] != 0)].drop_duplicates()
         매매_임대 = pd.concat([매매_당월,전세_당월,월세_당월])
 
-        if standard_str[-2:] == str(datetime.utcnow().strftime('%d')):
+        if standard_str[-2:] == str(datetime.utcnow()+timedelta(hours=9).strftime('%d')):
             if len(신규) >= 1:
-                with st.expander(f'{시군구.split()[-1]} {datetime.utcnow().day}일 - 신규 {len(신규)}건',expanded=True):
+                with st.expander(f'{시군구.split()[-1]} {(datetime.utcnow()+timedelta(hours=9)).date().day}일 - 신규 {len(신규)}건',expanded=True):
                     st.success('🍰 신규매매')
                     st.dataframe(신규.reset_index(drop=True).style.background_gradient(subset=['금액','면적'], cmap="Reds"),use_container_width=True)
         
-        with st.expander(f'{시군구.split()[-1]} {datetime.utcnow().month}월 - 전체',expanded=True):
+        with st.expander(f'{시군구.split()[-1]} {(datetime.utcnow()+timedelta(hours=9)).date().month}월 - 전체',expanded=True):
             아파트 = st.multiselect('🍞 아파트별',sorted([i for i in 매매_임대["아파트"].drop_duplicates()]),max_selections=3)
             st.warning('🍣 다중선택가능')
             tab1, tab2, tab3 = st.tabs([f"매매 {len(매매_당월)}", f"전세 {len(전세_당월)}", f"월세 {len(월세_당월)}"])
@@ -304,7 +304,7 @@ try:
     else:
         with st_lottie_spinner(lottie_json2):
             # empty.empty()
-            standard = empty.date_input('🍳 날짜', datetime.utcnow(),key='standard_date_2')
+            standard = empty.date_input('🍳 날짜', datetime.utcnow()+timedelta(hours=9),key='standard_date_2')
             standard_previous = standard.replace(day=1) - timedelta(days=1)
 
             if standard.day == 1 :
