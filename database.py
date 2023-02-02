@@ -101,7 +101,7 @@ if login_code == st.secrets.login_code :
             당월합= pd.DataFrame()
             전월합= pd.DataFrame()
             start = datetime.utcnow()
-            for city,dong in zip(file_1['법정동코드'][1:2].astype(str).str[:5],file_1['법정동명'][1:2]):
+            for city,dong in zip(file_1['법정동코드'].astype(str).str[:5],file_1['법정동명']):
                 합_당월매매 = {}
                 st.write(f"{c:.1f}% {dong} complete...")
                 당월매매 = 실거래(j, city, 당월.strftime('%Y%m'), user_key, rows, dong)
