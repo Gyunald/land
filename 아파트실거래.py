@@ -215,7 +215,7 @@ c1,c2 = st.columns([1,1])
 try:
     with c1 :
         empty = st.empty()
-        standard = empty.date_input('🧁 날짜', datetime.utcnow(),key='standard_date_1')
+        standard = empty.date_input('🧁 날짜', datetime.utcnow()+timedelta(hours=9),key='standard_date_1')
         standard_previous = standard - timedelta(days=1)
         day_num = datetime.isoweekday(standard)
 
