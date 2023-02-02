@@ -244,7 +244,7 @@ try:
     if 시군구데이터.exists:
         temp = 매매()
         temp2 = 임대()
-        if standard == datetime.now().date():
+        if standard == datetime.utcnow().date():
             temp3 = 매매_전일()
             신규 = pd.merge(temp,temp3, how='outer', indicator=True).query('_merge == "left_only"').drop(columns=['_merge']).reset_index(drop=True)
             
@@ -254,7 +254,7 @@ try:
         월세_당월 = temp2[(temp2['계약'].str.contains(standard_str[:5])) & (temp2['월세'] != 0)].drop_duplicates()
         매매_임대 = pd.concat([매매_당월,전세_당월,월세_당월])
 
-        if standard_str[-2:] == str(datetime.now().strftime('%d')):
+        if standard_str[-2:] == str(datetime.utcnow().strftime('%d')):
             if len(신규) >= 1:
                 with st.expander(f'{시군구.split()[-1]} - 신규 {len(신규)}건',expanded=True):
                     st.success('🔥 신규매매')
