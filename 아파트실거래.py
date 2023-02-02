@@ -327,7 +327,7 @@ try:
         매매_임대_계약월별 = pd.concat([매매_계약월별,전세_계약월별,월세_계약월별])
         
         with st.expander(f'{시군구} 실거래 - {standard_str[5:]}월 🍩 전체',expanded=True):
-            아파트 = st.multiselect('🍉 아파트별',sorted([i for i in 매매_임대_계약월별["아파트"].drop_duplicates()]),max_selections=3)
+            아파트 = st.multiselect('🍞 아파트별',sorted([i for i in 매매_임대_계약월별["아파트"].drop_duplicates()]),max_selections=3)
             st.warning('🚥 다중선택가능')
             
             tab1, tab2, tab3 = st.tabs([f"매매 {len(매매_계약월별)}", f"전세 {len(전세_계약월별)}", f"월세 {len(월세_계약월별)}"])
