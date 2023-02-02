@@ -256,7 +256,7 @@ try:
 
         if standard_str[-2:] == str(datetime.utcnow().strftime('%d')):
             if len(신규) >= 1:
-                with st.expander(f'{시군구.split()[-1]} - 신규 {len(신규)}건',expanded=True):
+                with st.expander(f'{시군구.split()[-1]} 실거래 - 신규 {len(신규)}건',expanded=True):
                     st.success('🧀 신규매매')
                     st.dataframe(신규.reset_index(drop=True).style.background_gradient(subset=['금액','면적'], cmap="Reds"),use_container_width=True)
         
