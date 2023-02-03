@@ -169,11 +169,10 @@ def 실거래(url, city, date, user_key, rows):
         aptTrade['계약'] = pd.to_datetime(aptTrade['계약'],format = "%Y%m%d").dt.strftime('%y.%m.%d')
         aptTrade['면적'] = aptTrade['면적'].astype(float).map('{:.0f}'.format).astype(int)
         aptTrade['동'] = aptTrade['동'].str.split().str[0]
-
+        return aptTrade.sort_values(by=['아파트'], ascending=True)
+    
     else:
         return Exception
-
-    return aptTrade.sort_values(by=['아파트'], ascending=True)
 
 if not firebase_admin._apps:
     cred = credentials.Certificate({
