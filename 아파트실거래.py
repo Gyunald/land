@@ -351,7 +351,7 @@ try:
                 st.dataframe(전세_데이터프레임.reset_index(drop=True).style.background_gradient(subset=['보증금','면적','종전보증금'], cmap="Reds"),use_container_width=True)
 
                 if 아파트 :
-                    전세_차트 = api_rent[(api_rent['아파트'].isin(아파트)) & (api_rent['월세'] == '0')]
+                    전세_차트 = api_rent[(api_rent['아파트'].isin(아파트)) & (api_rent['월세'] == 0)]
                     st.error('🥯 시세 동향')
                     chart = 차트(전세_차트,y='보증금',t=전세_차트)
                     st.altair_chart(chart,use_container_width=True)
