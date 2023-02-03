@@ -170,9 +170,6 @@ def 실거래(url, city, date, user_key, rows):
         aptTrade['면적'] = aptTrade['면적'].astype(float).map('{:.0f}'.format).astype(int)
         aptTrade['동'] = aptTrade['동'].str.split().str[0]
         return aptTrade.sort_values(by=['아파트'], ascending=True)
-    
-    else:
-        return Exception
 
 if not firebase_admin._apps:
     cred = credentials.Certificate({
