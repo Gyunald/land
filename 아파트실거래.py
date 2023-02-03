@@ -300,7 +300,7 @@ try:
     else:
         with st_lottie_spinner(lottie_json2):
             # empty.empty()
-            standard = empty.date_input('🍳 날짜', datetime.utcnow()+timedelta(hours=9),key='standard_date_2')
+            standard = empty.date_input('🧁 날짜', datetime.utcnow()+timedelta(hours=9),key='standard_date_2')
             standard_previous = standard.replace(day=1) - timedelta(days=1)
 
             if standard.day == 1 :
