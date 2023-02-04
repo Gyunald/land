@@ -9,7 +9,7 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 
-st.set_page_config(page_title="🎈아파트 실거래가 매매/전세/월세 ",layout='wide')
+st.set_page_config(page_title="🎈아파트 실거래가 매매/전세/월세 ") # layout='wide'
 empty = st.empty()
 empty.write('아파트 실거래')
 empty.empty()
