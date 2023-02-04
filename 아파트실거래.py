@@ -251,7 +251,7 @@ try:
         월세_당월 = temp2[(temp2['계약'].str.contains(standard_str[:5])) & (temp2['월세'] != 0)].drop_duplicates()
         매매_임대 = pd.concat([매매_당월,전세_당월,월세_당월])
 
-        if standard_str[-2:] == str(datetime.utcnow()+timedelta(hours=9).strftime('%d')):
+        if standard_str[-2:] == (datetime.utcnow()+timedelta(hours=9)).strftime('%d'):
             if len(신규) >= 1:
                 with st.expander(f'{시군구.split()[-1]} {(datetime.utcnow()+timedelta(hours=9)).day}일 - 신규 {len(신규)}건',expanded=True):
                     st.success('🍰 신규매매')
