@@ -94,7 +94,7 @@ if login_code == st.secrets.login_code :
         전월 = 당월.replace(day=1) - timedelta(days=1)
 
     c = 0
-    if not db.collection(f"{당월.strftime('%d')}_trade_{당월.strftime('%y.%m')}").document('서울특별시 종로구').get().exists:
+    #if not db.collection(f"{당월.strftime('%d')}_trade_{당월.strftime('%y.%m')}").document('서울특별시 종로구').get().exists:
         for i,j in urls.items():
             당월합= pd.DataFrame()
             전월합= pd.DataFrame()
@@ -112,8 +112,8 @@ if login_code == st.secrets.login_code :
                 c += (50/len(file_1['법정동코드']))
         end = datetime.utcnow()+timedelta(hours=9)
         st.write(f"100% complete! >>> {end-start} seconds")
-    else:
-        st.error('데이터 중복!!! 날짜 확인')
+    #else:
+        #st.error('데이터 중복!!! 날짜 확인')
 elif login_code != st.secrets.login_code :
     st.info('코드 입력')
     
