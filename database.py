@@ -110,8 +110,8 @@ if login_code == st.secrets.login_code :
                 합_당월매매[dong] = 당월전월합[당월전월합['시군구'].str.contains(dong)].set_index('시군구').to_csv().strip().split('\n') # 맥 \n 윈도우 \r\n
                 db.collection(f"{당월.strftime('%d')}_{i}_{당월.strftime('%y.%m')}").document(dong).set(합_당월매매)
                 c += (50/len(file_1['법정동코드']))
-        end = datetime.utcnow()+timedelta(hours=9)
-        st.write(f"100% complete! >>> {end-start} seconds")
+    end = datetime.utcnow()+timedelta(hours=9)
+    st.write(f"100% complete! >>> {end-start} seconds")
     #else:
         #st.error('데이터 중복!!! 날짜 확인')
 elif login_code != st.secrets.login_code :
