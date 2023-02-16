@@ -93,7 +93,7 @@ if login_code == st.secrets.login_code :
     if 당월.day == 1 :
         당월 = 당월 - timedelta(days=1)
         전월 = 당월.replace(day=1) - timedelta(days=1)
-    d1=50
+    d1=60
     d2=-1
     c = 0
     if db.collection(f"{당월.strftime('%d')}_trade_{당월.strftime('%y.%m')}").document('서울특별시 종로구').get().exists:
