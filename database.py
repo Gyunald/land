@@ -93,10 +93,10 @@ if login_code == st.secrets.login_code :
     if 당월.day == 1 :
         당월 = 당월 - timedelta(days=1)
         전월 = 당월.replace(day=1) - timedelta(days=1)
-    d1=60
+    d1=0
     d2=-1
     c = 0
-    if db.collection(f"{당월.strftime('%d')}_trade_{당월.strftime('%y.%m')}").document('서울특별시 종로구').get().exists:
+    if not db.collection(f"{당월.strftime('%d')}_trade_{당월.strftime('%y.%m')}").document('서울특별시 종로구').get().exists:
         for i,j in urls.items():
             당월합= pd.DataFrame()
             전월합= pd.DataFrame()
