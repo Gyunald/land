@@ -81,8 +81,8 @@ if login_code == st.secrets.login_code :
     
     db = firestore.client()
 
-    #urls= {'trade' : st.secrets.api_path,'rent' : st.secrets.api_path_2}
-    urls={'rent' : st.secrets.api_path_2}
+    urls= {'trade' : st.secrets.api_path,'rent' : st.secrets.api_path_2}
+#     urls={'rent' : st.secrets.api_path_2}
     file_1 = pd.read_csv(st.secrets.user_path,encoding='cp949')
     user_key = st.secrets.user_key
     rows = '9999'
@@ -114,8 +114,8 @@ if login_code == st.secrets.login_code :
                 c += 1
         end = datetime.utcnow()+timedelta(hours=9)
         st.write(f"complete! >>> {end-start} seconds")
-   # else:
-        #st.error('데이터 중복!!! 날짜 확인')
+   else:
+        st.error('데이터 중복!!! 날짜 확인')
 elif login_code != st.secrets.login_code :
     st.info('코드 입력')
     
