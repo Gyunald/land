@@ -104,7 +104,7 @@ if login_code == st.secrets.login_code :
             start = datetime.utcnow()+timedelta(hours=9)
             for city,dong in zip(file_1['법정동코드'][d1:d2].astype(str).str[:5],file_1['법정동명'][d1:d2]):
                 합_당월매매 = {}
-                st.write(f"{c}/{len(file_1['법정동명'])} {dong} complete...")
+                st.write(f"{c}/{len(file_1['법정동명'])} {dong} complete...") 
                 당월매매 = 실거래(j, city, 당월.strftime('%Y%m'), user_key, rows, dong)
                 전월매매 = 실거래(j, city, 전월.strftime('%Y%m'), user_key, rows, dong)
                 당월합 = pd.concat([당월합,당월매매])
