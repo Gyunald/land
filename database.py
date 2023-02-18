@@ -95,15 +95,16 @@ if login_code == st.secrets.login_code :
         전월 = 당월.replace(day=1) - timedelta(days=1)
     d1=0
     d2=-1
-    c = 0
+
     if not db.collection(f"{당월.strftime('%d')}_trade_{당월.strftime('%y.%m')}").document('서울특별시 종로구').get().exists:
         for i,j in urls.items():
+            c = 0
             당월합= pd.DataFrame()
             전월합= pd.DataFrame()
             start = datetime.utcnow()+timedelta(hours=9)
             for city,dong in zip(file_1['법정동코드'][d1:d2].astype(str).str[:5],file_1['법정동명'][d1:d2]):
                 합_당월매매 = {}
-                st.write(f"{c}/250 {dong} complete...")
+                st.write(f"{c}/{len(file_1['법정동명'])} {dong} complete...")
                 당월매매 = 실거래(j, city, 당월.strftime('%Y%m'), user_key, rows, dong)
                 전월매매 = 실거래(j, city, 전월.strftime('%Y%m'), user_key, rows, dong)
                 당월합 = pd.concat([당월합,당월매매])
