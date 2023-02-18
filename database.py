@@ -114,7 +114,7 @@ if login_code == st.secrets.login_code :
                 c += 1
         end = datetime.utcnow()+timedelta(hours=9)
         st.write(f"complete! >>> {end-start} seconds")
-   else:
+    else:
         st.error('데이터 중복!!! 날짜 확인')
 elif login_code != st.secrets.login_code :
     st.info('코드 입력')
