@@ -14,14 +14,14 @@ empty = st.empty()
 empty.write('아파트 실거래')
 empty.empty()
 
-@st.experimental_memo
+@st.cache_data
 def load_lottie(url:str):
     r = requests.get(url)
     if r.status_code != 200:
         return None
     return r.json()
 
-@st.experimental_memo
+@st.cache_data
 def load_lottie2(url:str):
     r = requests.get(url)
     if r.status_code != 200:
@@ -122,7 +122,7 @@ def 임대():
         temp2['면적']= temp2['면적'].astype('int64')
     return temp2.sort_values(by=['아파트'], ascending=True)
 
-@st.experimental_singleton(ttl=6000)
+@st.cache_resource(ttl=6000)
 def 실거래(url, city, date, user_key, rows):
     url = url + "?&LAWD_CD=" + city
     url = url + "&DEAL_YMD=" + date[:6]
