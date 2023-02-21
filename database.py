@@ -81,8 +81,8 @@ if login_code == st.secrets.login_code :
     
     db = firestore.client()
 
-#    urls= {'trade' : st.secrets.api_path,'rent' : st.secrets.api_path_2}
-    urls={'rent' : st.secrets.api_path_2}
+    urls= {'trade' : st.secrets.api_path,'rent' : st.secrets.api_path_2}
+#    urls={'rent' : st.secrets.api_path_2}
 #    urls= {'trade' : st.secrets.api_path}
     file_1 = pd.read_csv(st.secrets.user_path,encoding='cp949')
     user_key = st.secrets.user_key
@@ -97,7 +97,7 @@ if login_code == st.secrets.login_code :
     d1=0
     d2=-1
     # not
-    if db.collection(f"{당월.strftime('%d')}_trade_{당월.strftime('%y.%m')}").document('서울특별시 종로구').get().exists:
+    if not db.collection(f"{당월.strftime('%d')}_trade_{당월.strftime('%y.%m')}").document('서울특별시 종로구').get().exists:
         for i,j in urls.items():
             c = 0
             당월합= pd.DataFrame()
