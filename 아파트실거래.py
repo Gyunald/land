@@ -235,7 +235,7 @@ try:
     with c2:
         시군구 = st.selectbox('🍔 시군구 검색', [i for i in file_1["법정동명"]],index=105) # 22 강남 105 파주
         
-    시군구데이터 = db.collection(f"{standard.strftime('%d')}_trade_{standard_str[:-3]}").document(시군구).get()
+    시군구데이터 = db.collection(f"{standard.strftime('%d')}_rent_{standard_str[:-3]}").document(시군구).get()
     file_2 = file_1[file_1['법정동명'].str.contains(시군구)].astype(str)
 
     if 시군구데이터.exists:
