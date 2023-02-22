@@ -21,7 +21,7 @@ def load_lottie(url:str):
         return None
     return r.json()
 
-@st.cache_data
+#@st.cache_data
 def load_lottie2(url:str):
     r = requests.get(url)
     if r.status_code != 200:
