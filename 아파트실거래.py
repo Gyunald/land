@@ -14,14 +14,14 @@ empty = st.empty()
 empty.write('아파트 실거래')
 empty.empty()
 
-#@st.cache_data
+@st.cache_data
 def load_lottie(url:str):
     r = requests.get(url)
     if r.status_code != 200:
         return None
     return r.json()
 
-#@st.cache_data
+@st.cache_data
 def load_lottie2(url:str):
     r = requests.get(url)
     if r.status_code != 200:
@@ -122,7 +122,7 @@ def 임대():
         temp2['면적']= temp2['면적'].astype('int64')
     return temp2.sort_values(by=['아파트'], ascending=True)
 
-#@st.cache_resource(ttl=6000)
+@st.cache_resource(ttl=6000)
 def 실거래(url, city, date, user_key, rows):
     url = url + "?&LAWD_CD=" + city
     url = url + "&DEAL_YMD=" + date[:6]
@@ -235,7 +235,7 @@ try:
     with c2:
         시군구 = st.selectbox('🍔 시군구 검색', [i for i in file_1["법정동명"]],index=105) # 22 강남 105 파주
         
-    시군구데이터 = db.collection(f"{standard.strftime('%d')}_rent_{standard_str[:-3]}").document(시군구).get()
+    시군구데이터 = db.collection(f"{standard.strftime('%d')}_trade_{standard_str[:-3]}").document(시군구).get()
     file_2 = file_1[file_1['법정동명'].str.contains(시군구)].astype(str)
 
     if 시군구데이터.exists:
