@@ -87,37 +87,41 @@ if login_code == st.secrets.login_code :
     file_1 = pd.read_csv(st.secrets.user_path,encoding='cp949')
     user_key = st.secrets.user_key
     rows = '9999'
-
-    당월 = (datetime.utcnow()+timedelta(hours=9)).date()
+    당월 = (datetime.utcnow()+timedelta(days=5)).date()
+#     당월 = (datetime.utcnow()+timedelta(hours=9)).date()
     전월 = 당월.replace(day=1) - timedelta(days=1)
 
     if 당월.day == 1 :
         당월 = 당월 - timedelta(days=1)
         전월 = 당월.replace(day=1) - timedelta(days=1)
-    d1=0
-    d2=-1
-    # not
-    if not db.collection(f"{당월.strftime('%d')}_trade_{당월.strftime('%y.%m')}").document('서울특별시 종로구').get().exists:
-        for i,j in urls.items():
-            c = 0
-            당월합= pd.DataFrame()
-            전월합= pd.DataFrame()
-            start = datetime.utcnow()+timedelta(hours=9)
+
+    # if not db.collection(f"{당월.strftime('%d')}_trade_{당월.strftime('%y.%m')}").document('서귀포시').get().exists:
+    # print(list(file_1['법정동명']).index('서울특별시 중구'))
+
+    for i,j in urls.items():
+        d1= len(db.collection(f"{당월.strftime('%d')}_{i}_{당월.strftime('%y.%m')}").get())
+        d2=3
+        c = 0
+        당월합= pd.DataFrame()
+        전월합= pd.DataFrame()
+        start = datetime.utcnow()+timedelta(hours=9)
+        if d1 >= d2:
+            continue
+        else:
             for city,dong in zip(file_1['법정동코드'][d1:d2].astype(str).str[:5],file_1['법정동명'][d1:d2]):
                 합_당월매매 = {}
-                st.write(f"{c}/{len(file_1['법정동명'])} {dong} complete...") 
                 당월매매 = 실거래(j, city, 당월.strftime('%Y%m'), user_key, rows, dong)
                 전월매매 = 실거래(j, city, 전월.strftime('%Y%m'), user_key, rows, dong)
                 당월합 = pd.concat([당월합,당월매매])
                 전월합 = pd.concat([전월합,전월매매])
                 당월전월합 = pd.concat([당월합,전월합]).reset_index(drop=True)
-                합_당월매매[dong] = 당월전월합[당월전월합['시군구'].str.contains(dong)].set_index('시군구').to_csv().strip().split('\n') # 맥 \n 윈도우 \r\n
-                db.collection(f"{당월.strftime('%d')}_{i}_{당월.strftime('%y.%m')}").document(dong).set(합_당월매매)
-                c += 1
-        end = datetime.utcnow()+timedelta(hours=9)
-        st.write(f"complete! >>> {end-start} seconds")
-    else:
-        st.error('데이터 중복!!! 날짜 확인')
+                합_당월매매[dong] = 당월전월합[당월전월합['시군구'].str.contains(dong)].set_index('시군구').to_csv().strip().split('\r\n') # 맥 \n 윈도우 \r\n
+                db.collection(f"{당월.strftime('%d')}_{i}_{당월.strftime('%y.%m')}").document(dong).set(합_당월매매)        
+                c += (100/(d2-d1))
+                print(f"{i} {c:.1f}% {dong} complete...")
+            end = datetime.utcnow()+timedelta(hours=9)
+            print(f"100% complete! >>> {end-start} seconds")
+        
 elif login_code != st.secrets.login_code :
     st.info('코드 입력')
     
