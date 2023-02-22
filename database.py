@@ -118,9 +118,9 @@ if login_code == st.secrets.login_code :
                 합_당월매매[dong] = 당월전월합[당월전월합['시군구'].str.contains(dong)].set_index('시군구').to_csv().strip().split('\n') # 맥 \n 윈도우 \r\n
                 db.collection(f"{당월.strftime('%d')}_{i}_{당월.strftime('%y.%m')}").document(dong).set(합_당월매매)        
                 c += (100/(d2-d1))
-                st.wtite(f"{i} {c:.1f}% {dong} complete...")
+                st.write(f"{i} {c:.1f}% {dong} complete...")
             end = datetime.utcnow()+timedelta(hours=9)
-            st.wtite(f"100% complete! >>> {end-start} seconds")
+            st.write(f"100% complete! >>> {end-start} seconds")
         
 elif login_code != st.secrets.login_code :
     st.info('코드 입력')
