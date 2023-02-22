@@ -82,13 +82,12 @@ if login_code == st.secrets.login_code :
     db = firestore.client()
 
     urls= {'trade' : st.secrets.api_path,'rent' : st.secrets.api_path_2}
-#    urls={'rent' : st.secrets.api_path_2}
-#    urls= {'trade' : st.secrets.api_path}
+
     file_1 = pd.read_csv(st.secrets.user_path,encoding='cp949')
     user_key = st.secrets.user_key
     rows = '9999'
-    당월 = (datetime.utcnow()+timedelta(days=5)).date()
-#     당월 = (datetime.utcnow()+timedelta(hours=9)).date()
+
+    당월 = (datetime.utcnow()+timedelta(hours=9)).date()
     전월 = 당월.replace(day=1) - timedelta(days=1)
 
     if 당월.day == 1 :
@@ -100,7 +99,7 @@ if login_code == st.secrets.login_code :
 
     for i,j in urls.items():
         d1= len(db.collection(f"{당월.strftime('%d')}_{i}_{당월.strftime('%y.%m')}").get())
-        d2=3
+        d2= len(file_1['법정동명'])
         c = 0
         당월합= pd.DataFrame()
         전월합= pd.DataFrame()
