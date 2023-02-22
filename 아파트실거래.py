@@ -14,14 +14,14 @@ empty = st.empty()
 empty.write('아파트 실거래')
 empty.empty()
 
-@st.cache_data()
+#@st.cache_data
 def load_lottie(url:str):
     r = requests.get(url)
     if r.status_code != 200:
         return None
     return r.json()
 
-@st.cache_data()
+@st.cache_data
 def load_lottie2(url:str):
     r = requests.get(url)
     if r.status_code != 200:
