@@ -98,16 +98,18 @@ if login_code == st.secrets.login_code :
     # print(list(file_1['법정동명']).index('서울특별시 중구'))
 
     for i,j in urls.items():
+        st.write('check')
         d1= len(db.collection(f"{당월.strftime('%d')}_{i}_{당월.strftime('%y.%m')}").get())
         d2= len(file_1['법정동명'])
         c = 0
         당월합= pd.DataFrame()
         전월합= pd.DataFrame()
         start = datetime.utcnow()+timedelta(hours=9)
-        if d1 > d2:
+        if d1 >= d2:
+            st.write('continue')
             continue
         else:
-            for city,dong in zip(file_1['법정동코드'][117:123].astype(str).str[:5],file_1['법정동명'][117:123]):
+            for city,dong in zip(file_1['법정동코드'][d1:d2].astype(str).str[:5],file_1['법정동명'][d1:d2]):
                 합_당월매매 = {}
                 당월매매 = 실거래(j, city, 당월.strftime('%Y%m'), user_key, rows, dong)
                 전월매매 = 실거래(j, city, 전월.strftime('%Y%m'), user_key, rows, dong)
