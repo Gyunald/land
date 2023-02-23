@@ -107,7 +107,7 @@ if login_code == st.secrets.login_code :
         if d1 > d2:
             continue
         else:
-            for city,dong in zip(file_1['법정동코드'][107:117].astype(str).str[:5],file_1['법정동명'][107:117]):
+            for city,dong in zip(file_1['법정동코드'][117:123].astype(str).str[:5],file_1['법정동명'][117:123]):
                 합_당월매매 = {}
                 당월매매 = 실거래(j, city, 당월.strftime('%Y%m'), user_key, rows, dong)
                 전월매매 = 실거래(j, city, 전월.strftime('%Y%m'), user_key, rows, dong)
@@ -118,8 +118,8 @@ if login_code == st.secrets.login_code :
                 db.collection(f"{당월.strftime('%d')}_{i}_{당월.strftime('%y.%m')}").document(dong).set(합_당월매매)        
                 c += (100/(d2-d1))
                 st.write(f"{i} {c:.1f}% {dong}")
-            end = datetime.utcnow()+timedelta(hours=9)
-            st.write(f"100% complete! >>> {end-start} seconds")
+        end = datetime.utcnow()+timedelta(hours=9)
+        st.write(f"100% complete! >>> {end-start} seconds")
         
 elif login_code != st.secrets.login_code :
     st.info('코드 입력')
