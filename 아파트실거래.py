@@ -210,7 +210,7 @@ c1,c2 = st.columns([1,1])
 try:
     with c1 :
         empty = st.empty()
-        standard = empty.date_input('🧁 날짜', datetime.utcnow()+timedelta(hours=9),key='standard_date_1')
+        standard = empty.date_input('🧁 날짜', datetime.utcnow()+timedelta(hours=9),key='standard_date_1',max_value=datetime.utcnow()+timedelta(hours=9))
         standard_previous = standard - timedelta(days=2)
         day_num = datetime.isoweekday(standard)
 
@@ -229,29 +229,29 @@ try:
         
         standard_str = standard.strftime('%Y.%m.%d')
         standard_previous_str = standard_previous.strftime('%Y.%m.%d')
-        standard_str
+
     with c2:
         시군구 = st.selectbox('🍔 시군구 검색', [i for i in address],index=104) # 22 강남 104 파주
         
-    get_매매 = db.collection(standard_str).document(시군구).get().to_dict()['매매']
-    get_임대 = db.collection(standard_str).document(시군구).get().to_dict()['임대']
-
     city = address[시군구]
     address = {y:x for x,y in address.items()}
     법정동명 = address[city]
 
-    if not get_매매 :
+    if db.collection(standard_str).document(시군구).get().exists:
+        get_매매 = db.collection(standard_str).document(시군구).get().to_dict()['매매']
+        get_임대 = db.collection(standard_str).document(시군구).get().to_dict()['임대']
+        
         temp = 매매()
         temp2 = 임대()
- 
+        
         if standard == (datetime.utcnow()+timedelta(hours=9)).date():
             temp3 = 매매_전일()
             신규 = pd.merge(temp,temp3, how='outer', indicator=True).query('_merge == "left_only"').drop(columns=['_merge']).reset_index(drop=True)
-            
-        매매_당월 = temp[temp['계약'].str.contains(standard_str[2:5])].drop_duplicates()
-        전세_당월 = temp2[(temp2['계약'].str.contains(standard_str[2:5])) & (temp2['월세'] == 0)].drop_duplicates()
+
+        매매_당월 = temp[temp['계약'].str.contains(standard_str[5:8])].drop_duplicates()
+        전세_당월 = temp2[(temp2['계약'].str.contains(standard_str[5:8])) & (temp2['월세'] == 0)].drop_duplicates()
         전세_당월 = 전세_당월.reindex(columns=["아파트", "보증금", "층", "면적", "건축", "동", "계약", "종전보증금", "갱신권"])        
-        월세_당월 = temp2[(temp2['계약'].str.contains(standard_str[2:5])) & (temp2['월세'] != 0)].drop_duplicates()
+        월세_당월 = temp2[(temp2['계약'].str.contains(standard_str[5:8])) & (temp2['월세'] != 0)].drop_duplicates()
         매매_임대 = pd.concat([매매_당월,전세_당월,월세_당월])
 
         if standard_str[-2:] == (datetime.utcnow()+timedelta(hours=9)).strftime('%d'):
@@ -303,7 +303,7 @@ try:
                 st.dataframe(월세_당월.sort_values(by=['아파트'], ascending=True).reset_index(drop=True).style.background_gradient(subset=['보증금','월세','종전보증금','종전월세'], cmap="Reds"),use_container_width=True)
     else:
         with st_lottie_spinner(lottie_json2):
-            standard = empty.date_input('🧁 날짜', datetime.utcnow()+timedelta(hours=9),key='standard_date_2')
+            standard = empty.date_input('🧁 날짜', datetime.utcnow()+timedelta(hours=9),key='standard_date_2',max_value=datetime.utcnow()+timedelta(hours=9))
             standard_previous = standard.replace(day=1) - timedelta(days=1)
 
             if standard.day == 1 :
