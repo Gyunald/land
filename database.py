@@ -1,13 +1,11 @@
 import streamlit as st
 from bs4 import BeautifulSoup
-import pandas as pd
 from datetime import datetime,timedelta
 import requests
-from streamlit_lottie import st_lottie,st_lottie_spinner
-import altair as alt
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
+from threading import Thread
 
 empty = st.empty()
 login_code = empty.text_input('login_code', type='password')
