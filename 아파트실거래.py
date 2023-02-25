@@ -122,7 +122,7 @@ def 임대():
         temp2['면적']= temp2['면적'].astype('int64')
     return temp2.sort_values(by=['아파트'], ascending=True)
 
-@st.cache_resource
+@st.cache_data(ttl=6000)
 def 실거래(url, city, date, user_key, rows):
     url = url + "?&LAWD_CD=" + city
     url = url + "&DEAL_YMD=" + date[:6]
