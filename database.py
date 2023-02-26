@@ -114,5 +114,5 @@ if login_code == st.secrets.login_code :
             st.write(f"임대 {d:.1f}% {dong} complete...")     
     else:
         st.error('데이터 중복!!!')
-else:
-    st.write('코드 오류')
+elif login_code != st.secrets.login_code :
+    st.warning('코드 오류')
