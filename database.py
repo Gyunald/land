@@ -10,11 +10,11 @@ from threading import Thread
 empty = st.empty()
 login_code = empty.text_input('login_code', type='password')
 
-def 실거래(url, code, user_key, rows, dong, type):
+def 실거래(url, code, user_key, rows, dong, waht):
     start = datetime.now()
     l = []
     for date in [당월,전월]:
-        url = urls[type]
+        url = urls[waht]
         url = url + "?&LAWD_CD=" + code
         url = url + "&DEAL_YMD=" + date.strftime('%Y%m')
         url = url + "&serviceKey=" + user_key
@@ -49,15 +49,19 @@ def 실거래(url, code, user_key, rows, dong, type):
                         금액            = int(item.find("거래금액").text.replace(',','').strip())
                         파기            = item.find("해제사유발생일").text.strip()
                         temp = [','.join((아파트, str(금액), str(층), str(면적), str(건축), 계약 ,동, 거래, 파기))]
-                    # print(temp)
-                l.extend(temp)
-    end = datetime.utcnow()+timedelta(hours=9)
-    # nyc_ref = db.collection(f"{당월.strftime('%Y.%m.%d')}").document(dong)
-    # batch.set(nyc_ref, {type: l},merge=True)
-    # batch.commit()
-    # db.collection(f"{당월.strftime('%Y.%m.%d')}").document(dong).update({type:l},merge=True)
 
-    print(f"DB_update {type}_{dong} {end-start} sec")
+                l.extend(temp)
+                
+    end = datetime.utcnow()+timedelta(hours=9)
+    
+    # nyc_ref = db.collection(f"{당월.strftime('%Y.%m.%d')}").document(dong)
+    # batch.set(nyc_ref, {waht: l},merge=True)
+    # batch.commit()
+    
+    db.collection(f"{당월.strftime('%Y.%m.%d')}").document(dong).set({waht:l},merge=True)
+    tread_1.join()
+    tread_2.join()
+    print(f"DB_update {waht}_{dong} {end-start} sec")
 
 if login_code == st.secrets.login_code :
     empty.empty()
@@ -91,8 +95,10 @@ if login_code == st.secrets.login_code :
     
     당월 = (datetime.utcnow()+timedelta(hours=9)).date()
     전월 = 당월.replace(day=1) - timedelta(days=1)
+    
     c = 0
     d = 0
+    
     if 당월.day == 1 :
         당월 = 당월 - timedelta(days=1)
         전월 = 당월.replace(day=1) - timedelta(days=1)
@@ -105,9 +111,7 @@ if login_code == st.secrets.login_code :
         c += (100/len(address))
         print(f"매매 {c:.1f}% {dong} complete...")
         d += (100/len(address))
-        print(f"임대 {d:.1f}% {dong} complete...")
-    tread_1.join()
-    tread_2.join()        
+        print(f"임대 {d:.1f}% {dong} complete...")     
     
-elif login_code != 'kkd':
+else:
     print('코드 오류')
