@@ -61,7 +61,7 @@ def 실거래(url, code, user_key, rows, dong, waht):
     db.collection(f"{당월.strftime('%Y.%m.%d')}").document(dong).set({waht:l},merge=True)
     tread_1.join()
     tread_2.join()
-    print(f"DB_update {waht}_{dong} {end-start} sec")
+    st.write(f"DB_update {waht}_{dong} {end-start} sec")
 
 if login_code == st.secrets.login_code :
     empty.empty()
@@ -109,9 +109,9 @@ if login_code == st.secrets.login_code :
         tread_1.start()
         tread_2.start()
         c += (100/len(address))
-        print(f"매매 {c:.1f}% {dong} complete...")
+        st.write(f"매매 {c:.1f}% {dong} complete...")
         d += (100/len(address))
-        print(f"임대 {d:.1f}% {dong} complete...")     
+        st.write(f"임대 {d:.1f}% {dong} complete...")     
     
 else:
-    print('코드 오류')
+    st.write('코드 오류')
