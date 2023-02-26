@@ -56,9 +56,9 @@ def 실거래(url, code, user_key, rows, dong, waht):
     # batch.commit()
     
     db.collection(f"{당월.strftime('%Y.%m.%d')}").document(dong).set({waht:l},merge=True)
+    st.write(f"DB_update {waht}_{dong} {end-start} sec")
     tread_1.join()
     tread_2.join()
-    st.write(f"DB_update {waht}_{dong} {end-start} sec")
     
 empty = st.empty()
 login_code = empty.text_input('login_code', type='password')
