@@ -113,6 +113,6 @@ if login_code == st.secrets.login_code :
             d += (100/len(address))
             st.write(f"임대 {d:.1f}% {dong} complete...")     
     else:
-        st.error(데이터 중복!!!)
+        st.error('데이터 중복!!!')
 else:
     st.write('코드 오류')
