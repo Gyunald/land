@@ -1,11 +1,11 @@
-import streamlit as st
-from bs4 import BeautifulSoup
-from datetime import datetime,timedelta
-import requests
-import firebase_admin
-from firebase_admin import credentials
-from firebase_admin import firestore
-from threading import Thread
+# import streamlit as st
+# from bs4 import BeautifulSoup
+# from datetime import datetime,timedelta
+# import requests
+# import firebase_admin
+# from firebase_admin import credentials
+# from firebase_admin import firestore
+# from threading import Thread
 
 empty = st.empty()
 login_code = empty.text_input('login_code', type='password')
