@@ -7,9 +7,6 @@ from firebase_admin import credentials
 from firebase_admin import firestore
 from threading import Thread
 
-empty = st.empty()
-login_code = empty.text_input('login_code', type='password')
-
 def 실거래(url, code, user_key, rows, dong, waht):
     start = datetime.now()
     l = []
@@ -62,6 +59,9 @@ def 실거래(url, code, user_key, rows, dong, waht):
     tread_1.join()
     tread_2.join()
     st.write(f"DB_update {waht}_{dong} {end-start} sec")
+    
+empty = st.empty()
+login_code = empty.text_input('login_code', type='password')
 
 if login_code == st.secrets.login_code :
     empty.empty()
