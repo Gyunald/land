@@ -91,7 +91,7 @@ if login_code == st.secrets.login_code :
     user_key = st.secrets.user_key
     rows = '9999'
     
-    st.write(DB_update)
+    st.write('DB_update')
     
     당월 = (datetime.utcnow()+timedelta(hours=9)).date()
     전월 = 당월.replace(day=1) - timedelta(days=1)
