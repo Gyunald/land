@@ -1,11 +1,11 @@
-# import streamlit as st
-# from bs4 import BeautifulSoup
-# from datetime import datetime,timedelta
-# import requests
-# import firebase_admin
-# from firebase_admin import credentials
-# from firebase_admin import firestore
-# from threading import Thread
+import streamlit as st
+from bs4 import BeautifulSoup
+from datetime import datetime,timedelta
+import requests
+import firebase_admin
+from firebase_admin import credentials
+from firebase_admin import firestore
+from threading import Thread
 
 empty = st.empty()
 login_code = empty.text_input('login_code', type='password')
@@ -102,16 +102,17 @@ if login_code == st.secrets.login_code :
     if 당월.day == 1 :
         당월 = 당월 - timedelta(days=1)
         전월 = 당월.replace(day=1) - timedelta(days=1)
-
-    for dong,code in address.items():        
-        tread_1 = Thread(target=실거래, args=(urls['매매'], code, user_key, rows, dong,'매매'))
-        tread_2 = Thread(target=실거래, args=(urls['임대'], code, user_key, rows, dong,'임대'))
-        tread_1.start()
-        tread_2.start()
-        c += (100/len(address))
-        st.write(f"매매 {c:.1f}% {dong} complete...")
-        d += (100/len(address))
-        st.write(f"임대 {d:.1f}% {dong} complete...")     
-    
+    if not db.collection(f"{당월.strftime('%Y.%m.%d')}").document('서울특별시 종로구').get().exists:
+        for dong,code in address.items():        
+            tread_1 = Thread(target=실거래, args=(urls['매매'], code, user_key, rows, dong,'매매'))
+            tread_2 = Thread(target=실거래, args=(urls['임대'], code, user_key, rows, dong,'임대'))
+            tread_1.start()
+            tread_2.start()
+            c += (100/len(address))
+            st.write(f"매매 {c:.1f}% {dong} complete...")
+            d += (100/len(address))
+            st.write(f"임대 {d:.1f}% {dong} complete...")     
+    else:
+        st.error(데이터 중복!!!)
 else:
     st.write('코드 오류')
