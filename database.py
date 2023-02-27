@@ -7,11 +7,11 @@ from firebase_admin import credentials
 from firebase_admin import firestore
 from threading import Thread
 
-def 실거래(url, code, user_key, rows, dong, waht):
+def 실거래(url, code, user_key, rows, dong, what):
     start = datetime.now()
     l = []
     for date in [당월,전월]:
-        url = urls[waht]
+        url = urls[what]
         url = url + "?&LAWD_CD=" + code
         url = url + "&DEAL_YMD=" + date.strftime('%Y%m')
         url = url + "&serviceKey=" + user_key
@@ -52,11 +52,11 @@ def 실거래(url, code, user_key, rows, dong, waht):
     end = datetime.utcnow()+timedelta(hours=9)
     
     # nyc_ref = db.collection(f"{당월.strftime('%Y.%m.%d')}").document(dong)
-    # batch.set(nyc_ref, {waht: l},merge=True)
+    # batch.set(nyc_ref, {what: l},merge=True)
     # batch.commit()
     
-    db.collection(f"{당월.strftime('%Y.%m.%d')}").document(dong).set({waht:l},merge=True)
-    st.write(f"DB_update {waht}_{dong} {end-start} sec")
+    db.collection(f"{당월.strftime('%Y.%m.%d')}").document(dong).set({what:l},merge=True)
+    st.write(f"DB_update {what}_{dong} {end-start} sec")
     tread_1.join()
     tread_2.join()
     
