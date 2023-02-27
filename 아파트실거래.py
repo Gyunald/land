@@ -274,10 +274,13 @@ try:
                 st.dataframe(아파트별.sort_values(by=['아파트'], ascending=True).reset_index(drop=True).style.background_gradient(subset=['금액','면적'], cmap="Reds"),use_container_width=True)
                 
                 if 아파트 :
-                    매매_전월당월_전체 = temp[temp["아파트"].isin(아파트)]
-                    st.error('🥯 시세 동향')
-                    chart = 차트(매매_전월당월_전체,y='금액',t=매매_전월당월_전체)
-                    st.altair_chart(chart,use_container_width=True)
+                    매매_전월당월_전체 = temp[temp["아파트"].isin(아파트)]                    
+                    if not 매매_전월당월_전체.empty :
+                        st.error('🥯 시세 동향')
+                        chart = 차트(매매_전월당월_전체,y='금액',t=매매_전월당월_전체)
+                        st.altair_chart(chart,use_container_width=True)
+                    else:
+                        st.error('No data 😎')
                     
             with tab2:
                 # 아파트 = st.multiselect('🚀 아파트별',sorted([i for i in 전세_당월["아파트"].drop_duplicates()]),max_selections=3)
@@ -290,9 +293,12 @@ try:
 
                 if 아파트 :
                     전세_전월당월_전체 = temp2[(temp2['아파트'].isin(아파트)) & (temp2['월세'] == 0)]
-                    st.error('🥯 시세 동향')
-                    chart = 차트(전세_전월당월_전체,y='보증금',t=전세_전월당월_전체)
-                    st.altair_chart(chart,use_container_width=True)
+                    if not 전세_전월당월_전체.empty :
+                        st.error('🥯 시세 동향')
+                        chart = 차트(전세_전월당월_전체,y='보증금',t=전세_전월당월_전체)
+                        st.altair_chart(chart,use_container_width=True)
+                    else:
+                        st.error('No data 😎')
                     
             with tab3: 
                 # 아파트 = st.multiselect('🚀 아파트별',sorted([i for i in 월세_당월["아파트"].drop_duplicates()]),max_selections=3)
@@ -340,9 +346,12 @@ try:
 
                 if 아파트 :                
                     매매_차트 = api_trade[api_trade["아파트"].isin(아파트)]
-                    st.error('🥯 시세 동향')
-                    chart = 차트(매매_차트,y='금액',t=매매_차트)
-                    st.altair_chart(chart,use_container_width=True)
+                    if not 매매_차트.empty:
+                        st.error('🥯 시세 동향')
+                        chart = 차트(매매_차트,y='금액',t=매매_차트)
+                        st.altair_chart(chart,use_container_width=True)
+                    else:
+                        st.error('No data 😎')
                     
             with tab2:
                 if not 아파트:
@@ -354,9 +363,10 @@ try:
 
                 if 아파트 :
                     전세_차트 = api_rent[(api_rent['아파트'].isin(아파트)) & (api_rent['월세'] == 0)]
-                    st.error('🥯 시세 동향')
-                    chart = 차트(전세_차트,y='보증금',t=전세_차트)
-                    st.altair_chart(chart,use_container_width=True)
+                    if not 전세_차트.empty:
+                        st.error('🥯 시세 동향')
+                        chart = 차트(전세_차트,y='보증금',t=전세_차트)
+                        st.altair_chart(chart,use_container_width=True)
                     
             with tab3:
                 if not 아파트:
