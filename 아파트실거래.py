@@ -197,7 +197,7 @@ lottie_json = load_lottie(lottie_url)
 lottie_url2 = 'https://assets1.lottiefiles.com/packages/lf20_yJ8wNO.json'
 lottie_json2 = load_lottie2(lottie_url2)
 
-st_lottie(
+#st_lottie(
     lottie_json,
     speed=2,
     # reverse='Ture',
