@@ -261,7 +261,6 @@ try:
                     아파트별 = 매매_당월[매매_당월["아파트"].isin(아파트)]
 
                 st.dataframe(아파트별.sort_values(by=['아파트'], ascending=True).reset_index(drop=True).style.background_gradient(subset=['금액','면적'], cmap="Reds"),use_container_width=True)
-
                 if 아파트 :
                     매매_전월당월_전체 = temp[temp["아파트"].isin(아파트)]                    
                     if not 매매_전월당월_전체.empty :
@@ -296,7 +295,7 @@ try:
                 else:
                     월세_당월 = 월세_당월[월세_당월["아파트"].isin(아파트)]
                 st.dataframe(월세_당월.sort_values(by=['아파트'], ascending=True).reset_index(drop=True).style.background_gradient(subset=['보증금','월세','종전보증금','종전월세'], cmap="Reds"),use_container_width=True)
-    
+
     else:
         with st_lottie_spinner(lottie_json2):
             standard = empty.date_input('🧁 날짜', datetime.utcnow()+timedelta(hours=9),key='standard_date_2',max_value=datetime.utcnow()+timedelta(hours=9))
