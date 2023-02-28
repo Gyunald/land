@@ -73,7 +73,7 @@ def 차트(data,y,t):
     )
     return (lines + points + tooltips).interactive()
 @st.cache_data
-def 매매():
+def 매매(get_매매):
     temp = pd.DataFrame(
     [i.split(',') for i in get_매매], columns=["아파트", "금액", "층", "면적", "건축", "계약", "동", "거래", "파기"])
         
@@ -89,9 +89,9 @@ def 매매():
     return temp.sort_values(by=['아파트'], ascending=True)
 
 @st.cache_data
-def 매매_전일():    
+def 매매_전일(get_매매전일):    
     temp3 = pd.DataFrame(
-    [i.split(',') for i in get_매매], columns=["아파트", "금액", "층", "면적", "건축", "계약", "동", "거래", "파기"]
+    [i.split(',') for i in get_매매전일], columns=["아파트", "금액", "층", "면적", "건축", "계약", "동", "거래", "파기"]
 )
     temp3['계약'] = pd.to_datetime(temp3['계약'],format = "%Y%m%d").dt.strftime('%y.%m.%d')
     temp3['면적'] = temp3['면적'].astype(float).map('{:.0f}'.format).astype(int)
@@ -105,7 +105,7 @@ def 매매_전일():
     return temp3.sort_values(by=['아파트'], ascending=True)
 
 @st.cache_data
-def 임대():
+def 임대(get_임대):
     temp2 = pd.DataFrame(
     [i.split(',') for i in get_임대], columns=["아파트", "보증금", "층", "월세", "면적", "건축", "동", "계약", "종전보증금", "종전월세", "갱신권"]
     )        
@@ -241,11 +241,11 @@ try:
         get_매매 = db.collection(standard_str).document(시군구).get().to_dict()['매매']
         get_임대 = db.collection(standard_str).document(시군구).get().to_dict()['임대']
         
-        temp = 매매()
-        temp2 = 임대()
+        temp = 매매(get_매매)
+        temp2 = 임대(get_임대)
         
         if standard == (datetime.utcnow()+timedelta(hours=9)).date():
-            temp3 = 매매_전일()
+            temp3 = 매매_전일(get_매매전일)
             신규 = pd.merge(temp,temp3, how='outer', indicator=True).query('_merge == "left_only"').drop(columns=['_merge']).reset_index(drop=True)
 
         매매_당월 = temp[temp['계약'].str.contains(standard_str[5:8])].drop_duplicates()
