@@ -10,9 +10,6 @@ from firebase_admin import credentials
 from firebase_admin import firestore
 
 st.set_page_config(page_title="🎈아파트 실거래가 매매/전세/월세 ") # layout='wide'
-empty = st.empty()
-empty.write('아파트 실거래')
-empty.empty()
 
 @st.cache_data
 def load_lottie(url:str):
@@ -197,41 +194,35 @@ lottie_json = load_lottie(lottie_url)
 lottie_url2 = 'https://assets1.lottiefiles.com/packages/lf20_yJ8wNO.json'
 lottie_json2 = load_lottie2(lottie_url2)
 
-st_lottie(
-    lottie_json,
-    speed=2,
-    # reverse='Ture',
-    loop=True,
-    quality='low',
-    )
-
-c1,c2 = st.columns([1,1])
+st_lottie(lottie_json,speed=2,loop=True,quality='low')# reverse='Ture'
 
 try:
-    with c1 :
-        empty = st.empty()
-        standard = empty.date_input('🧁 날짜', datetime.utcnow()+timedelta(hours=9),key='standard_date_1',max_value=datetime.utcnow()+timedelta(hours=9))
-        standard_previous = standard - timedelta(days=1)
-        day_num = datetime.isoweekday(standard)
+    with st.container():
+        c1,c2 = st.columns([1,1])
+        with c1 :
+            empty = st.empty()
+            standard = empty.date_input('🧁 날짜', datetime.utcnow()+timedelta(hours=9),key='standard_date_1',max_value=datetime.utcnow()+timedelta(hours=9))
+            standard_previous = standard - timedelta(days=1)
+            day_num = datetime.isoweekday(standard)
 
-        if day_num == 1 :
-            standard = standard-timedelta(days=2)
-            standard_previous = standard_previous-timedelta(days=2)
-        elif day_num == 2:
-            standard_previous = standard_previous-timedelta(days=2)
-        elif day_num == 7:            
-            standard = standard-timedelta(days=1)
-            standard_previous = standard_previous-timedelta(days=1)
-            
-        if standard.day == 1 :
-            standard = standard-timedelta(days=1)
-            standard_previous = standard.replace(day=1) - timedelta(days=1)
-        
-        standard_str = standard.strftime('%Y.%m.%d')
-        standard_previous_str = standard_previous.strftime('%Y.%m.%d')
+            if day_num == 1 :
+                standard = standard-timedelta(days=2)
+                standard_previous = standard_previous-timedelta(days=2)
+            elif day_num == 2:
+                standard_previous = standard_previous-timedelta(days=2)
+            elif day_num == 7:            
+                standard = standard-timedelta(days=1)
+                standard_previous = standard_previous-timedelta(days=1)
 
-    with c2:
-        시군구 = st.selectbox('🍔 시군구 검색', [i for i in address],index=104) # 22 강남 104 파주
+            if standard.day == 1 :
+                standard = standard-timedelta(days=1)
+                standard_previous = standard.replace(day=1) - timedelta(days=1)
+
+            standard_str = standard.strftime('%Y.%m.%d')
+            standard_previous_str = standard_previous.strftime('%Y.%m.%d')
+
+        with c2:
+            시군구 = st.selectbox('🍔 시군구 검색', [i for i in address],index=104) # 22 강남 104 파주
         
     city = address[시군구]
     address = {y:x for x,y in address.items()}
