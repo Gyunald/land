@@ -196,9 +196,9 @@ lottie_json2 = load_lottie2(lottie_url2)
 
 try:
     with st.expander('실거래 조회 🎈',expanded=True):
+        st_lottie(lottie_json,speed=2,loop=True,quality='low')# reverse='Ture'
         c1,c2 = st.columns([1,1])
-        with c1 :
-            st_lottie(lottie_json,speed=2,loop=True,quality='low')# reverse='Ture'
+        with c1 :            
             empty = st.empty()
             standard = empty.date_input('🧁 날짜', datetime.utcnow()+timedelta(hours=9),key='standard_date_1',max_value=datetime.utcnow()+timedelta(hours=9))
             standard_previous = standard - timedelta(days=1)
