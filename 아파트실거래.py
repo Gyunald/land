@@ -239,6 +239,7 @@ try:
 
     if db.collection(standard_str).document(시군구).get().exists:
         get_매매 = db.collection(standard_str).document(시군구).get().to_dict()['매매']
+        get_매매전일 = db.collection(standard_previous_str).document(시군구).get().to_dict()['매매']
         get_임대 = db.collection(standard_str).document(시군구).get().to_dict()['임대']
         
         temp = 매매(get_매매)
