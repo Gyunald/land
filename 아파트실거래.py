@@ -226,78 +226,79 @@ try:
     city = address[시군구]
     address = {y:x for x,y in address.items()}
     법정동명 = address[city]
+    
+    if standard == datetime.now().date():
+        if db.collection(standard_str).document(시군구).get().exists:
+            get_매매 = db.collection(standard_str).document(시군구).get().to_dict()['매매']
+            get_매매전일 = db.collection(standard_previous_str).document(시군구).get().to_dict()['매매']
+            get_임대 = db.collection(standard_str).document(시군구).get().to_dict()['임대']
 
-    if db.collection(standard_str).document(시군구).get().exists:
-        get_매매 = db.collection(standard_str).document(시군구).get().to_dict()['매매']
-        get_매매전일 = db.collection(standard_previous_str).document(시군구).get().to_dict()['매매']
-        get_임대 = db.collection(standard_str).document(시군구).get().to_dict()['임대']
-        
-        temp = 매매(get_매매)
-        temp2 = 임대(get_임대)
-        
-        if standard == (datetime.utcnow()+timedelta(hours=9)).date():
-            temp3 = 매매_전일(get_매매전일)
-            신규 = pd.merge(temp,temp3, how='outer', indicator=True).query('_merge == "left_only"').drop(columns=['_merge']).reset_index(drop=True)
+            temp = 매매(get_매매)
+            temp2 = 임대(get_임대)
 
-        매매_당월 = temp[temp['계약'].str.contains(standard_str[5:8])].drop_duplicates()
-        전세_당월 = temp2[(temp2['계약'].str.contains(standard_str[5:8])) & (temp2['월세'] == 0)].drop_duplicates()
-        전세_당월 = 전세_당월.reindex(columns=["아파트", "보증금", "층", "면적", "건축", "동", "계약", "종전보증금", "갱신권"])        
-        월세_당월 = temp2[(temp2['계약'].str.contains(standard_str[5:8])) & (temp2['월세'] != 0)].drop_duplicates()
-        매매_임대 = pd.concat([매매_당월,전세_당월,월세_당월])
+            if standard == (datetime.utcnow()+timedelta(hours=9)).date():
+                temp3 = 매매_전일(get_매매전일)
+                신규 = pd.merge(temp,temp3, how='outer', indicator=True).query('_merge == "left_only"').drop(columns=['_merge']).reset_index(drop=True)
 
-        if standard_str[-2:] == (datetime.utcnow()+timedelta(hours=9)).strftime('%d'):
-            if len(신규) >= 1:
-                with st.expander(f'{법정동명.split()[-1]} {(datetime.utcnow()+timedelta(hours=9)).day}일 - 신규 {len(신규)}건',expanded=True):
-                    st.success('🍰 신규매매')
-                    st.dataframe(신규.reset_index(drop=True).style.background_gradient(subset=['금액','면적'], cmap="Reds"),use_container_width=True)
-        
-        with st.expander(f'{법정동명.split()[-1]} {(datetime.utcnow()+timedelta(hours=9)).month}월 - 전체',expanded=True):
-            아파트 = st.multiselect('🍞 아파트별',sorted([i for i in 매매_임대["아파트"].drop_duplicates()]),max_selections=3)
-#             st.warning('🍣 다중선택가능')
-            tab1, tab2, tab3 = st.tabs([f"매매 {len(매매_당월)}", f"전세 {len(전세_당월)}", f"월세 {len(월세_당월)}"])
+            매매_당월 = temp[temp['계약'].str.contains(standard_str[5:8])].drop_duplicates()
+            전세_당월 = temp2[(temp2['계약'].str.contains(standard_str[5:8])) & (temp2['월세'] == 0)].drop_duplicates()
+            전세_당월 = 전세_당월.reindex(columns=["아파트", "보증금", "층", "면적", "건축", "동", "계약", "종전보증금", "갱신권"])        
+            월세_당월 = temp2[(temp2['계약'].str.contains(standard_str[5:8])) & (temp2['월세'] != 0)].drop_duplicates()
+            매매_임대 = pd.concat([매매_당월,전세_당월,월세_당월])
 
-            with tab1:
-                if not 아파트:
-                    아파트별 = 매매_당월
-                else:
-                    아파트별 = 매매_당월[매매_당월["아파트"].isin(아파트)]
+            if standard_str[-2:] == (datetime.utcnow()+timedelta(hours=9)).strftime('%d'):
+                if len(신규) >= 1:
+                    with st.expander(f'{법정동명.split()[-1]} {(datetime.utcnow()+timedelta(hours=9)).day}일 - 신규 {len(신규)}건',expanded=True):
+                        st.success('🍰 신규매매')
+                        st.dataframe(신규.reset_index(drop=True).style.background_gradient(subset=['금액','면적'], cmap="Reds"),use_container_width=True)
 
-                st.dataframe(아파트별.sort_values(by=['아파트'], ascending=True).reset_index(drop=True).style.background_gradient(subset=['금액','면적'], cmap="Reds"),use_container_width=True)
+            with st.expander(f'{법정동명.split()[-1]} {(datetime.utcnow()+timedelta(hours=9)).month}월 - 전체',expanded=True):
+                아파트 = st.multiselect('🍞 아파트별',sorted([i for i in 매매_임대["아파트"].drop_duplicates()]),max_selections=3)
+                st.warning('🍣 다중선택가능')
+                tab1, tab2, tab3 = st.tabs([f"매매 {len(매매_당월)}", f"전세 {len(전세_당월)}", f"월세 {len(월세_당월)}"])
 
-                if 아파트 :
-                    매매_전월당월_전체 = temp[temp["아파트"].isin(아파트)]                    
-                    if not 매매_전월당월_전체.empty :
-                        st.error('🥯 시세 동향')
-                        chart = 차트(매매_전월당월_전체,y='금액',t=매매_전월당월_전체)
-                        st.altair_chart(chart,use_container_width=True)
+                with tab1:
+                    if not 아파트:
+                        아파트별 = 매매_당월
                     else:
-                        st.error('No data 😎')
-                    
-            with tab2:
-                # 아파트 = st.multiselect('🚀 아파트별',sorted([i for i in 전세_당월["아파트"].drop_duplicates()]),max_selections=3)
-                if not 아파트:
-                    전세_당월 = 전세_당월
-                else:
-                    전세_당월 = 전세_당월[전세_당월["아파트"].isin(아파트)]
+                        아파트별 = 매매_당월[매매_당월["아파트"].isin(아파트)]
 
-                st.dataframe(전세_당월.sort_values(by=['아파트'], ascending=True).reset_index(drop=True).style.background_gradient(subset=['보증금','면적','종전보증금'], cmap="Reds"),use_container_width=True)
+                    st.dataframe(아파트별.sort_values(by=['아파트'], ascending=True).reset_index(drop=True).style.background_gradient(subset=['금액','면적'], cmap="Reds"),use_container_width=True)
 
-                if 아파트 :
-                    전세_전월당월_전체 = temp2[(temp2['아파트'].isin(아파트)) & (temp2['월세'] == 0)]
-                    if not 전세_전월당월_전체.empty :
-#                         st.error('🥯 시세 동향')
-                        chart = 차트(전세_전월당월_전체,y='보증금',t=전세_전월당월_전체)
-                        st.altair_chart(chart,use_container_width=True)
+                    if 아파트 :
+                        매매_전월당월_전체 = temp[temp["아파트"].isin(아파트)]                    
+                        if not 매매_전월당월_전체.empty :
+                            st.error('🥯 시세 동향')
+                            chart = 차트(매매_전월당월_전체,y='금액',t=매매_전월당월_전체)
+                            st.altair_chart(chart,use_container_width=True)
+                        else:
+                            st.error('No data 😎')
+
+                with tab2:
+                    # 아파트 = st.multiselect('🚀 아파트별',sorted([i for i in 전세_당월["아파트"].drop_duplicates()]),max_selections=3)
+                    if not 아파트:
+                        전세_당월 = 전세_당월
                     else:
-                        st.error('No data 😎')
-                    
-            with tab3: 
-                # 아파트 = st.multiselect('🚀 아파트별',sorted([i for i in 월세_당월["아파트"].drop_duplicates()]),max_selections=3)
-                if not 아파트:
-                    월세_당월 = 월세_당월
-                else:
-                    월세_당월 = 월세_당월[월세_당월["아파트"].isin(아파트)]
-                st.dataframe(월세_당월.sort_values(by=['아파트'], ascending=True).reset_index(drop=True).style.background_gradient(subset=['보증금','월세','종전보증금','종전월세'], cmap="Reds"),use_container_width=True)
+                        전세_당월 = 전세_당월[전세_당월["아파트"].isin(아파트)]
+
+                    st.dataframe(전세_당월.sort_values(by=['아파트'], ascending=True).reset_index(drop=True).style.background_gradient(subset=['보증금','면적','종전보증금'], cmap="Reds"),use_container_width=True)
+
+                    if 아파트 :
+                        전세_전월당월_전체 = temp2[(temp2['아파트'].isin(아파트)) & (temp2['월세'] == 0)]
+                        if not 전세_전월당월_전체.empty :
+                            st.error('🥯 시세 동향')
+                            chart = 차트(전세_전월당월_전체,y='보증금',t=전세_전월당월_전체)
+                            st.altair_chart(chart,use_container_width=True)
+                        else:
+                            st.error('No data 😎')
+
+                with tab3: 
+                    # 아파트 = st.multiselect('🚀 아파트별',sorted([i for i in 월세_당월["아파트"].drop_duplicates()]),max_selections=3)
+                    if not 아파트:
+                        월세_당월 = 월세_당월
+                    else:
+                        월세_당월 = 월세_당월[월세_당월["아파트"].isin(아파트)]
+                    st.dataframe(월세_당월.sort_values(by=['아파트'], ascending=True).reset_index(drop=True).style.background_gradient(subset=['보증금','월세','종전보증금','종전월세'], cmap="Reds"),use_container_width=True)
     else:
         with st_lottie_spinner(lottie_json2):
             standard = empty.date_input('🧁 날짜', datetime.utcnow()+timedelta(hours=9),key='standard_date_2',max_value=datetime.utcnow()+timedelta(hours=9))
@@ -323,7 +324,7 @@ try:
         
         with st.expander(f'{시군구} 실거래 - {standard_str[5:]}월 🍩 전체',expanded=True):
             아파트 = st.multiselect('🍞 아파트별',sorted([i for i in 매매_임대_계약월별["아파트"].drop_duplicates()]),max_selections=3)
-#             st.warning('🍣 다중선택가능')
+            st.warning('🍣 다중선택가능')
             
             tab1, tab2, tab3 = st.tabs([f"매매 {len(매매_계약월별)}", f"전세 {len(전세_계약월별)}", f"월세 {len(월세_계약월별)}"])
             
@@ -338,7 +339,7 @@ try:
                 if 아파트 :                
                     매매_차트 = api_trade[api_trade["아파트"].isin(아파트)]
                     if not 매매_차트.empty:
-#                         st.error('🥯 시세 동향')
+                        st.error('🥯 시세 동향')
                         chart = 차트(매매_차트,y='금액',t=매매_차트)
                         st.altair_chart(chart,use_container_width=True)
                     else:
@@ -355,7 +356,7 @@ try:
                 if 아파트 :
                     전세_차트 = api_rent[(api_rent['아파트'].isin(아파트)) & (api_rent['월세'] == 0)]
                     if not 전세_차트.empty:
-#                         st.error('🥯 시세 동향')
+                        st.error('🥯 시세 동향')
                         chart = 차트(전세_차트,y='보증금',t=전세_차트)
                         st.altair_chart(chart,use_container_width=True)
                     
