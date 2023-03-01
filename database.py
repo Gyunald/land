@@ -99,10 +99,7 @@ if login_code == st.secrets.login_code :
     
     c = 0
     d = 0
-    
-    if 당월.day == 1 :
-        당월 = 당월 - timedelta(days=1)
-        전월 = 당월.replace(day=1) - timedelta(days=1)
+
     if not db.collection(f"{당월.strftime('%Y.%m.%d')}").document('서울특별시 종로구').get().exists:
         for dong,code in address.items():        
             tread_1 = Thread(target=실거래, args=(urls['매매'], code, user_key, rows, dong,'매매'))
