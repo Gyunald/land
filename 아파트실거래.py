@@ -223,7 +223,7 @@ try:
     address = {y:x for x,y in address.items()}
     법정동명 = address[city]
     
-    if standard_str[:-3] == (datetime.utcnow()+timedelta(hours=9)).date().strftime('%Y.%m'):
+    if standard_str[5:] == (datetime.utcnow()+timedelta(hours=9)).date().strftime('%m.%d'):
         get_매매 = db.collection((datetime.utcnow()+timedelta(hours=9)).date().strftime('%Y.%m.%d')).document(시군구).get().to_dict()['매매']
         get_임대 = db.collection((datetime.utcnow()+timedelta(hours=9)).date().strftime('%Y.%m.%d')).document(시군구).get().to_dict()['임대']
         
@@ -257,7 +257,7 @@ try:
                 else:
                     아파트별 = 매매_당월[매매_당월["아파트"].isin(아파트)]
 
-                st.dataframe(아파트별.sort_values(by=['아파트'], ascending=True).reset_index(drop=True).style.background_gradient(subset=['금액','면적'], cmap="Reds"),use_container_width=True)
+                st.dataframe(아파트별.sort_values(by=['금액'], ascending=False).reset_index(drop=True).style.background_gradient(subset=['금액','면적'], cmap="Reds"),use_container_width=True)
                 if 아파트 :
                     매매_전월당월_전체 = temp[temp["아파트"].isin(아파트)]                    
                     if not 매매_전월당월_전체.empty :
@@ -274,7 +274,7 @@ try:
                 else:
                     전세_당월 = 전세_당월[전세_당월["아파트"].isin(아파트)]
 
-                st.dataframe(전세_당월.sort_values(by=['아파트'], ascending=True).reset_index(drop=True).style.background_gradient(subset=['보증금','면적','종전보증금'], cmap="Reds"),use_container_width=True)
+                st.dataframe(전세_당월.sort_values(by=['보증금'], ascending=False).reset_index(drop=True).style.background_gradient(subset=['보증금','면적','종전보증금'], cmap="Reds"),use_container_width=True)
 
                 if 아파트 :
                     전세_전월당월_전체 = temp2[(temp2['아파트'].isin(아파트)) & (temp2['월세'] == 0)]
@@ -291,7 +291,7 @@ try:
                     월세_당월 = 월세_당월
                 else:
                     월세_당월 = 월세_당월[월세_당월["아파트"].isin(아파트)]
-                st.dataframe(월세_당월.sort_values(by=['아파트'], ascending=True).reset_index(drop=True).style.background_gradient(subset=['보증금','월세','종전보증금','종전월세'], cmap="Reds"),use_container_width=True)
+                st.dataframe(월세_당월.sort_values(by=['월세'], ascending=False).reset_index(drop=True).style.background_gradient(subset=['보증금','월세','종전보증금','종전월세'], cmap="Reds"),use_container_width=True)
 
     else:
         with st_lottie_spinner(lottie_json2):
@@ -328,7 +328,7 @@ try:
                 else:
                     매매_데이터프레임 = 매매_계약월별[매매_계약월별["아파트"].isin(아파트)]
                     
-                st.dataframe(매매_데이터프레임.reset_index(drop=True).style.background_gradient(subset=['금액','면적'], cmap="Reds"),use_container_width=True)
+                st.dataframe(매매_데이터프레임.sort_values(by=['금액'], ascending=False).reset_index(drop=True).style.background_gradient(subset=['금액','면적'], cmap="Reds"),use_container_width=True)
 
                 if 아파트 :                
                     매매_차트 = api_trade[api_trade["아파트"].isin(아파트)]
@@ -345,7 +345,7 @@ try:
                 else:
                     전세_데이터프레임 = 전세_계약월별[전세_계약월별["아파트"].isin(아파트)]
 
-                st.dataframe(전세_데이터프레임.reset_index(drop=True).style.background_gradient(subset=['보증금','면적','종전보증금'], cmap="Reds"),use_container_width=True)
+                st.dataframe(전세_데이터프레임.sort_values(by=['보증금'], ascending=False).reset_index(drop=True).style.background_gradient(subset=['보증금','면적','종전보증금'], cmap="Reds"),use_container_width=True)
 
                 if 아파트 :
                     전세_차트 = api_rent[(api_rent['아파트'].isin(아파트)) & (api_rent['월세'] == 0)]
@@ -360,7 +360,7 @@ try:
                 else:
                     월세_데이터프레임 = 월세_계약월별[월세_계약월별["아파트"].isin(아파트)]
                     
-                st.dataframe(월세_데이터프레임.reset_index(drop=True).style.background_gradient(subset=['보증금','월세','종전보증금','종전월세'], cmap="Reds"),use_container_width=True)
+                st.dataframe(월세_데이터프레임.sort_values(by=['월세'], ascending=False).reset_index(drop=True).style.background_gradient(subset=['보증금','월세','종전보증금','종전월세'], cmap="Reds"),use_container_width=True)
 except Exception as e:
     st.write(e)
     st.error('No data 😎')
