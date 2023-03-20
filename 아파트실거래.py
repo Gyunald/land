@@ -159,7 +159,7 @@ def 실거래(url, city, date, user_key, rows):
                                     columns=["아파트", "금액", "층", "면적", "건축", "계약", "동", "거래", "파기"])            
                 aptTrade = pd.concat([aptTrade,temp])
 
-        replace_word = '아파트','마을','신도시'
+        replace_word = '아파트','마을','신도시','단지','\(.+\)'
         for i in replace_word:
             aptTrade['아파트'] = aptTrade['아파트'].str.replace(i,'',regex=True)
 
