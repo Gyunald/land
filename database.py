@@ -55,7 +55,7 @@ def 실거래(url, code, user_key, rows, dong, what):
     # batch.set(nyc_ref, {what: l},merge=True)
     # batch.commit()
     
-    db.collection(f"{당월.strftime('%Y.%m.%d')}").document(dong).set({what:l},merge=True)
+    db.collection(f"{당월.strftime('%Y.%m.%d')}").document(dong).update({what:l},merge=True)
     st.write(f"DB_update {what}_{dong} {end-start} sec")
 #     tread_1.join()
 #     tread_2.join()
