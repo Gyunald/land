@@ -201,7 +201,7 @@ try:
         with c1 :            
             empty = st.empty()
             standard = empty.date_input('🧁 날짜', datetime.utcnow()+timedelta(hours=9),key='standard_date_1',max_value=datetime.utcnow()+timedelta(hours=9))
-            standard_previous = standard - timedelta(days=2)
+            standard_previous = standard - timedelta(days=1)
             day_num = datetime.isoweekday(standard)
 
             if day_num == 1 :
