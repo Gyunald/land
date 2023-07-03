@@ -6,9 +6,9 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 from threading import Thread
-from streamlit_autorefresh import st_autorefresh
+# from streamlit_autorefresh import st_autorefresh
 
-st_autorefresh(interval=40800000, limit=2)
+# st_autorefresh(interval=40800000, limit=2)
 
 def 실거래(url, code, user_key, rows, dong, what):
     start = datetime.now()
