@@ -8,7 +8,7 @@ from firebase_admin import firestore
 from threading import Thread
 from streamlit_autorefresh import st_autorefresh
 
-st_autorefresh(interval=43200000, limit=2)
+st_autorefresh(interval=40800000, limit=2)
 
 def 실거래(url, code, user_key, rows, dong, what):
     start = datetime.now()
@@ -63,8 +63,8 @@ def 실거래(url, code, user_key, rows, dong, what):
 #     tread_1.join()
 #     tread_2.join()
     
-empty = st.empty()
-login_code = empty.text_input('login_code', type='password')
+# empty = st.empty()
+# login_code = empty.text_input('login_code', type='password')
 
 # if login_code == st.secrets.login_code :
 #     empty.empty()
