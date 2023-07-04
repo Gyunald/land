@@ -97,8 +97,6 @@ if choice == '업데이트' :
         user_key = st.secrets.user_key
         rows = '9999'
         
-        st.write('DB_update')
-        
         당월 = (datetime.utcnow()+timedelta(hours=9)).date()
         전월 = 당월.replace(day=1) - timedelta(days=1)
         
