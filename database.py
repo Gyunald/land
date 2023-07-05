@@ -135,8 +135,7 @@ elif choice == '삭제' :
                 for doc in db:
                     doc.reference.delete()
                     c += (100/len(address))
-                    bar = st.progress(0)
-                    bar.progress(int(c)+1)
+                    empty.progress(int(c))
                 empty.write('삭제 완료')
     elif login_code2 != '' and login_code2:
         st.warning('코드 오류')
