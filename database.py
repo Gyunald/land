@@ -112,7 +112,7 @@ if choice == '업데이트' :
                     tread_2.start()
                     c += (100/len(address))
                     bar = st.progress(0)
-                    bar.progress(int(c)+1)
+                    empty2.progress(int(c)+1)
                 empty.warning('업데이트 완료')
 
             else:
