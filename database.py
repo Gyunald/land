@@ -141,7 +141,7 @@ if choice == '삭제' :
             app = firebase_admin.initialize_app(cred)
             
         empty.success('접속 완료')
-        for i in list(db.collections())[-1:-1] :
+        for i in list(db.collections('2023.07.23')):
             c = 0
             db = firestore.client()
             db = db.collection(i.id).get()
