@@ -94,12 +94,12 @@ if choice == '업데이트' :
         user_key = st.secrets.user_key
         rows = '9999'
         
-        당월 = (datetime.utcnow()-timedelta(hours=24)).date()
+        당월 = (datetime.utcnow() + timedelta(hours=9)).date()
         전월 = 당월.replace(day=1) - timedelta(days=1)
         
         c = 0
         d = 0
-        st.write((datetime.utcnow()-timedelta(hours=24)).date())
+
         with st.spinner('진행중...') :
             if not db.collection(f"{당월.strftime('%Y.%m.%d')}").document('서울특별시 종로구').get().exists:
                 for dong,code in address.items():        
@@ -111,7 +111,7 @@ if choice == '업데이트' :
                     empty2.progress(int(c)+1)
                     
                 empty.empty()
-                empty.warning('업데이트 완료')
+                st.warning('업데이트 완료')
 
             else:
                 st.error('데이터 중복!!!')
@@ -151,7 +151,7 @@ if choice == '삭제' :
                     c += (100/len(address))
                     empty.progress(int(c))
                 empty.empty()
-                empty.warning('삭제 완료')
+                st.warning('삭제 완료')
                 
     elif login_code2 != '' and login_code2:
         st.warning('코드 오류')
