@@ -208,8 +208,8 @@ try:
                 standard = standard-timedelta(days=2)
                 standard_previous = standard_previous-timedelta(days=2)
             elif day_num == 2:
-                standard_previous = standard_previous-timedelta(days=2)
-            elif day_num == 7:            
+                standard_previous = standard_previous-timedelta(days=2) 
+            elif day_num == 7:
                 standard = standard-timedelta(days=1)
                 standard_previous = standard_previous-timedelta(days=1)
 
@@ -224,8 +224,8 @@ try:
     법정동명 = address[city]
     
     if standard_str[5:] == (datetime.utcnow()+timedelta(hours=9)).date().strftime('%m.%d'):
-        get_매매 = db.collection((datetime.utcnow()+timedelta(hours=9)).date().strftime('%Y.%m.%d')).document(시군구).get().to_dict()['매매']
-        get_임대 = db.collection((datetime.utcnow()+timedelta(hours=9)).date().strftime('%Y.%m.%d')).document(시군구).get().to_dict()['임대']
+        get_매매 = db.collection((datetime.utcnow()-timedelta(days=1)).date().strftime('%Y.%m.%d')).document(시군구).get().to_dict()['매매']
+        get_임대 = db.collection((datetime.utcnow()-timedelta(days=1)).date().strftime('%Y.%m.%d')).document(시군구).get().to_dict()['임대']
         
         temp = 매매(get_매매)
         temp2 = 임대(get_임대)
