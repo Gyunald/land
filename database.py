@@ -104,28 +104,45 @@ if choice == '업데이트' :
         d = 0
         
         with st.spinner('진행중...') :
-            # if not db.collection(f"{당월.strftime('%Y.%m.%d')}").document('서울특별시 종로구').get().exists:
+            if not db.collection(f"{당월.strftime('%Y.%m.%d')}").document('서울특별시 종로구').get().exists:
                 for dong,code in address.items():        
                     tread_1 = Thread(target=실거래, args=(urls['매매'], code, user_key, rows, dong,'매매'))
                     tread_2 = Thread(target=실거래, args=(urls['임대'], code, user_key, rows, dong,'임대'))
                     tread_1.start()
                     tread_2.start()
                     c += (100/len(address))
-                    empty2.progress(int(c))
+                    empty2.progress(int(c)+1)
+                    
+                empty.empty()
                 empty.warning('업데이트 완료')
 
-            # else:
-            #     st.error('데이터 중복!!!')
+            else:
+                st.error('데이터 중복!!!')
                 
     elif login_code != '' and st.secrets.login_code :
         st.warning('코드 오류')
         
-elif choice == '삭제' :
+if choice == '삭제' :
     db = firestore.client()
     empty = st.empty()
     login_code2 = empty.text_input('삭제 코드 ', type='password')
 
     if login_code2 == st.secrets.login_code :
+        if not firebase_admin._apps :
+            cred = credentials.Certificate({
+            "type": st.secrets.type,
+            "project_id": st.secrets.project_id,
+            "private_key_id": st.secrets.private_key_id,
+            "private_key": st.secrets.private_key,
+            "client_email": st.secrets.client_email,
+            "client_id": st.secrets.client_id,
+            "auth_uri": st.secrets.auth_uri,
+            "token_uri": st.secrets.token_uri,
+            "auth_provider_x509_cert_url": st.secrets.auth_provider_x509_cert_url,
+            "client_x509_cert_url": st.secrets.client_x509_cert_url
+            })
+            app = firebase_admin.initialize_app(cred)
+            
         empty.success('접속 완료')
         for i in list(db.collections())[:-3] :
             c = 0
@@ -136,7 +153,9 @@ elif choice == '삭제' :
                     doc.reference.delete()
                     c += (100/len(address))
                     empty.progress(int(c))
+                empty.empty()
                 empty.warning('삭제 완료')
+                
     elif login_code2 != '' and login_code2:
         st.warning('코드 오류')
 
