@@ -224,8 +224,8 @@ try:
     법정동명 = address[city]
     
     if standard_str[5:] == (datetime.utcnow()+timedelta(hours=9)).date().strftime('%m.%d'):
-        get_매매 = db.collection((datetime.utcnow()-timedelta(days=1)).date().strftime('%Y.%m.%d')).document(시군구).get().to_dict()['매매']
-        get_임대 = db.collection((datetime.utcnow()-timedelta(days=1)).date().strftime('%Y.%m.%d')).document(시군구).get().to_dict()['임대']
+        get_매매 = db.collection((datetime.utcnow()+timedelta(hours=9)).date().strftime('%Y.%m.%d')).document(시군구).get().to_dict()['매매']
+        get_임대 = db.collection((datetime.utcnow()+timedelta(hours=9)).date().strftime('%Y.%m.%d')).document(시군구).get().to_dict()['임대']
         
         temp = 매매(get_매매)
         temp2 = 임대(get_임대)
