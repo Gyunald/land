@@ -141,7 +141,7 @@ if choice == '삭제' :
             app = firebase_admin.initialize_app(cred)
             
         empty.success('접속 완료')
-        for i in list(db.collections())[-1] :
+        for i in list(db.collections())[-1:-1] :
             c = 0
             db = firestore.client()
             db = db.collection(i.id).get()
@@ -149,7 +149,7 @@ if choice == '삭제' :
                 for doc in db:
                     doc.reference.delete()
                     c += (100/len(address))
-                    empty.progress(int(c))
+                    empty.progress(int(c)+1)
                 empty.empty()
                 st.warning('삭제 완료')
                 
