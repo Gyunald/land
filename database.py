@@ -71,7 +71,7 @@ def 실거래(url, code, user_key, rows, dong, what):
     # batch.set(nyc_ref, {what: l},merge=True)
     # batch.commit()
     
-    db.collection(f"{당월.strftime('%Y.%m.%d')}").document(dong).set({what:l},merge=True)
+    # db.collection(f"{당월.strftime('%Y.%m.%d')}").document(dong).set({what:l},merge=True)
     
     # tread_1.join()
     # tread_2.join()
@@ -110,11 +110,13 @@ if choice == '업데이트' :
                     
                 empty.empty()
                 st.warning('업데이트 완료')
-                t2 = datetime.now() - t
-                st.write(t2)
+
             else:
                 st.error('데이터 중복!!!')
                 
+        t2 = datetime.now() - t
+        st.write(t2)
+        
     elif login_code != '' and st.secrets.login_code :
         st.warning('코드 오류')
         
