@@ -100,12 +100,11 @@ if choice == '업데이트' :
         t = datetime.now()
         with st.spinner('진행중...') :
             if not db.collection(f"{당월.strftime('%Y.%m.%d')}").document('서울특별시 종로구').get().exists:
-                for dong,code in address.items():        
-                    tread_1 = Thread(target=실거래, args=(urls['매매'], code, user_key, rows, dong,'매매'))
-                    tread_2 = Thread(target=실거래, args=(urls['임대'], code, user_key, rows, dong,'임대'))
-                    tread_1.start()
-                    tread_2.start()
-                    c += (100/len(address))
+                for dong, code in address.items():
+                    process = multiprocessing.Process(target=실거래, args=(urls['매매'], code, user_key, rows, dong, '매매'))
+
+                    process.start()
+                    c += (100 / len(address))
                     empty2.progress(int(c))
                     
                 empty.empty()
