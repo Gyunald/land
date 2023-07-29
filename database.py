@@ -110,7 +110,7 @@ if choice == '업데이트' :
                     
                 empty.empty()
                 st.warning('업데이트 완료')
-                t2 = t - datetime.now()
+                t2 = datetime.now() - t
                 st.write(t2)
             else:
                 st.error('데이터 중복!!!')
