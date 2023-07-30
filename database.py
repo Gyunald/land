@@ -116,26 +116,32 @@ if choice == '업데이트' :
     elif login_code != '' and st.secrets.login_code :
         st.warning('코드 오류')
         
-if choice == '삭제' :
+def delete_collection(collection_ref):
+    docs = collection_ref.stream()
+    for doc in docs:
+        doc.reference.delete()
+
+if choice == '삭제':
     db = firestore.client()
     empty = st.empty()
     login_code2 = empty.text_input('삭제 코드 ', type='password')
 
     if login_code2 == st.secrets.login_code :
         empty.success('접속 완료')
-        for i in list(db.collections())[:-3]:
-            c = 0
-            db = firestore.client()
-            db = db.collection(i.id).get()
-            with st.spinner(f"{i.id} 삭제중...") :
-                for doc in db:
-                    doc.reference.delete()
-                    c += (100/len(address))
-                    empty.progress(int(c)+1)
-                empty.empty()
-        st.warning('삭제 완료')
-                
-    elif login_code2 != '' and login_code2:
-        st.warning('코드 오류')
+        collections = list(db.collections())[:-3]  # Excluding the last collection
+        num_processes = min(len(collections), multiprocessing.cpu_count())
 
-# st.write(list(db.collections()))
+        # Split collections into chunks for parallel processing
+        chunk_size = (len(collections) + num_processes - 1) // num_processes
+        collection_chunks = [collections[i:i + chunk_size] for i in range(0, len(collections), chunk_size)]
+
+        processes = []
+        for chunk in collection_chunks:
+            process = multiprocessing.Process(target=delete_collection, args=(chunk,))
+            processes.append(process)
+            process.start()
+
+        for process in processes:
+            process.join()
+
+        st.warning('삭제 완료')
