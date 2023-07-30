@@ -135,11 +135,15 @@ if choice == '삭제':
         chunk_size = (len(collections) + num_processes - 1) // num_processes
         collection_chunks = [collections[i:i + chunk_size] for i in range(0, len(collections), chunk_size)]
 
-
+        processes = []
         for chunk in collection_chunks:
             process = multiprocessing.Process(target=delete_collection, args=(chunk,))
-
+            processes.append(process)
             process.start()
+
+        for process in processes:
+            process.join()
+
 
 
         st.warning('삭제 완료')
