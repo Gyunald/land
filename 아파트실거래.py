@@ -81,7 +81,7 @@ def 매매(get_매매):
     replace_word = '아파트','마을','신도시','단지','\(.+\)'
     for i in replace_word:
         temp['아파트'] = temp['아파트'].str.replace(i,'',regex=True)
-    # temp['층']= temp['층'].astype('int64')
+    temp['층']= temp['층'].astype('int64')
     temp['면적'] = temp['면적'].astype('int64')
     return temp.sort_values(by=['아파트'], ascending=True)
 
@@ -97,7 +97,7 @@ def 매매_전일(get_매매전일):
     replace_word = '아파트','마을','신도시','단지','\(.+\)'
     for i in replace_word:
         temp3['아파트'] = temp3['아파트'].str.replace(i,'',regex=True)
-    # temp3['층']= temp3['층'].astype('int64')
+    temp3['층']= temp3['층'].astype('int64')
     temp3['면적'] = temp3['면적'].astype('int64')
     return temp3.sort_values(by=['아파트'], ascending=True)
 
@@ -113,7 +113,7 @@ def 임대(get_임대):
     for i in replace_word:
         temp2['아파트'] = temp2['아파트'].str.replace(i,'',regex=True)
     temp2['보증금']= temp2['보증금'].str.replace(',','').astype('int64')
-    # temp2['층']= temp2['층'].astype('int64')
+    temp2['층']= temp2['층'].astype('int64')
     temp2['월세']= temp2['월세'].str.replace(',','').astype('int64')
     temp2['건축']= temp2['건축'].astype('int64')
     temp2['면적']= temp2['면적'].astype('int64')
@@ -240,7 +240,7 @@ try:
             get_매매전일 = db.collection(standard_previous_str).document(시군구).get().to_dict()['매매']
             temp3 = 매매_전일(get_매매전일)
             신규 = pd.merge(temp,temp3, how='outer', indicator=True).query('_merge == "left_only"').drop(columns=['_merge']).reset_index(drop=True)
-
+            신규 = 신규.reindex(columns=["아파트", "금액","면적", "층", "건축", "계약", "동", "거래", "파기"])
             if len(신규) >= 1:
                 with st.expander(f'{법정동명.split()[-1]} {(datetime.utcnow()+timedelta(hours=9)).day}일 - 신규 {len(신규)}건',expanded=True):
                     st.success('🍰 신규매매')
