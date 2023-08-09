@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import pandas as pd
 from datetime import datetime, timedelta
 import requests
-from streamlit_lottie import st_lottie,st_lottie_spinner
+# from streamlit_lottie import st_lottie,st_lottie_spinner
 import altair as alt
 import firebase_admin
 from firebase_admin import credentials
@@ -11,19 +11,19 @@ from firebase_admin import firestore
 
 st.set_page_config(page_title="🎈아파트 실거래가 매매/전세/월세 ") # layout='wide'
 
-@st.cache_data
-def load_lottie(url:str):
-    r = requests.get(url)
-    if r.status_code != 200:
-        return None
-    return r.json()
+# @st.cache_data
+# def load_lottie(url:str):
+#     r = requests.get(url)
+#     if r.status_code != 200:
+#         return None
+#     return r.json()
 
-@st.cache_data
-def load_lottie2(url:str):
-    r = requests.get(url)
-    if r.status_code != 200:
-        return None
-    return r.json()
+# @st.cache_data
+# def load_lottie2(url:str):
+#     r = requests.get(url)
+#     if r.status_code != 200:
+#         return None
+#     return r.json()
 
 def 차트(data,y,t):
     input_dropdown = alt.binding_select(options=sorted([i for i in t['면적'].drop_duplicates()]), name='면적별 🎈 ')
@@ -189,14 +189,14 @@ address = {'서울특별시 종로구': '11110', '서울특별시 중구': '1114
 user_key = st.secrets.user_key
 rows = '9999'
 
-lottie_url = 'https://assets9.lottiefiles.com/packages/lf20_2v2beqrh.json'
-lottie_json = load_lottie(lottie_url)
-lottie_url2 = 'https://assets1.lottiefiles.com/packages/lf20_yJ8wNO.json'
-lottie_json2 = load_lottie2(lottie_url2)
+# lottie_url = 'https://assets9.lottiefiles.com/packages/lf20_2v2beqrh.json'
+# lottie_json = load_lottie(lottie_url)
+# lottie_url2 = 'https://assets1.lottiefiles.com/packages/lf20_yJ8wNO.json'
+# lottie_json2 = load_lottie2(lottie_url2)
 
 try:
     with st.expander('실거래 조회 🎈',expanded=True):
-        st_lottie(lottie_json,speed=2,loop=True,quality='low')# reverse='Ture'
+        # st_lottie(lottie_json,speed=2,loop=True,quality='low')# reverse='Ture'
         c1,c2 = st.columns([1,1])
         with c1 :            
             empty = st.empty()
@@ -294,7 +294,7 @@ try:
                 st.dataframe(월세_당월.sort_values(by=['월세'], ascending=False).reset_index(drop=True).style.background_gradient(subset=['보증금','월세','종전보증금','종전월세'], cmap="Reds"),use_container_width=True)
 
     else:
-        with st_lottie_spinner(lottie_json2):
+        with st.spiner('실거래 목록 구성중'):
             standard = empty.date_input('🧁 날짜', datetime.utcnow()+timedelta(hours=9),key='standard_date_2',max_value=datetime.utcnow()+timedelta(hours=9))
             standard_previous = standard.replace(day=1) - timedelta(days=1)
 
