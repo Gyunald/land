@@ -72,7 +72,7 @@ def 차트(data,y,t):
 @st.cache_data
 def 매매(get_매매):
     temp = pd.DataFrame(
-    [i.split(',') for i in get_매매], columns=["아파트", "금액", "층", "면적", "건축", "계약", "동", "거래", "파기"])
+    [i.split(',') for i in get_매매], columns=["아파트", "금액", "면적", "층", "건축", "계약", "동", "거래", "파기"])
         
     temp['계약'] = pd.to_datetime(temp['계약'],format = "%Y%m%d").dt.strftime('%y.%m.%d')
     temp['면적'] = temp['면적'].astype(float).map('{:.0f}'.format).astype(int)
@@ -88,7 +88,7 @@ def 매매(get_매매):
 @st.cache_data
 def 매매_전일(get_매매전일):    
     temp3 = pd.DataFrame(
-    [i.split(',') for i in get_매매전일], columns=["아파트", "금액", "층", "면적", "건축", "계약", "동", "거래", "파기"]
+    [i.split(',') for i in get_매매전일], columns=["아파트", "금액", "면적", "층", "건축", "계약", "동", "거래", "파기"]
 )
     temp3['계약'] = pd.to_datetime(temp3['계약'],format = "%Y%m%d").dt.strftime('%y.%m.%d')
     temp3['면적'] = temp3['면적'].astype(float).map('{:.0f}'.format).astype(int)
