@@ -256,7 +256,7 @@ try:
                     아파트별 = 매매_당월
                 else:
                     아파트별 = 매매_당월[매매_당월["아파트"].isin(아파트)]
-                아파트별 = 아파트별.reindex(columns=["아파트", "금액","면적", "층", "건축", "계약", "동", "거래", "파기"]))
+                아파트별 = 아파트별.reindex(columns=["아파트", "금액","면적", "층", "건축", "계약", "동", "거래", "파기"])
                 st.dataframe(아파트별.sort_values(by=['금액'], ascending=False).reset_index(drop=True).style.background_gradient(subset=['금액','면적'], cmap="Reds"),use_container_width=True,hide_index=True)
                 if 아파트 :
                     매매_전월당월_전체 = temp[temp["아파트"].isin(아파트)]                    
@@ -327,7 +327,7 @@ try:
                     매매_데이터프레임 = 매매_계약월별
                 else:
                     매매_데이터프레임 = 매매_계약월별[매매_계약월별["아파트"].isin(아파트)]
-                매매_데이터프레임 = 매매_데이터프레임.reindex(columns=["아파트", "금액","면적", "층", "건축", "계약", "동", "거래", "파기"]))
+                매매_데이터프레임 = 매매_데이터프레임.reindex(columns=["아파트", "금액","면적", "층", "건축", "계약", "동", "거래", "파기"])
                 st.dataframe(매매_데이터프레임.sort_values(by=['금액'], ascending=False).reset_index(drop=True).style.background_gradient(subset=['금액','면적'], cmap="Reds"),use_container_width=True,hide_index=True)
 
                 if 아파트 :                
