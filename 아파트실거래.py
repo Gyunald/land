@@ -156,7 +156,7 @@ def 실거래(url, city, date, user_key, rows):
                     금액            = int(item.find("거래금액").text.replace(',','').strip())
                     파기            = item.find("해제사유발생일").text.strip()
                     temp = pd.DataFrame([[아파트, 금액, 면적, 층, 건축, 계약 ,동, 거래, 파기]], 
-                                    columns=["아파트", "금액", 면적, "층", "건축", "계약", "동", "거래", "파기"])            
+                                    columns=["아파트", "금액", "면적", "층", "건축", "계약", "동", "거래", "파기"])            
                 aptTrade = pd.concat([aptTrade,temp])
 
         replace_word = '아파트','마을','신도시','단지','\(.+\)'
