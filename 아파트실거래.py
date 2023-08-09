@@ -149,14 +149,14 @@ def 실거래(url, city, date, user_key, rows):
                     갱신권           = item.find("갱신요구권사용").text.strip()
                     종전보증금        = int(item.find("종전계약보증금").text.replace(',','').replace(' ','0'))
                     종전월세         = int(item.find("종전계약월세").text.replace(',','').replace(' ','0'))
-                    temp = pd.DataFrame([[아파트, 보증금, 층, 월세, 면적, 건축, 동, 계약, 종전보증금, 종전월세, 갱신권,]], 
+                    temp = pd.DataFrame([[아파트, 보증금, 월세, 층, 면적, 건축, 동, 계약, 종전보증금, 종전월세, 갱신권,]], 
                                 columns=["아파트", "보증금", "층", "월세", "면적", "건축", "동", "계약", "종전보증금", "종전월세", "갱신권"])
                 else:
                     거래            = item.find("거래유형").text
                     금액            = int(item.find("거래금액").text.replace(',','').strip())
                     파기            = item.find("해제사유발생일").text.strip()
-                    temp = pd.DataFrame([[아파트, 금액, 층,면적, 건축, 계약 ,동, 거래, 파기]], 
-                                    columns=["아파트", "금액", "층", "면적", "건축", "계약", "동", "거래", "파기"])            
+                    temp = pd.DataFrame([[아파트, 금액, 면적, 층, 건축, 계약 ,동, 거래, 파기]], 
+                                    columns=["아파트", "금액", 면적, "층", "건축", "계약", "동", "거래", "파기"])            
                 aptTrade = pd.concat([aptTrade,temp])
 
         replace_word = '아파트','마을','신도시','단지','\(.+\)'
