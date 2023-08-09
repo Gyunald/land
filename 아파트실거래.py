@@ -195,7 +195,7 @@ rows = '9999'
 # lottie_json2 = load_lottie2(lottie_url2)
 
 try:
-    with st.expander('실거래 조회 🎈',expanded=True):
+    with st.expander('실거래 조회 🎈',expanded=False):
         # st_lottie(lottie_json,speed=2,loop=True,quality='low')# reverse='Ture'
         c1,c2 = st.columns([1,1])
         with c1 :            
