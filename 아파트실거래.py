@@ -294,7 +294,7 @@ try:
                 st.dataframe(월세_당월.sort_values(by=['월세'], ascending=False).reset_index(drop=True).style.background_gradient(subset=['보증금','월세','종전보증금','종전월세'], cmap="Reds"),use_container_width=True)
 
     else:
-        with st.spiner('실거래 목록 구성중'):
+        with st.spinner('실거래 목록 구성중'):
             standard = empty.date_input('🧁 날짜', datetime.utcnow()+timedelta(hours=9),key='standard_date_2',max_value=datetime.utcnow()+timedelta(hours=9))
             standard_previous = standard.replace(day=1) - timedelta(days=1)
 
