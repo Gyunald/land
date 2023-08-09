@@ -72,7 +72,7 @@ def 차트(data,y,t):
 @st.cache_data
 def 매매(get_매매):
     temp = pd.DataFrame(
-    [i.split(',') for i in get_매매], columns=["아파트", "금액", "면적", "층", "건축", "계약", "동", "거래", "파기"])
+    [i.split(',') for i in get_매매], columns=["아파트", "금액", "층", "면적", "건축", "계약", "동", "거래", "파기"])
         
     temp['계약'] = pd.to_datetime(temp['계약'],format = "%Y%m%d").dt.strftime('%y.%m.%d')
     temp['면적'] = temp['면적'].astype(float).map('{:.0f}'.format).astype(int)
@@ -136,7 +136,7 @@ def 실거래(url, city, date, user_key, rows):
             if item.find('건축년도') == None :
                 continue
             else:               
-                계약               =   item.find("년").text + item.find("월").text.zfill(2) + item.find("일").text.zfill(2)
+                계약               = item.find("년").text + item.find("월").text.zfill(2) + item.find("일").text.zfill(2)
                 동                = item.find("법정동").text
                 면적               = float(item.find("전용면적").text)
                 아파트              = item.find("아파트").text.replace(',','.')
