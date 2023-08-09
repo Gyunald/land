@@ -244,7 +244,7 @@ try:
             if len(신규) >= 1:
                 with st.expander(f'{법정동명.split()[-1]} {(datetime.utcnow()+timedelta(hours=9)).day}일 - 신규 {len(신규)}건',expanded=True):
                     st.success('🍰 신규매매')
-                    st.dataframe(신규.sort_values(by=['금액'], ascending=False).reset_index(drop=True).style.background_gradient(subset=['금액','면적'], cmap="Reds"),use_container_width=True,hide_index=True)
+                    st.dataframe(신규.sort_values(by=['금액'], ascending=False).reset_index(drop=True).style.background_gradient(subset=['금액','층'], cmap="Reds"),use_container_width=True,hide_index=True)
 
         with st.expander(f'{법정동명.split()[-1]} {(datetime.utcnow()+timedelta(hours=9)).month}월 - 전체',expanded=False):
             아파트 = st.multiselect('🍞 아파트별',sorted([i for i in 매매_임대["아파트"].drop_duplicates()]),max_selections=3)
@@ -257,7 +257,7 @@ try:
                 else:
                     아파트별 = 매매_당월[매매_당월["아파트"].isin(아파트)]
                 아파트별 = 아파트별.reindex(columns=["아파트", "금액","면적", "층", "건축", "계약", "동", "거래", "파기"])
-                st.dataframe(아파트별.sort_values(by=['금액'], ascending=False).reset_index(drop=True).style.background_gradient(subset=['금액','면적'], cmap="Reds"),use_container_width=True,hide_index=True)
+                st.dataframe(아파트별.sort_values(by=['금액'], ascending=False).reset_index(drop=True).style.background_gradient(subset=['금액','층'], cmap="Reds"),use_container_width=True,hide_index=True)
                 if 아파트 :
                     매매_전월당월_전체 = temp[temp["아파트"].isin(아파트)]                    
                     if not 매매_전월당월_전체.empty :
@@ -328,7 +328,7 @@ try:
                 else:
                     매매_데이터프레임 = 매매_계약월별[매매_계약월별["아파트"].isin(아파트)]
                 매매_데이터프레임 = 매매_데이터프레임.reindex(columns=["아파트", "금액","면적", "층", "건축", "계약", "동", "거래", "파기"])
-                st.dataframe(매매_데이터프레임.sort_values(by=['금액'], ascending=False).reset_index(drop=True).style.background_gradient(subset=['금액','면적'], cmap="Reds"),use_container_width=True,hide_index=True)
+                st.dataframe(매매_데이터프레임.sort_values(by=['금액'], ascending=False).reset_index(drop=True).style.background_gradient(subset=['금액','층'], cmap="Reds"),use_container_width=True,hide_index=True)
 
                 if 아파트 :                
                     매매_차트 = api_trade[api_trade["아파트"].isin(아파트)]
