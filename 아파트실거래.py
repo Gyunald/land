@@ -236,11 +236,13 @@ try:
         월세_당월 = temp2[(temp2['계약'].str.contains(standard_str[5:8])) & (temp2['월세'] != 0)].drop_duplicates()
         매매_임대 = pd.concat([매매_당월,전세_당월,월세_당월])
 
-        if standard_str[-2:] == (datetime.utcnow()+timedelta(hours=9)).strftime('%d'):            
+        if standard_str[-2:] == (datetime.utcnow()+timedelta(hours=9)).strftime('%d'):
             get_매매전일 = db.collection(standard_previous_str).document(시군구).get().to_dict()['매매']
             temp3 = 매매_전일(get_매매전일)
             신규 = pd.merge(temp,temp3, how='outer', indicator=True).query('_merge == "left_only"').drop(columns=['_merge']).reset_index(drop=True)
             신규 = 신규.reindex(columns=["아파트", "금액","면적", "층", "건축", "계약", "동", "거래", "파기"])
+            st.dataframe(신규.sort_values(by=['금액'], ascending=False).reset_index(drop=True).style.background_gradient(subset=['금액','층'], cmap="Reds"),use_container_width=True,hide_index=True)
+
             if len(신규) >= 1:
                 with st.expander(f'{법정동명.split()[-1]} {(datetime.utcnow()+timedelta(hours=9)).day}일 - 신규 {len(신규)}건',expanded=True):
                     st.success('🍰 신규매매')
