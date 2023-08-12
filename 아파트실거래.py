@@ -275,7 +275,7 @@ if standard_str[5:] == (datetime.utcnow()+timedelta(hours=9)).date().strftime('%
 
     with st.expander(f'{법정동명.split()[-1]} {(datetime.utcnow()+timedelta(hours=9)).month}월 - 전체',expanded=False):
         아파트 = st.multiselect('🍞 아파트별',sorted([i for i in 매매_임대["아파트"].drop_duplicates()]),max_selections=3)
-        st.warning('🍣 다중선택가능')
+        # st.warning('🍣 다중선택가능')
         tab1, tab2, tab3 = st.tabs([f"매매 {len(매매_당월)}", f"전세 {len(전세_당월)}", f"월세 {len(월세_당월)}"])
 
         with tab1:
@@ -288,7 +288,7 @@ if standard_str[5:] == (datetime.utcnow()+timedelta(hours=9)).date().strftime('%
             if 아파트 :
                 매매_전월당월_전체 = temp[temp["아파트"].isin(아파트)]                    
                 if not 매매_전월당월_전체.empty :
-                    st.error('🥯 시세 동향')
+                    # st.error('🥯 시세 동향')
                     chart = 차트(매매_전월당월_전체,y='금액',t=매매_전월당월_전체)
                     st.altair_chart(chart,use_container_width=True)
                 else:
@@ -306,7 +306,7 @@ if standard_str[5:] == (datetime.utcnow()+timedelta(hours=9)).date().strftime('%
             if 아파트 :
                 전세_전월당월_전체 = temp2[(temp2['아파트'].isin(아파트)) & (temp2['월세'] == 0)]
                 if not 전세_전월당월_전체.empty :
-                    st.error('🥯 시세 동향')
+                    # st.error('🥯 시세 동향')
                     chart = 차트(전세_전월당월_전체,y='보증금',t=전세_전월당월_전체)
                     st.altair_chart(chart,use_container_width=True)
                 else:
@@ -345,7 +345,7 @@ else:
     
     with st.expander(f'{시군구} 실거래 - {standard_str[5:]}월 🍩 전체',expanded=True):
         아파트 = st.multiselect('🍞 아파트별',sorted([i for i in 매매_임대_계약월별["아파트"].drop_duplicates()]),max_selections=3)
-        st.warning('🍣 다중선택가능')
+        # st.warning('🍣 다중선택가능')
         
         tab1, tab2, tab3 = st.tabs([f"매매 {len(매매_계약월별)}", f"전세 {len(전세_계약월별)}", f"월세 {len(월세_계약월별)}"])
         
@@ -360,7 +360,7 @@ else:
             if 아파트 :                
                 매매_차트 = api_trade[api_trade["아파트"].isin(아파트)]
                 if not 매매_차트.empty:
-                    st.error('🥯 시세 동향')
+                    # st.error('🥯 시세 동향')
                     chart = 차트(매매_차트,y='금액',t=매매_차트)
                     st.altair_chart(chart,use_container_width=True)
                 else:
@@ -377,7 +377,7 @@ else:
             if 아파트 :
                 전세_차트 = api_rent[(api_rent['아파트'].isin(아파트)) & (api_rent['월세'] == 0)]
                 if not 전세_차트.empty:
-                    st.error('🥯 시세 동향')
+                    # st.error('🥯 시세 동향')
                     chart = 차트(전세_차트,y='보증금',t=전세_차트)
                     st.altair_chart(chart,use_container_width=True)
                 
