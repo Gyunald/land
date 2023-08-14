@@ -76,30 +76,69 @@ def 실거래(url, code, user_key, rows, dong, what):
     # tread_1.join()
     # tread_2.join()
 
-st.success('접속 완료')
-# batch = db.batch()
-db = firestore.client()
+if choice == '업데이트' : 
+#     empty = st.empty()
+#     login_code = empty.text_input('업데이트 코드', type='password')
+    
+    # if login_code == st.secrets.login_code :
+        # empty.empty()
+        # st.success('접속 완료')
+    empty2 = st.empty()
+    # batch = db.batch()
+    db = firestore.client()
+    
+    urls= {'매매' : 'http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptTradeDev','임대' : 'http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptRent?'}
+    
+    user_key = st.secrets.user_key
+    rows = '9999'
+    
+    당월 = (datetime.utcnow() + timedelta(hours=9)).date()
+    전월 = 당월.replace(day=1) - timedelta(days=1)
+    
+    c = 0
+    d = 0
+    with st.spinner('진행중...') :
+        if not db.collection(f"{당월.strftime('%Y.%m.%d')}").document('서울특별시 종로구').get().exists:
+            for dong,code in address.items():        
+                tread_1 = Thread(target=실거래, args=(urls['매매'], code, user_key, rows, dong,'매매'))
+                tread_2 = Thread(target=실거래, args=(urls['임대'], code, user_key, rows, dong,'임대'))
+                tread_1.start()                
+                tread_2.start()
+                c += (100/len(address))
+                empty2.progress(int(c)+1)
+                
+            # empty.empty()
+            st.warning('업데이트 완료')
 
-urls= {'매매' : 'http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptTradeDev','임대' : 'http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptRent?'}
+        else:
+            st.error('데이터 중복!!!')
+                
+    # elif login_code != '' and st.secrets.login_code :
+    #     st.warning('코드 오류')
+        
+# def delete_collection(collection_ref):
+#     docs = collection_ref.stream()
+#     for doc in docs:
+#         doc.reference.delete()
 
-user_key = st.secrets.user_key
-rows = '9999'
+if choice == '삭제':
+    db = firestore.client()
+    empty = st.empty()
+    login_code2 = empty.text_input('삭제 코드 ', type='password')
 
-당월 = (datetime.utcnow() + timedelta(hours=9)).date()
-전월 = 당월.replace(day=1) - timedelta(days=1)
-
-c = 0
-d = 0
-with st.spinner('진행중...') :
-    if not db.collection(f"{당월.strftime('%Y.%m.%d')}").document('서울특별시 종로구').get().exists:
-        for dong,code in address.items():        
-            tread_1 = Thread(target=실거래, args=(urls['매매'], code, user_key, rows, dong,'매매'))
-            tread_2 = Thread(target=실거래, args=(urls['임대'], code, user_key, rows, dong,'임대'))
-            tread_1.start()                
-            tread_2.start()
-            
-        st.warning('업데이트 완료')
-
-    else:
-        st.error('데이터 중복!!!')
-
+    if login_code2 == st.secrets.login_code :
+        empty.success('접속 완료')
+        for i in list(db.collections())[:-3]:
+            c = 0
+            db = firestore.client()
+            db = db.collection(i.id).get()
+            with st.spinner(f"{i.id} 삭제중...") :
+                for doc in db:
+                    doc.reference.delete()
+                    c += (100 / len(address))
+                    empty.progress(int(c)+1)
+                empty.empty()
+        st.warning('삭제 완료')
+                
+    elif login_code2 != '' and login_code2:
+        st.warning('코드 오류')
