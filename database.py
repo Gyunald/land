@@ -74,7 +74,7 @@ def 실거래(url, code, user_key, rows, dong, what):
     
     # tread_1.join()
     # tread_2.join()
-st.write('hi')
+
 if choice == '업데이트' :
 #     empty = st.empty()
 #     login_code = empty.text_input('업데이트 코드', type='password')
@@ -98,12 +98,12 @@ if choice == '업데이트' :
     d = 0
 
     # with st.spinner('진행중...') :
-    #     if not db.collection(f"{당월.strftime('%Y.%m.%d')}").document('서울특별시 종로구').get().exists:
-    #         for dong,code in address.items():        
-    #             tread_1 = Thread(target=실거래, args=(urls['매매'], code, user_key, rows, dong,'매매'))
-    #             tread_2 = Thread(target=실거래, args=(urls['임대'], code, user_key, rows, dong,'임대'))
-    #             tread_1.start()
-    #             tread_2.start()
+    if not db.collection(f"{당월.strftime('%Y.%m.%d')}").document('서울특별시 종로구').get().exists:
+        for dong,code in address.items():        
+            tread_1 = Thread(target=실거래, args=(urls['매매'], code, user_key, rows, dong,'매매'))
+            tread_2 = Thread(target=실거래, args=(urls['임대'], code, user_key, rows, dong,'임대'))
+            tread_1.start()
+            tread_2.start()
     #             c += (100/len(address))
     #             empty2.progress(int(c)+1)
                 
