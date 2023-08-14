@@ -227,7 +227,7 @@ with st.expander('실거래 조회 🎈',expanded=False):
     c1,c2 = st.columns([1,1])
     with c1 :
         empty = st.empty()
-        standard = st.date_input('🧁 날짜', datetime.utcnow()+timedelta(hours=9),key='standard_date_1',max_value=datetime.utcnow()+timedelta(hours=9))
+        standard = empty.date_input('🧁 날짜', datetime.utcnow()+timedelta(hours=9),key='standard_date_1',max_value=datetime.utcnow()+timedelta(hours=9))
         standard_previous = standard - timedelta(days=1)
         day_num = datetime.isoweekday(standard)
 
