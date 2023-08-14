@@ -129,7 +129,7 @@ if choice == '삭제':
 
     if login_code2 == st.secrets.login_code :
         # empty.success('접속 완료')
-        for i in list(db.collections())[:-3]:
+        for i in list(db.collections())[-1:-1]:
             c = 0
             db = firestore.client()
             db = db.collection(i.id).get()
