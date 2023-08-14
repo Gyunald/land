@@ -115,10 +115,10 @@ if choice == '업데이트' :
     # elif login_code != '' and st.secrets.login_code :
     #     st.warning('코드 오류')
         
-def delete_collection(collection_ref):
-    docs = collection_ref.stream()
-    for doc in docs:
-        doc.reference.delete()
+# def delete_collection(collection_ref):
+#     docs = collection_ref.stream()
+#     for doc in docs:
+#         doc.reference.delete()
 
 if choice == '삭제':
     db = firestore.client()
