@@ -134,7 +134,7 @@ if choice == '삭제':
             with st.spinner(f"{i.id} 삭제중...") :
                 for doc in db:
                     doc.reference.delete()
-                    c += (100/len(address))
+                    c += (len(address)/100)
                     st.write(int(c))
                     empty.progress(int(c))
                 empty.empty()
