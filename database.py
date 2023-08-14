@@ -96,7 +96,6 @@ if choice == '업데이트' :
     
     c = 0
     d = 0
-
     # with st.spinner('진행중...') :
     if not db.collection(f"{당월.strftime('%Y.%m.%d')}").document('서울특별시 종로구').get().exists:
         for dong,code in address.items():        
