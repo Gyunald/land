@@ -109,8 +109,8 @@ if choice == '업데이트' :
             empty.empty()
             st.warning('업데이트 완료')
 
-            else:
-                st.error('데이터 중복!!!')
+        else:
+            st.error('데이터 중복!!!')
                 
     # elif login_code != '' and st.secrets.login_code :
     #     st.warning('코드 오류')
