@@ -77,12 +77,7 @@ def 실거래(url, code, user_key, rows, dong, what):
     # tread_2.join()
 
 if choice == '업데이트' : 
-#     empty = st.empty()
-#     login_code = empty.text_input('업데이트 코드', type='password')
-    
-    # if login_code == st.secrets.login_code :
-        # empty.empty()
-        # st.success('접속 완료')
+    st.success('접속 완료')
     empty2 = st.empty()
     # batch = db.batch()
     db = firestore.client()
@@ -102,25 +97,15 @@ if choice == '업데이트' :
             for dong,code in address.items():        
                 tread_1 = Thread(target=실거래, args=(urls['매매'], code, user_key, rows, dong,'매매'))
                 tread_2 = Thread(target=실거래, args=(urls['임대'], code, user_key, rows, dong,'임대'))
-                tread_1.start()
+                tread_1.start()                
+                tread_2.start()
                 
-                # tread_2.start()
-                # c += (100/len(address))
-                # empty2.progress(int(c)+1)
-                
-            empty.empty()
+                c += (100/len(address))
+                empty2.progress(int(c)+1)
             st.warning('업데이트 완료')
 
         else:
             st.error('데이터 중복!!!')
-                
-    # elif login_code != '' and st.secrets.login_code :
-    #     st.warning('코드 오류')
-        
-# def delete_collection(collection_ref):
-#     docs = collection_ref.stream()
-#     for doc in docs:
-#         doc.reference.delete()
 
 if choice == '삭제':
     db = firestore.client()
