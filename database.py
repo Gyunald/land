@@ -135,7 +135,7 @@ if choice == '삭제':
                 for doc in db:
                     doc.reference.delete()
                     c += (100/len(address))
-                    empty.progress(int(c)+1)
+                    empty.progress(int(c))
                 empty.empty()
         st.warning('삭제 완료')
                 
