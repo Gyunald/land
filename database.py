@@ -105,10 +105,10 @@ if choice == '업데이트' :
                 tread_2 = Thread(target=실거래, args=(urls['임대'], code, user_key, rows, dong,'임대'))
                 tread_1.start()                
                 tread_2.start()
-                # c += (100/len(address))
-                # empty2.progress(int(c)+1)
+                c += (100/len(address))
+                empty2.progress(int(c)+1)
                 
-            # empty.empty()
+            empty.empty()
             st.warning('업데이트 완료')
 
         else:
