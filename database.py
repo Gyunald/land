@@ -75,7 +75,7 @@ def 실거래(url, code, user_key, rows, dong, what):
     # tread_1.join()
     # tread_2.join()
 
-if choice == '업데이트' :
+if choice == '업데이트' : 
 #     empty = st.empty()
 #     login_code = empty.text_input('업데이트 코드', type='password')
     
