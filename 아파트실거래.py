@@ -322,7 +322,7 @@ if standard_str[5:] == (datetime.utcnow()+timedelta(hours=9)).date().strftime('%
 
 else:
     # with st.spinner('실거래 목록 구성중'):
-    standard = empty.date_input('🧁 날짜', datetime.utcnow()+timedelta(hours=9),key='standard_date_2',max_value=datetime.utcnow()+timedelta(hours=9))
+    standard = st.date_input('🧁 날짜', datetime.utcnow()+timedelta(hours=9),key='standard_date_2',max_value=datetime.utcnow()+timedelta(hours=9))
     standard_previous = standard.replace(day=1) - timedelta(days=1)
 
     if standard.day == 1 :
