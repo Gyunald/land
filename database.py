@@ -116,19 +116,22 @@ if choice == '업데이트' :
     
     with st.spinner('진행중...'):
         if not db.collection(f"{this_month.strftime('%Y.%m.%d')}").document('서울특별시 종로구').get().exists:
-            threads = []
+            # threads = []
             for dong, code in address.items():
                 t = Thread(target=process_data, args=(urls['매매'], code, user_key, rows, dong, '매매'))
-                threads.append(t)
+                # threads.append(t)
                 t.start()
                 t = Thread(target=process_data, args=(urls['임대'], code, user_key, rows, dong, '임대'))
-                threads.append(t)
+                # threads.append(t)
                 t.start()
                 c += (100/len(address))
                 empty2.progress(int(c)+1)
                 
             empty2.empty()
             st.warning('업데이트 완료')
+
+            # for thread in threads:
+            #     thread.join()
 
         else:
             st.error('데이터 중복!!!')
