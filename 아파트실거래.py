@@ -376,7 +376,7 @@ try:
                 else:
                     전세_데이터프레임 = 전세_계약월별[전세_계약월별["아파트"].isin(아파트)]
     
-                st.dataframe(전세_데이터프레임.sort_values(by=['보증금'], ascending=False).reset_index(drop=True).style.background_gradient(subset=['보증금','면적','종전보증금'], cmap="Reds"),use_container_width=True,hide_index=True)
+                st.dataframe(전세_데이터프레임.sort_values(by=['보증금'], ascending=False).reset_index(drop=True).style.background_gradient(subset=['보증금','층','종전보증금'], cmap="Reds"),use_container_width=True,hide_index=True)
     
                 if 아파트 :
                     전세_차트 = api_rent[(api_rent['아파트'].isin(아파트)) & (api_rent['월세'] == 0)]
