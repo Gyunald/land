@@ -391,7 +391,7 @@ try:
                 else:
                     월세_데이터프레임 = 월세_계약월별[월세_계약월별["아파트"].isin(아파트)]
                     
-                    st.dataframe(월세_데이터프레임.sort_values(by=['월세'], ascending=False).reset_index(drop=True).style.background_gradient(subset=['보증금','월세','종전보증금','종전월세'], cmap="Reds"),use_container_width=True,hide_index=True)
+                st.dataframe(월세_데이터프레임.sort_values(by=['월세'], ascending=False).reset_index(drop=True).style.background_gradient(subset=['보증금','월세','종전보증금','종전월세'], cmap="Reds"),use_container_width=True,hide_index=True)
 
 except Exception as e:
     # st.write(e)
