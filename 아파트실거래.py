@@ -141,7 +141,7 @@ def 실거래(url, city, date, user_key, rows):
                 면적               = float(item.find("전용면적").text)
                 아파트              = item.find("아파트").text.replace(',','.')
                 층                 = int(item.find("층").text)
-                건축                = int(item.find("건축년도").text)
+                건축                = str(item.find("건축년도").text)
                 
                 if 'getRTMSDataSvcAptRent' in url:
                     보증금           = int(item.find("보증금액").text.replace(',',''))
@@ -150,7 +150,7 @@ def 실거래(url, city, date, user_key, rows):
                     종전보증금        = int(item.find("종전계약보증금").text.replace(',','').replace(' ','0'))
                     종전월세         = int(item.find("종전계약월세").text.replace(',','').replace(' ','0'))
                     temp = pd.DataFrame([[아파트, 보증금, 월세, 층, 면적, 건축, 동, 계약, 종전보증금, 종전월세, 갱신권,]], 
-                                columns=["아파트", "보증금", "층", "월세", "면적", "건축", "동", "계약", "종전보증금", "종전월세", "갱신권"])
+                                columns=["아파트", "보증금", "월세", "층", "면적", "건축", "동", "계약", "종전보증금", "종전월세", "갱신권"])
                 else:
                     거래            = item.find("거래유형").text
                     금액            = int(item.find("거래금액").text.replace(',','').strip())
@@ -251,7 +251,7 @@ address = {y:x for x,y in address.items()}
 법정동명 = address[city]
 
 try:
-    if standard_str[5:] == (datetime.utcnow()+timedelta(hours=9)).date().strftime('%m.%d'):
+    if standard_str[5:] == (datetime.utcnow()+timedelta(hours=9)).date().strftime('%m.%d') :
         get_매매 = db.collection((datetime.utcnow()+timedelta(hours=9)).date().strftime('%Y.%m.%d')).document(시군구).get().to_dict()['매매']
         get_임대 = db.collection((datetime.utcnow()+timedelta(hours=9)).date().strftime('%Y.%m.%d')).document(시군구).get().to_dict()['임대']
         
