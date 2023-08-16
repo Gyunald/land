@@ -149,14 +149,14 @@ def 실거래(url, city, date, user_key, rows):
                     갱신권           = item.find("갱신요구권사용").text.strip()
                     종전보증금        = int(item.find("종전계약보증금").text.replace(',','').replace(' ','0'))
                     종전월세         = int(item.find("종전계약월세").text.replace(',','').replace(' ','0'))
-                    temp = pd.DataFrame([[아파트, 보증금, 월세, 층, 면적, 건축, 동, 계약, 종전보증금, 종전월세, 갱신권,]], 
-                                columns=["아파트", "보증금", "월세", "층", "면적", "건축", "동", "계약", "종전보증금", "종전월세", "갱신권"])
+                    temp = pd.DataFrame([[아파트, 보증금, 면적, 월세, 층, 건축, 동, 계약, 종전보증금, 종전월세, 갱신권]], 
+                                columns=["아파트", "보증금", "면적", "월세", "층", "건축", "동", "계약", "종전보증금", "종전월세", "갱신권")
                 else:
                     거래            = item.find("거래유형").text
                     금액            = int(item.find("거래금액").text.replace(',','').strip())
                     파기            = item.find("해제사유발생일").text.strip()
-                    temp = pd.DataFrame([[아파트, 금액, 층, 면적, 건축, 계약 ,동, 거래, 파기]], 
-                                    columns=["아파트", "금액", "층", "면적", "건축", "계약", "동", "거래", "파기"])            
+                    temp = pd.DataFrame([[아파트, 금액, 면적, 층, 건축, 계약 ,동, 거래, 파기]], 
+                                    columns=["아파트", "금액", "면적", "층", "건축", "계약", "동", "거래", "파기"])
                 aptTrade = pd.concat([aptTrade,temp])
 
         replace_word = '아파트','마을','신도시','단지','\(.+\)'
@@ -269,7 +269,7 @@ try:
             get_매매전일 = db.collection(standard_previous_str).document(시군구).get().to_dict()['매매']
             temp3 = 매매_전일(get_매매전일)
             신규 = pd.merge(temp,temp3, how='outer', indicator=True).query('_merge == "left_only"').drop(columns=['_merge']).reset_index(drop=True)
-            신규 = 신규.reindex(columns=["아파트", "금액","면적", "층", "건축", "계약", "동", "거래", "파기"])
+            신규 = 신규.reindex(columns=["아파트", "금액", "면적", "층", "건축", "계약", "동", "거래", "파기"])
             
             if len(신규) >= 1:
                 expanded = False
@@ -287,7 +287,7 @@ try:
                     아파트별 = 매매_당월
                 else:
                     아파트별 = 매매_당월[매매_당월["아파트"].isin(아파트)]
-                아파트별 = 아파트별.reindex(columns=["아파트", "금액","면적", "층", "건축", "계약", "동", "거래", "파기"])
+                아파트별 = 아파트별.reindex(columns=["아파트", "금액", "면적", "층", "건축", "계약", "동", "거래", "파기"])
                 st.dataframe(아파트별.sort_values(by=['금액'], ascending=False).reset_index(drop=True).style.background_gradient(subset=['금액','층'], cmap="Reds"),use_container_width=True,hide_index=True)
                 if 아파트 :
                     매매_전월당월_전체 = temp[temp["아파트"].isin(아파트)]
@@ -343,7 +343,7 @@ try:
         api_rent = pd.concat([실거래(urls[1], city, standard.strftime('%Y%m'), user_key, rows),실거래(urls[1], city, standard_previous.strftime('%Y%m'), user_key, rows)]).reset_index(drop=True).drop_duplicates()
         
         매매_계약월별 = api_trade[api_trade['계약'].str.contains(standard_str[2:])]
-        전세_계약월별 = api_rent[(api_rent['계약'].str.contains(standard_str[2:])) & (api_rent['월세'] == 0)].reindex(columns=["아파트", "보증금", "층", "면적", "건축", "동", "계약", "종전보증금", "갱신권"])
+        전세_계약월별 = api_rent[(api_rent['계약'].str.contains(standard_str[2:])) & (api_rent['월세'] == 0)].reindex(columns=["아파트", "보증금", "면적", "층", "건축", "동", "계약", "종전보증금", "갱신권"])
         월세_계약월별 = api_rent[(api_rent['계약'].str.contains(standard_str[4:])) & (api_rent['월세'] != 0)]
         매매_임대_계약월별 = pd.concat([매매_계약월별,전세_계약월별,월세_계약월별])
         
@@ -358,7 +358,7 @@ try:
                     매매_데이터프레임 = 매매_계약월별
                 else:
                     매매_데이터프레임 = 매매_계약월별[매매_계약월별["아파트"].isin(아파트)]
-                매매_데이터프레임 = 매매_데이터프레임.reindex(columns=["아파트", "금액","면적", "층", "건축", "계약", "동", "거래", "파기"])
+                매매_데이터프레임 = 매매_데이터프레임.reindex(columns=["아파트", "금액", "면적", "층", "건축", "계약", "동", "거래", "파기"])
                 st.dataframe(매매_데이터프레임.sort_values(by=['금액'], ascending=False).reset_index(drop=True).style.background_gradient(subset=['금액','층'], cmap="Reds"),use_container_width=True,hide_index=True)
     
                 if 아파트 :                
