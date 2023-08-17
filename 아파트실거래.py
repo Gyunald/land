@@ -254,7 +254,7 @@ address = {y:x for x,y in address.items()}
 #t2 = ((datetime.utcnow()+timedelta(hours=9)).replace(hour=6,minute=30,second=0,microsecond=0))
 
 try:
-    if standard_str[5:] == (datetime.utcnow()+timedelta(hours=9)).date().strftime('%m.%d') :
+    if standard_str[5:8] == (datetime.utcnow()+timedelta(hours=9)).date().strftime('%m.%d')[:3] :
         get_매매 = db.collection((datetime.utcnow()+timedelta(hours=9)).date().strftime('%Y.%m.%d')).document(시군구).get().to_dict()['매매']
         get_임대 = db.collection((datetime.utcnow()+timedelta(hours=9)).date().strftime('%Y.%m.%d')).document(시군구).get().to_dict()['임대']
         
