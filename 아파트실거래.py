@@ -255,8 +255,8 @@ address = {y:x for x,y in address.items()}
 
 try:
     if standard_str[5:8] == (datetime.utcnow()+timedelta(hours=9)).date().strftime('%m.%d')[:3] :
-        get_매매 = db.collection((datetime.utcnow()+timedelta(hours=9)).date().strftime('%Y.%m.%d')).document(시군구).get().to_dict()['매매']
-        get_임대 = db.collection((datetime.utcnow()+timedelta(hours=9)).date().strftime('%Y.%m.%d')).document(시군구).get().to_dict()['임대']
+        get_매매 = db.collection(list(db.collections())[-1].id).document(시군구).get().to_dict()['매매']
+        get_임대 = db.collection(list(db.collections())[-1].id).document(시군구).get().to_dict()['임대']
         
         temp = 매매(get_매매)
         temp2 = 임대(get_임대)
