@@ -145,7 +145,7 @@ if choice == '삭제':
     login_code2 = empty.text_input('삭제 코드 ', type='password')
 
     if login_code2 == st.secrets.login_code :
-        for i in list(db.collections())[:-2]:
+        for i in list(db.collections())[:-3]:
             c = 0
             db = firestore.client()
             db = db.collection(i.id).get()
