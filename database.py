@@ -140,7 +140,7 @@ if choice == '업데이트' :
     #     st.warning('코드 오류')
         
 if choice == '삭제':
-    toggle = st.toggle(':rainbow[오늘 데이터만 삭제]',value=False)
+    toggle = st.toggle(':rainbow[오늘 데이터만 삭제]',value=True)
     if toggle :
         list_range = list(db.collections())[-1:]
     else:
