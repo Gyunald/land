@@ -157,7 +157,7 @@ if choice == '삭제':
 
         else:
             list_range = list(db.collections())[:-3]
-            st.write('#', list(db.collections())[0].id,'~')
+            st.write(f"# {list(db.collections())[0].id} ~")
 
         db = firestore.client()
         empty2 = st.empty()
@@ -172,9 +172,8 @@ if choice == '삭제':
                     for doc in db:
                         doc.reference.delete()
                         c += (100 / len(address))
-                        empty.progress(int(c)+1)
-                    empty.empty()
+                        empty2.progress(int(c))
+                    empty2.empty()
             st.warning('삭제 완료')
-            st.experimental_rerun()
     elif login_code2 != '' and login_code2:
         st.warning('코드 오류')
