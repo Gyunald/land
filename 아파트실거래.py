@@ -399,4 +399,4 @@ try:
 
 except Exception as e:
     # st.write(e)
-    st.error(':rainbow[데이터 업로드 필요 😎]')
+    st.error('데이터 업데이트 중 😎')
