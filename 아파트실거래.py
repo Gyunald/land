@@ -255,9 +255,10 @@ address = {y:x for x,y in address.items()}
 
 try:
     if standard_str[5:8] == (datetime.utcnow()+timedelta(hours=9)).date().strftime('%m.%d')[:3] :
+
         get_매매 = db.collection(list(db.collections())[-1].id).document(시군구).get().to_dict()['매매']
         get_임대 = db.collection(list(db.collections())[-1].id).document(시군구).get().to_dict()['임대']
-        
+
         temp = 매매(get_매매)
         temp2 = 임대(get_임대)
         
@@ -397,5 +398,5 @@ try:
                 st.dataframe(월세_데이터프레임.sort_values(by=['월세'], ascending=False).reset_index(drop=True).style.background_gradient(subset=['보증금','월세','종전보증금','종전월세'], cmap="Reds"),use_container_width=True,hide_index=True)
 
 except Exception as e:
-    st.write(e)
-    st.error('데이터 업로드 필요 😎')
+    # st.write(e)
+    st.error(':rainbow[데이터 업로드 필요 😎]')
