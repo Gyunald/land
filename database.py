@@ -115,8 +115,9 @@ if choice == '업데이트' :
     c = 0
     
     with st.spinner('진행중...'):
-        if not db.collection(f"{this_month.strftime('%Y.%m.%d')}").document('서울특별시 종로구').get().exists:
+        # if not db.collection(f"{this_month.strftime('%Y.%m.%d')}").document('서울특별시 종로구').get().exists:
             # threads = []
+        if (datetime.utcnow() + timedelta(hours=9)).date().strftime('%Y.%m.%d') != list(db.collections())[-1].id:
             for dong, code in address.items():
                 t = Thread(target=process_data, args=(urls['매매'], code, user_key, rows, dong, '매매'))
                 # threads.append(t)
@@ -136,32 +137,42 @@ if choice == '업데이트' :
         else:
             st.error('데이터 중복!!!')
                 
-    # elif login_code != '' and st.secrets.login_code :
-    #     st.warning('코드 오류')
-        
 if choice == '삭제':
-    toggle = st.toggle(':rainbow[오늘 데이터만 삭제]',value=True)
-    if toggle :
-        list_range = list(db.collections())[-1:]
-    else:
-        list_range = list(db.collections())[:-2]
-    db = firestore.client()
     empty = st.empty()
     login_code2 = empty.text_input('삭제 코드 ', type='password')
-
     if login_code2 == st.secrets.login_code :
-        for i in list_range:
-            c = 0
-            db = firestore.client()
-            db = db.collection(i.id).get()
-            
-            with st.spinner(f"{i.id} 삭제중...") :
-                for doc in db:
-                    doc.reference.delete()
-                    c += (100 / len(address))
-                    empty.progress(int(c)+1)
-                empty.empty()
-        st.warning('삭제 완료')
-                
+        empty.empty()
+        if (datetime.utcnow() + timedelta(hours=9)).date().strftime('%Y.%m.%d') == list(db.collections())[-1].id :
+            status = False
+            v = ':rainbow[오늘 데이터만 삭제]'
+        else:
+            status = True
+            v = '오늘 업데이트 필요'
+
+        toggle = st.toggle(v,value= not status, disabled=status)
+        
+        if toggle:
+            list_range = list(db.collections())[-1:]
+            st.write(f"# :rainbow[{list(db.collections())[-1].id}]")
+
+        else:
+            list_range = list(db.collections())[:-3]
+            st.write('#', list(db.collections())[0].id,'~')
+
+        db = firestore.client()
+        b = st.button('삭제',use_container_width=True)
+        if b :
+            for i in list_range:
+                c = 0
+                db = firestore.client()
+                db = db.collection(i.id).get()
+                with st.spinner(f"{i.id} 삭제중...") :
+                    for doc in db:
+                        doc.reference.delete()
+                        c += (100 / len(address))
+                        # empty.progress(int(c)+1)
+                    empty.empty()
+            st.warning('삭제 완료')
+            st.experimental_rerun()
     elif login_code2 != '' and login_code2:
         st.warning('코드 오류')
