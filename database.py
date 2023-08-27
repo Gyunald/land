@@ -160,8 +160,10 @@ if choice == '삭제':
             st.write('#', list(db.collections())[0].id,'~')
 
         db = firestore.client()
-        b = st.button('삭제',use_container_width=True)
+        empty2 = st.empty()
+        b = empty2.button('삭제',use_container_width=True)
         if b :
+            empty2.empty()
             for i in list_range:
                 c = 0
                 db = firestore.client()
@@ -170,7 +172,7 @@ if choice == '삭제':
                     for doc in db:
                         doc.reference.delete()
                         c += (100 / len(address))
-                        # empty.progress(int(c)+1)
+                        empty.progress(int(c)+1)
                     empty.empty()
             st.warning('삭제 완료')
             st.experimental_rerun()
