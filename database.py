@@ -140,12 +140,17 @@ if choice == '업데이트' :
     #     st.warning('코드 오류')
         
 if choice == '삭제':
+    toggle = st.toggle(':rainbow[오늘 데이터만 삭제]',True)
+    if toggle :
+        list_range = list(db.collections())[-1:]
+    else:
+        list_range = list(db.collections())[:-2]
     db = firestore.client()
     empty = st.empty()
     login_code2 = empty.text_input('삭제 코드 ', type='password')
 
     if login_code2 == st.secrets.login_code :
-        for i in list(db.collections())[-1 :]:
+        for i in list_range:
             c = 0
             db = firestore.client()
             db = db.collection(i.id).get()
