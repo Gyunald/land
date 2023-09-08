@@ -15,13 +15,13 @@ def 매매(get_매매):
     temp = pd.DataFrame(
     [i.split(',') for i in get_매매], columns=["아파트", "금액", "층", "면적", "건축", "계약", "동", "거래", "파기"])
         
-    temp['계약'] = pd.to_datetime(temp['계약'],format = "%Y%m%d").dt.strftime('%y.%m.%d')
+    temp['계약'] = pd.to_datetime(temp['계약'],format = "%Y%m%d").dt.strftime('%m.%d')
     temp['면적'] = temp['면적'].astype(float).map('{:.0f}'.format)
     temp['동'] = temp['동'].str.split().str[0]
     temp['금액'] = (temp['금액'].astype(int) / 10000).astype(str)
-    replace_word = '아파트','마을','신도시','단지','\(.+\)'
+    replace_word = '아파트','마을','신도시','단지','\(.+\)','운정','파주','더퍼스트'
     for i in replace_word:
-        temp['아파트'] = temp['아파트'].str.replace(i,'',regex=True).str.replace('운정','').str.replace('파주','')
+        temp['아파트'] = temp['아파트'].str.replace(i,'',regex=True)
     temp['층']= temp['층']
 
     return temp.sort_values(by=['아파트'], ascending=True)
@@ -31,13 +31,13 @@ def 매매_전일(get_매매전일):
     temp3 = pd.DataFrame(
     [i.split(',') for i in get_매매전일], columns=["아파트", "금액", "층", "면적", "건축", "계약", "동", "거래", "파기"]
 )
-    temp3['계약'] = pd.to_datetime(temp3['계약'],format = "%Y%m%d").dt.strftime('%y.%m.%d')
+    temp3['계약'] = pd.to_datetime(temp3['계약'],format = "%Y%m%d").dt.strftime('%m.%d')
     temp3['면적'] = temp3['면적'].astype(float).map('{:.0f}'.format)
     temp3['동'] = temp3['동'].str.split().str[0]
     temp3['금액'] = (temp3['금액'].astype(int) / 10000).astype(str)
-    replace_word = '아파트','마을','신도시','단지','\(.+\)'
+    replace_word = '아파트','마을','신도시','단지','\(.+\)','운정','파주','더퍼스트'
     for i in replace_word:
-        temp3['아파트'] = temp3['아파트'].str.replace(i,'',regex=True).str.replace('운정','').str.replace('파주','')
+        temp3['아파트'] = temp3['아파트'].str.replace(i,'',regex=True)
     temp3['층']= temp3['층']
     return temp3.sort_values(by=['아파트'], ascending=True)
 
