@@ -1,9 +1,6 @@
 import streamlit as st
-from bs4 import BeautifulSoup
 import pandas as pd
 from datetime import datetime, timedelta
-import requests
-import altair as alt
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
@@ -56,15 +53,6 @@ if not firebase_admin._apps:
     })
     app = firebase_admin.initialize_app(cred)
     
-db = firestore.client()
-address = {'파주시' : '41480'}
-
-user_key = st.secrets.user_key
-rows = '9999'
-
-city = address['파주시']
-address = {y:x for x,y in address.items()}
-법정동명 = address[city]
 try:
     if list(db.collections())[-1].id == (datetime.utcnow()+timedelta(hours=9)).date().strftime('%Y.%m.%d') :        
         get_매매 = db.collection(list(db.collections())[-1].id).document('파주시').get().to_dict()['매매']
