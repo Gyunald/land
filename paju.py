@@ -10,7 +10,7 @@ st.set_page_config(page_title="파주시 실거래가") # layout='wide'
 @st.cache_data
 def 정규화(신규):
     temp = pd.DataFrame(
-    [i.split(',') for i in 신규], columns=["아파트", "금액", "면적", "층", "계약", "건축", "동", "거래", "파기"]
+    [i.split(',') for i in 신규], columns=["아파트", "금액", "면적", "층", "계약", "건축", "동", "거래", "파기"])
         
     temp['계약'] = pd.to_datetime(temp['계약'],format = "%Y%m%d").dt.strftime('%m.%d')
     temp['면적'] = temp['면적'].astype(float).map('{:.0f}'.format)
@@ -45,7 +45,6 @@ try:
         매매전일 = db.collection(list(db.collections())[-2].id).document('파주시').get().to_dict()['매매']     
         
         신규 = pd.merge(매매,매매전일, how='outer', indicator=True).query('_merge == "left_only"').drop(columns=['_merge'])
-        신규
         신규 = 정규화(신규)
         if len(신규) >= 1:
             f'파주시 {(datetime.utcnow()+timedelta(hours=9)).day}일 - 신규 {len(신규)}건'
