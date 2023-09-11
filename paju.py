@@ -52,7 +52,7 @@ if not firebase_admin._apps:
     "client_x509_cert_url": st.secrets.client_x509_cert_url
     })
     app = firebase_admin.initialize_app(cred)
-    
+db = firestore.client()  
 try:
     if list(db.collections())[-1].id == (datetime.utcnow()+timedelta(hours=9)).date().strftime('%Y.%m.%d') :        
         get_매매 = db.collection(list(db.collections())[-1].id).document('파주시').get().to_dict()['매매']
