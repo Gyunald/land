@@ -8,35 +8,21 @@ from firebase_admin import firestore
 st.set_page_config(page_title="파주시 실거래가") # layout='wide'
 
 @st.cache_data
-def 매매(get_매매):
+def 정규화(신규):
     temp = pd.DataFrame(
-    [i.split(',') for i in get_매매], columns=["아파트", "금액", "층", "면적", "건축", "계약", "동", "거래", "파기"])
+    [i.split(',') for i in 신규], columns=["아파트", "금액", "면적", "층", "계약", "건축", "동", "거래", "파기"]
         
     temp['계약'] = pd.to_datetime(temp['계약'],format = "%Y%m%d").dt.strftime('%m.%d')
     temp['면적'] = temp['면적'].astype(float).map('{:.0f}'.format)
     temp['동'] = temp['동'].str.split().str[0]
     temp['금액'] = (temp['금액'].astype(int) / 10000).astype(str)
-    replace_word = '아파트','마을','신도시','단지','\(.+\)','운정','파주','더퍼스트'
+    
+    replace_word = '아파트','마을','신도시','단지','\(.+\)','운정','파주','더퍼스트','리버팰리스'
     for i in replace_word:
         temp['아파트'] = temp['아파트'].str.replace(i,'',regex=True)
     temp['층']= temp['층']
 
     return temp.sort_values(by=['아파트'], ascending=True)
-
-@st.cache_data
-def 매매_전일(get_매매전일):    
-    temp3 = pd.DataFrame(
-    [i.split(',') for i in get_매매전일], columns=["아파트", "금액", "층", "면적", "건축", "계약", "동", "거래", "파기"]
-)
-    temp3['계약'] = pd.to_datetime(temp3['계약'],format = "%Y%m%d").dt.strftime('%m.%d')
-    temp3['면적'] = temp3['면적'].astype(float).map('{:.0f}'.format)
-    temp3['동'] = temp3['동'].str.split().str[0]
-    temp3['금액'] = (temp3['금액'].astype(int) / 10000).astype(str)
-    replace_word = '아파트','마을','신도시','단지','\(.+\)','운정','파주','더퍼스트'
-    for i in replace_word:
-        temp3['아파트'] = temp3['아파트'].str.replace(i,'',regex=True)
-    temp3['층']= temp3['층']
-    return temp3.sort_values(by=['아파트'], ascending=True)
 
 if not firebase_admin._apps:
     cred = credentials.Certificate({
@@ -55,13 +41,10 @@ if not firebase_admin._apps:
 db = firestore.client()  
 try:
     if list(db.collections())[-1].id == (datetime.utcnow()+timedelta(hours=9)).date().strftime('%Y.%m.%d') :        
-        get_매매 = db.collection(list(db.collections())[-1].id).document('파주시').get().to_dict()['매매']
-        temp = 매매(get_매매)            
-
-        get_매매전일 = db.collection(list(db.collections())[-2].id).document('파주시').get().to_dict()['매매']
-        temp3 = 매매_전일(get_매매전일)        
-        신규 = pd.merge(temp,temp3, how='outer', indicator=True).query('_merge == "left_only"').drop(columns=['_merge']).reset_index(drop=True)
-        신규 = 신규.reindex(columns=["아파트", "금액", "면적", "층", "계약", "건축", "동", "거래", "파기"])
+        매매 = db.collection(list(db.collections())[-1].id).document('파주시').get().to_dict()['매매']
+        매매전일 = db.collection(list(db.collections())[-2].id).document('파주시').get().to_dict()['매매']     
+        신규 = pd.merge(매매,매매전일, how='outer', indicator=True).query('_merge == "left_only"').drop(columns=['_merge'])
+        신규 = 정규화(신규)
         if len(신규) >= 1:
             f'파주시 {(datetime.utcnow()+timedelta(hours=9)).day}일 - 신규 {len(신규)}건'
             st.dataframe(신규.sort_values(by=['금액'], ascending=False).style.background_gradient(subset=['금액','층'], cmap='Reds'),use_container_width=True,hide_index=True)
