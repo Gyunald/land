@@ -67,5 +67,5 @@ try:
             st.dataframe(신규.sort_values(by=['금액'], ascending=False).style.background_gradient(subset=['금액','층'], cmap='Reds'),use_container_width=True,hide_index=True)
 
 except Exception as e:
-    # st.write(e)
+    st.write(e)
     st.error('데이터 업데이트 중 😎')
