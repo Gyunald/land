@@ -43,7 +43,9 @@ try:
     if list(db.collections())[-1].id == (datetime.utcnow()+timedelta(hours=9)).date().strftime('%Y.%m.%d') :        
         매매 = db.collection(list(db.collections())[-1].id).document('파주시').get().to_dict()['매매']
         매매전일 = db.collection(list(db.collections())[-2].id).document('파주시').get().to_dict()['매매']     
+        
         신규 = pd.merge(매매,매매전일, how='outer', indicator=True).query('_merge == "left_only"').drop(columns=['_merge'])
+        신규
         신규 = 정규화(신규)
         if len(신규) >= 1:
             f'파주시 {(datetime.utcnow()+timedelta(hours=9)).day}일 - 신규 {len(신규)}건'
