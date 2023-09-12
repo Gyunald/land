@@ -38,18 +38,19 @@ if not firebase_admin._apps:
     "client_x509_cert_url": st.secrets.client_x509_cert_url
     })
     app = firebase_admin.initialize_app(cred)
-db = firestore.client()  
+db = firestore.client()
+city = '파주시'
 try:
     if list(db.collections())[-1].id == (datetime.utcnow()+timedelta(hours=9)).date().strftime('%Y.%m.%d') :        
-        매매 = db.collection(list(db.collections())[-1].id).document('파주시').get().to_dict()['매매']
-        매매전일 = db.collection(list(db.collections())[-2].id).document('파주시').get().to_dict()['매매']
+        매매 = db.collection(list(db.collections())[-1].id).document(city).get().to_dict()['매매']
+        매매전일 = db.collection(list(db.collections())[-2].id).document(city).get().to_dict()['매매']
         신규 = [i for i in 매매 if i not in 매매전일]
         신규 = 정규화(신규)
         신규 = 신규.reindex(columns=["아파트", "금액", "면적", "층", "계약", "건축", "동", "거래", "파기"])
         if len(신규) >= 1:
-            f'파주시 {(datetime.utcnow()+timedelta(hours=9)).day}일 - 신규 {len(신규)}건'
+            f'{city} {(datetime.utcnow()+timedelta(hours=9)).day}일 - 신규 {len(신규)}건'
             st.dataframe(신규.sort_values(by=['금액'], ascending=False).style.background_gradient(subset=['금액','층'], cmap='Reds'),use_container_width=True,hide_index=True)
 
 except Exception as e:
-    st.write(e)
     st.error('데이터 업데이트 중 😎')
+    st.write(e)
