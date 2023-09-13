@@ -50,6 +50,6 @@ for city in cities:
             e = st.empty()
             e1.write(f'{city} {(datetime.utcnow()+timedelta(hours=9)).day}일 - 신규 {len(신규)}건')
             e.dataframe(신규.sort_values(by=['금액'], ascending=False).style.background_gradient(subset=['금액','층'], cmap='Reds'),use_container_width=True,hide_index=True)
-            time.sleep(5)
+            time.sleep(6)
         e.empty()
         e1.empty()
