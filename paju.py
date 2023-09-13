@@ -38,7 +38,7 @@ if not firebase_admin._apps:
     })
     app = firebase_admin.initialize_app(cred)
 db = firestore.client()
-cities = ['파주시', '고양시 일산서구','고양시 일산동구','고양시 덕양구', '김포시','화성시']
+cities = ['파주시', '고양시 일산서구','고양시 일산동구']
 
 for city in cities:
     if list(db.collections())[-1].id == (datetime.utcnow()+timedelta(hours=9)).date().strftime('%Y.%m.%d') :        
@@ -51,6 +51,6 @@ for city in cities:
             e = st.empty()
             e1.write(f'{city} {(datetime.utcnow()+timedelta(hours=9)).day}일 - 신규 {len(신규)}건')
             e.dataframe(신규.sort_values(by=['금액'], ascending=False).style.background_gradient(subset=['금액','층'], cmap='Reds'),use_container_width=True,hide_index=True)
-            time.sleep(2)
+            time.sleep(3)
         e.empty()
         e1.empty()
