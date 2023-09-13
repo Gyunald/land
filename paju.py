@@ -17,6 +17,7 @@ def 정규화(신규):
     temp['금액'] = (temp['금액'].astype(int) / 10000).astype(str)
     
     replace_word = '\(.+\)','아파트','마을','신도시','단지'
+    
     for i in replace_word:
         temp['아파트'] = temp['아파트'].str.replace(i,'',regex=True)
     return temp.sort_values(by=['아파트'], ascending=True)
@@ -50,6 +51,6 @@ for city in cities:
             e = st.empty()
             e1.write(f'{city} {(datetime.utcnow()+timedelta(hours=9)).day}일 - 신규 {len(신규)}건')
             e.dataframe(신규.sort_values(by=['금액'], ascending=False).style.background_gradient(subset=['금액','층'], cmap='Reds'),use_container_width=True,hide_index=True)
-            time.sleep(6)
+            time.sleep(7)
         e.empty()
         e1.empty()
