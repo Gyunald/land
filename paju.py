@@ -6,7 +6,6 @@ from firebase_admin import credentials
 from firebase_admin import firestore
 import time
 
-@st.cache_data
 def 정규화(신규):
     temp = pd.DataFrame(
     [i.split(',') for i in 신규], columns=["아파트", "금액", "층", "면적", "건축", "계약", "동", "거래", "파기"])
