@@ -6,8 +6,6 @@ from firebase_admin import credentials
 from firebase_admin import firestore
 import time
 
-st.set_page_config(page_title="파주시 실거래가") # layout='wide'
-
 @st.cache_data
 def 정규화(신규):
     temp = pd.DataFrame(
