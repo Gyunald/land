@@ -16,7 +16,7 @@ def 정규화(신규):
     temp['동'] = temp['동'].str.split().str[0]
     temp['금액'] = (temp['금액'].astype(int) / 10000).astype(str)
     
-    replace_word = '아파트','마을','신도시','단지','\(.+\)','운정','더퍼스트','리버팰리스'
+    replace_word = '\(.+\)','아파트','마을','신도시','단지','국제금융'
     for i in replace_word:
         temp['아파트'] = temp['아파트'].str.replace(i,'',regex=True)
     return temp.sort_values(by=['아파트'], ascending=True)
@@ -36,7 +36,7 @@ if not firebase_admin._apps:
     })
     app = firebase_admin.initialize_app(cred)
 db = firestore.client()
-cities = ['파주시', '고양시 일산서구','고양시 일산동구']
+cities = ['파주시', '고양시 일산서구','인천광역시 서구', '인천광역시 연수구']
 
 for city in cities:
     if list(db.collections())[-1].id == (datetime.utcnow()+timedelta(hours=9)).date().strftime('%Y.%m.%d') :        
