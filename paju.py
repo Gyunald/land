@@ -52,6 +52,6 @@ for city in cities:
             e1.write(f'{city} {(datetime.utcnow()+timedelta(hours=9)).day}일 - 신규 {len(신규)}건')
             float_point = dict.fromkeys(신규.select_dtypes('float').columns, "{:.1f}")
             e.dataframe(신규.sort_values(by=['금액'], ascending=False).style.format(float_point).background_gradient(subset=['금액','층'], cmap='Reds'),use_container_width=True,hide_index=True)
-            time.sleep(2)
+            time.sleep(2.3)
         e.empty()
         e1.empty()
