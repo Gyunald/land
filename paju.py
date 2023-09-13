@@ -37,7 +37,7 @@ if not firebase_admin._apps:
     
 db = firestore.client()
 cities =  ['파주시', '김포시', '고양시 일산서구', '고양시 덕양구', '인천광역시 연수구', '인천광역시 서구', '남양주시', '하남시', '성남시 분당구', '수원시 영통구', '용인시 수지구', '화성시', '평택시']
-for city in cities:
+for city in cities[::-1]:
     if list(db.collections())[-1].id == (datetime.utcnow()+timedelta(hours=9)).date().strftime('%Y.%m.%d') :        
         매매 = db.collection(list(db.collections())[-1].id).document(city).get().to_dict()['매매']
         매매전일 = db.collection(list(db.collections())[-2].id).document(city).get().to_dict()['매매']
