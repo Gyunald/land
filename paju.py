@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
+import time
 
 st.set_page_config(page_title="파주시 실거래가") # layout='wide'
 
