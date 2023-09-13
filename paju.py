@@ -36,7 +36,7 @@ if not firebase_admin._apps:
     app = firebase_admin.initialize_app(cred)
     
 db = firestore.client()
-cities = ['서울특별시 강남구','파주시', '고양시 일산서구', '인천광역시 서구', '인천광역시 연수구','김포시','화성시', '성남시 분당구',]
+cities = ['서울특별시 강남구', '파주시', '고양시 일산서구', '인천광역시 서구', '인천광역시 연수구','김포시','화성시', '성남시 분당구',]
 
 for city in cities:
     if list(db.collections())[-1].id == (datetime.utcnow()+timedelta(hours=9)).date().strftime('%Y.%m.%d') :        
