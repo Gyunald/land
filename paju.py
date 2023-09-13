@@ -20,8 +20,6 @@ def 정규화(신규):
     replace_word = '아파트','마을','신도시','단지','\(.+\)','운정','더퍼스트','리버팰리스'
     for i in replace_word:
         temp['아파트'] = temp['아파트'].str.replace(i,'',regex=True)
-    temp['층']= temp['층']
-
     return temp.sort_values(by=['아파트'], ascending=True)
 
 if not firebase_admin._apps:
@@ -39,18 +37,19 @@ if not firebase_admin._apps:
     })
     app = firebase_admin.initialize_app(cred)
 db = firestore.client()
-city = '파주시'
-try:
+cities = ['파주시', '고양시 일산서구','고양시 일산동구','고양시 덕양구', '김포시','화성시']
+
+for city in cities:
     if list(db.collections())[-1].id == (datetime.utcnow()+timedelta(hours=9)).date().strftime('%Y.%m.%d') :        
         매매 = db.collection(list(db.collections())[-1].id).document(city).get().to_dict()['매매']
         매매전일 = db.collection(list(db.collections())[-2].id).document(city).get().to_dict()['매매']
         신규 = [i for i in 매매 if i not in 매매전일]
-        신규 = 정규화(신규)
-        신규 = 신규.reindex(columns=["아파트", "금액", "면적", "층", "계약", "건축", "동", "거래", "파기"])
+        신규 = 정규화(신규).reindex(columns=["아파트", "금액", "면적", "층", "계약", "건축", "동", "거래", "파기"])
         if len(신규) >= 1:
-            f'{city} {(datetime.utcnow()+timedelta(hours=9)).day}일 - 신규 {len(신규)}건'
-            st.dataframe(신규.sort_values(by=['금액'], ascending=False).style.background_gradient(subset=['금액','층'], cmap='Reds'),use_container_width=True,hide_index=True)
-
-except Exception as e:
-    st.error('데이터 업데이트 중 😎')
-    st.write(e)
+            e1 = st.empty()
+            e = st.empty()
+            e1.write(f'{city} {(datetime.utcnow()+timedelta(hours=9)).day}일 - 신규 {len(신규)}건')
+            e.dataframe(신규.sort_values(by=['금액'], ascending=False).style.background_gradient(subset=['금액','층'], cmap='Reds'),use_container_width=True,hide_index=True)
+            time.sleep(2)
+        e.empty()
+        e1.empty()
