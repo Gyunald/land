@@ -49,7 +49,7 @@ for city in cities[::-1]:
         if len(신규) >= 1:
             e1 = st.empty()
             e = st.empty()
-            e1.write(f"#### :orange[{city}] 실거래 {len(신규)}건 ({datetime.utcnow() + timedelta(hours=9)).strftime('%m.%d')})")                    
+            e1.write(f"#### :orange[{city}] 실거래 {len(신규)}건 ({(datetime.utcnow() + timedelta(hours=9)).strftime('%m.%d')})")                    
             float_point = dict.fromkeys(신규.select_dtypes('float').columns, "{:.1f}")
             e.dataframe(신규.sort_values(by=['금액'], ascending=False).style.format(float_point).background_gradient(subset=['금액','층'], cmap='Reds'),use_container_width=True,hide_index=True)
             time.sleep(2.7)
