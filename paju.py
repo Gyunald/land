@@ -29,7 +29,7 @@ def 정규화(신규):
     temp['면적'] = temp['면적'].astype(float).map('{:.0f}'.format)
     temp['동'] = temp['동'].str.split().str[0]
     temp['금액'] = (temp['금액'].astype(float) / 10000)
-    replace_word = '\(.+\)',city_replace,'신도시', '아파트','역','시범','마을',
+    replace_word = '\(.+\)',city_replace,'신도시', '아파트','역','시범','마을','세상'
     for i in replace_word:
         temp['아파트'] = temp['아파트'].str.replace(i,'',regex=True)
     if city == '파주시':
