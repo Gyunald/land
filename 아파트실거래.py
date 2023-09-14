@@ -40,8 +40,11 @@ def 매매(get_매매):
     replace_word = '\(.+\)',city_replace,'신도시', '아파트','역','시범','마을',
     for i in replace_word:
         temp['아파트'] = temp['아파트'].str.replace(i,'',regex=True)
+        
     if city == '파주시':
         temp['아파트'] = temp['아파트'].apply(lambda j: j[j.index('단지')+2 :] if '단지' in j else j)
+        temp['아파트'] = temp['아파트'].str.replace('세상','',regex=True)
+        
     elif city == '평택시':
         temp['아파트'] = temp['아파트'].str.replace('국제','',regex=True)
 
