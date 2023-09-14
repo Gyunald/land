@@ -41,7 +41,7 @@ def 정규화(신규):
         temp['아파트'] = temp['아파트'].str.replace('반도유보라','',regex=True).replace('산척동.동탄호수공원','',regex=True)
 
     elif city == '인천광역시 서구':
-        temp['아파트'] = temp['아파트'].str.replace('에듀앤파크','',regex=True).str.replace('국제금융단지','',regex=True)
+        temp['아파트'] = temp['아파트'].str.replace('에듀앤파크','',regex=True).str.replace('국제금융단지','',regex=True).str.replace('지구','',regex=True).str.replace('블루','',regex=True)
 
     elif city == '인천광역시 연수구':
         temp['아파트'] = temp['아파트'].str.replace('더샵','',regex=True).str.replace('송도1차','1차',regex=True).str.replace('송도2차','2차',regex=True).str.replace('송도3차','3차',regex=True).str.replace('송도4차','4차',regex=True).str.replace('송도5차','5차',regex=True)
