@@ -49,21 +49,12 @@ def 실거래(url, city, date, user_key, rows):
                 아파트              = item.find("아파트").text.replace(',','.')
                 층                 = int(item.find("층").text)
                 건축                = str(item.find("건축년도").text)
-                
-                if 'getRTMSDataSvcAptRent' in url:
-                    보증금           = int(item.find("보증금액").text.replace(',',''))
-                    월세             = int(item.find("월세금액").text.replace(',','').replace(' ','0'))
-                    갱신권           = item.find("갱신요구권사용").text.strip()
-                    종전보증금        = int(item.find("종전계약보증금").text.replace(',','').replace(' ','0'))
-                    종전월세         = int(item.find("종전계약월세").text.replace(',','').replace(' ','0'))
-                    temp = pd.DataFrame([[아파트, 보증금, 면적, 월세, 층, 건축, 동, 계약, 종전보증금, 종전월세, 갱신권]], 
-                                columns=["아파트", "보증금", "면적", "월세", "층", "건축", "동", "계약", "종전보증금", "종전월세", "갱신권"])
-                else:
-                    거래            = item.find("거래유형").text
-                    금액            = int(item.find("거래금액").text.replace(',','').strip())
-                    파기            = item.find("해제사유발생일").text.strip()
-                    temp = pd.DataFrame([[아파트, 금액, 면적, 층, 건축, 계약 ,동, 거래, 파기]], 
-                                    columns=["아파트", "금액", "면적", "층", "건축", "계약",  "동", "거래", "파기"])
+
+                거래            = item.find("거래유형").text
+                금액            = int(item.find("거래금액").text.replace(',','').strip())
+                파기            = item.find("해제사유발생일").text.strip()
+                temp = pd.DataFrame([[아파트, 금액, 면적, 층, 건축, 계약 ,동, 거래, 파기]], 
+                                columns=["아파트", "금액", "면적", "층", "건축", "계약",  "동", "거래", "파기"])
                 aptTrade = pd.concat([aptTrade,temp])
 
         index = 법정동명[:법정동명.rfind('시')]  # 마지막 '시'의 위치를 찾습니다.
@@ -124,7 +115,9 @@ c1,c2 = st.columns([1,1])
 with c1 :
     empty = st.empty()
     standard = empty.date_input('🧁 날짜', datetime.utcnow()+timedelta(hours=9),key='standard_date_1',max_value=datetime.utcnow()+timedelta(hours=9),label_visibility='collapsed',format='YYYY.MM.DD')
-    standard_previous = standard - timedelta(days=1)
+    empty.empty()
+
+    standard_previous = standard - timedelta(days=1)    
     day_num = datetime.isoweekday(standard)
 
     if day_num == 1 :
@@ -185,34 +178,6 @@ try:
 
                 float_point = dict.fromkeys(매매_당월.select_dtypes('float').columns, "{:.1f}")
                 e2.dataframe(매매_데이터프레임.sort_values(by=['금액'], ascending=False).style.format(float_point).background_gradient(subset=['금액','층'], cmap="Reds"),use_container_width=True,hide_index=True)
-
-    else:
-        standard_previous = standard.replace(day=1) - timedelta(days=1)
-    
-        if standard.day == 1 :
-            standard = standard-timedelta(days=1)
-            standard_previous = standard.replace(day=1) - timedelta(days=1)
-    
-        standard_str = standard.strftime('%Y.%m')
-        standard_previous_str = standard_previous.strftime('%Y.%m')
-    
-        urls= ['http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptTradeDev', 'http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptRent?']
-    
-        api_trade = pd.concat([실거래(urls[0], city, standard.strftime('%Y%m'), user_key, rows),실거래(urls[0], city, standard_previous.strftime('%Y%m'), user_key, rows)]).drop_duplicates()
-
-        매매_계약월별 = api_trade[api_trade['계약'].str.contains(standard_str[2:])]
-
-        # e = st.empty()
-        아파트 = st.multiselect('🍞 아파트별1',sorted([i for i in 매매_계약월별["아파트"].drop_duplicates()]),max_selections=3,placeholder= '아파트별',label_visibility='collapsed')
-
-        if not 아파트:
-            매매_데이터프레임 = 매매_계약월별
-        else:
-            매매_데이터프레임 = 매매_계약월별[매매_계약월별["아파트"].isin(아파트)]
-        st.write(f"#### :orange[{법정동명}] 실거래 {len(매매_데이터프레임)}건")        
-        매매_데이터프레임 = 매매_데이터프레임.reindex(columns=["아파트", "금액", "면적", "층", "계약", "건축", "동", "거래", "파기"])
-        float_point = dict.fromkeys(매매_데이터프레임.select_dtypes('float').columns, "{:.1f}")
-        st.dataframe(매매_데이터프레임.sort_values(by=['금액'], ascending=False).reset_index(drop=True).style.format(float_point).background_gradient(subset=['금액','층'], cmap="Reds"),use_container_width=True,hide_index=True)
 
 except Exception as e:
     st.write(e)
