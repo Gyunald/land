@@ -31,10 +31,9 @@ def 매매(get_매매):
     [i.split(',') for i in get_매매], columns=["아파트", "금액", "층", "면적", "건축", "계약", "동", "거래", "파기"])
         
     temp['계약'] = pd.to_datetime(temp['계약'],format = "%Y%m%d").dt.strftime('%m.%d')
-    temp['면적'] = temp['면적'].astype(float).map('{:.0f}'.format).astype(int)
+    temp['면적'] = temp['면적'].astype(float).map('{:.0f}'.format)
     temp['동'] = temp['동'].str.split().str[0]
     temp['금액'] = (temp['금액'].astype(float) / 10000)
-    # temp['층']= temp['층'].astype('int64')
     index = 시군구[:시군구.rfind('시')]  # 마지막 '시'의 위치를 찾습니다.
     city_replace = index.replace('광역','').replace('특별','')
     replace_word = '\(.+\)', city_replace, '아파트', '마을', '신도시', '단지', '시범','역'
