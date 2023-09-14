@@ -53,7 +53,7 @@ try:
     temp = 매매(get_매매)
     매매_당월 = temp[temp['계약'].str.contains(date[-1].id[5:8])].drop_duplicates()
 
-    if date[-1].id[-2:] == day.strftime('%d'):
+    if date[-1].id == day.date().strftime('%Y.%m.%d'):
         get_매매전일 = db.collection(date[-2].id).document(시군구).get().to_dict()['매매']
         temp3 = 매매(get_매매전일)
         신규 = pd.merge(temp,temp3, how='outer', indicator=True).query('_merge == "left_only"').drop(columns=['_merge']).reset_index(drop=True)
