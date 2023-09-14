@@ -25,7 +25,7 @@ db = firestore.client()
 st.set_page_config(page_title="🎈아파트 실거래가 매매/전세/월세 ") # layout='wide'
 
 @st.cache_data
-def 매매(get_매매):
+def 정규화(get_매매):
     temp = pd.DataFrame(
     [i.split(',') for i in get_매매], columns=["아파트", "금액", "층", "면적", "건축", "계약", "동", "거래", "파기"])
         
