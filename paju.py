@@ -21,19 +21,29 @@ if not firebase_admin._apps:
     })
     app = firebase_admin.initialize_app(cred)
     
-def 정규화(신규):
+db = firestore.client()
+st.set_page_config(page_title="🎈아파트 실거래가 매매/전세/월세 ") # layout='wide'
+
+@st.cache_data
+def 매매(get_매매):
     temp = pd.DataFrame(
-    [i.split(',') for i in 신규], columns=["아파트", "금액", "층", "면적", "건축", "계약", "동", "거래", "파기"])
+    [i.split(',') for i in get_매매], columns=["아파트", "금액", "층", "면적", "건축", "계약", "동", "거래", "파기"])
         
     temp['계약'] = pd.to_datetime(temp['계약'],format = "%Y%m%d").dt.strftime('%m.%d')
     temp['면적'] = temp['면적'].astype(float).map('{:.0f}'.format)
     temp['동'] = temp['동'].str.split().str[0]
     temp['금액'] = (temp['금액'].astype(float) / 10000)
-    replace_word = '\(.+\)',city_replace,'신도시', '아파트','역','시범','마을','세상'
+    index = city[:city.rfind('시')]  # 마지막 '시'의 위치를 찾습니다.
+    city_replace = index.replace('광역','').replace('특별','')
+    
+    replace_word = '\(.+\)',city_replace,'신도시', '아파트','역','시범','마을',
     for i in replace_word:
         temp['아파트'] = temp['아파트'].str.replace(i,'',regex=True)
+        
     if city == '파주시':
         temp['아파트'] = temp['아파트'].apply(lambda j: j[j.index('단지')+2 :] if '단지' in j else j)
+        temp['아파트'] = temp['아파트'].str.replace('세상','',regex=True)
+        
     elif city == '평택시':
         temp['아파트'] = temp['아파트'].str.replace('국제','',regex=True)
 
@@ -44,7 +54,7 @@ def 정규화(신규):
         temp['아파트'] = temp['아파트'].str.replace('에듀앤파크','',regex=True).str.replace('국제금융단지','',regex=True).str.replace('지구','',regex=True).str.replace('블루','',regex=True)
 
     elif city == '인천광역시 연수구':
-        temp['아파트'] = temp['아파트'].str.replace('더샵','',regex=True).str.replace('송도1차','1차',regex=True).str.replace('송도2차','2차',regex=True).str.replace('송도3차','3차',regex=True).str.replace('송도4차','4차',regex=True).str.replace('송도5차','5차',regex=True)
+        temp['아파트'] = temp['아파트'].str.replace('더샵','',regex=True).str.replace('송도1차','1차',regex=True).str.replace('송도2차','2차',regex=True).str.replace('송도3차','3차',regex=True).str.replace('송도4차','4차',regex=True)
 
     elif city == '고양시 일산동구':
         temp['아파트'] = temp['아파트'].str.replace('일산','',regex=True)
@@ -53,7 +63,6 @@ def 정규화(신규):
         temp['아파트'] = temp['아파트'].str.replace('일산','',regex=True)             
     
     temp['아파트'] = temp['아파트'].apply(lambda j: j[:j.index('단지')] if '단지' in j else j)
-  
     return temp
 
 db = firestore.client()
