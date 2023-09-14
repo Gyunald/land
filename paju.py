@@ -6,25 +6,6 @@ from firebase_admin import credentials
 from firebase_admin import firestore
 import time
 
-def 정규화(신규):
-    temp = pd.DataFrame(
-    [i.split(',') for i in 신규], columns=["아파트", "금액", "층", "면적", "건축", "계약", "동", "거래", "파기"])
-        
-    temp['계약'] = pd.to_datetime(temp['계약'],format = "%Y%m%d").dt.strftime('%m.%d')
-    temp['면적'] = temp['면적'].astype(float).map('{:.0f}'.format)
-    temp['동'] = temp['동'].str.split().str[0]
-    temp['금액'] = (temp['금액'].astype(float) / 10000)
-    replace_word = '\(.+\)',city_replace,'신도시', '아파트','역','시범', '반도유보라', '국제','마을','에듀앤파크'
-    for i in replace_word:
-        temp['아파트'] = temp['아파트'].str.replace(i,'',regex=True)
-    if city == '파주시':
-        temp['아파트'] = temp['아파트'].apply(lambda j: j[j.index('단지')+2 :] if '단지' in j else j)
-    else :
-        temp['아파트'] = temp['아파트'].apply(lambda j: j[:j.index('단지')] if '단지' in j else j)
-  
-    return temp
-
-
 if not firebase_admin._apps:
     cred = credentials.Certificate({
     "type": st.secrets.type,
@@ -40,6 +21,40 @@ if not firebase_admin._apps:
     })
     app = firebase_admin.initialize_app(cred)
     
+def 정규화(신규):
+    temp = pd.DataFrame(
+    [i.split(',') for i in 신규], columns=["아파트", "금액", "층", "면적", "건축", "계약", "동", "거래", "파기"])
+        
+    temp['계약'] = pd.to_datetime(temp['계약'],format = "%Y%m%d").dt.strftime('%m.%d')
+    temp['면적'] = temp['면적'].astype(float).map('{:.0f}'.format)
+    temp['동'] = temp['동'].str.split().str[0]
+    temp['금액'] = (temp['금액'].astype(float) / 10000)
+    replace_word = '\(.+\)',city_replace,'신도시', '아파트','역','시범','마을',
+    for i in replace_word:
+        temp['아파트'] = temp['아파트'].str.replace(i,'',regex=True)
+    if city == '파주시':
+        temp['아파트'] = temp['아파트'].apply(lambda j: j[j.index('단지')+2 :] if '단지' in j else j)
+    elif city == '평택시':
+        temp['아파트'] = temp['아파트'].str.replace('국제','',regex=True)
+
+    elif city == '화성시':
+        temp['아파트'] = temp['아파트'].str.replace('반도유보라','',regex=True).replace('산척동.동탄호수공원','',regex=True)
+
+    elif city == '인천광역시 서구':
+        temp['아파트'] = temp['아파트'].str.replace('에듀앤파크','',regex=True).str.replace('국제금융단지','',regex=True)
+    elif city == '인천광역시 연수구':
+        temp['아파트'] = temp['아파트'].str.replace('더샵','',regex=True)
+
+    elif city == '고양시 일산동구':
+        temp['아파트'] = temp['아파트'].str.replace('일산','',regex=True)
+
+    elif city == '고양시 일산서구':
+        temp['아파트'] = temp['아파트'].str.replace('일산','',regex=True)             
+    
+    temp['아파트'] = temp['아파트'].apply(lambda j: j[:j.index('단지')] if '단지' in j else j)
+  
+    return temp
+
 db = firestore.client()
 cities =  ['파주시', '김포시', '고양시 일산서구', '고양시 일산동구', '인천광역시 연수구', '인천광역시 서구', '성남시 분당구', '수원시 영통구', '용인시 수지구', '화성시', '평택시']
 
