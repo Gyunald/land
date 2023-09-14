@@ -42,7 +42,8 @@ def 매매(get_매매):
         temp['아파트'] = temp['아파트'].str.replace(i,'',regex=True)
         
     if city == '파주시':
-        # temp['아파트'] = temp['아파트'].apply(lambda j: j[j.index('단지')+2 :] if '단지' in j else j)
+        temp['아파트'] = temp['아파트'].apply(lambda j: j[j.index('단지')+2 :] if '단지' in j else j)
+        temp['아파트'] = temp['아파트'].apply(lambda j: j[: j.index('단지')] if '꿈에그린' in j else j)
         temp['아파트'] = temp['아파트'].str.replace('세상','',regex=True)
         
     elif city == '평택시':
@@ -63,7 +64,7 @@ def 매매(get_매매):
     elif city == '고양시 일산서구':
         temp['아파트'] = temp['아파트'].str.replace('일산','',regex=True)             
     
-    # temp['아파트'] = temp['아파트'].apply(lambda j: j[:j.index('단지')] if '단지' in j else j)
+    temp['아파트'] = temp['아파트'].apply(lambda j: j[:j.index('단지')] if '단지' in j else j)
     return temp
         
 db = firestore.client()
