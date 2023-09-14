@@ -78,9 +78,9 @@ for city in cities[::-1]:
         city_replace = index.replace('광역','').replace('특별','')
         신규 = [i for i in 매매 if i not in 매매전일]
         신규 = 정규화(신규).reindex(columns=["아파트", "금액", "면적", "층", "계약", "건축", "동", "거래", "파기"])
-        if len(신규) >= 1:
-            e1 = st.empty()
-            e = st.empty()
+        e1 = st.empty()
+        e = st.empty()
+        if len(신규) >= 1:          
             e1.write(f"#### :orange[{city}] 실거래 {len(신규)}건 ({day.strftime('%m.%d')})")                    
             float_point = dict.fromkeys(신규.select_dtypes('float').columns, "{:.1f}")
             e.dataframe(신규.sort_values(by=['금액'], ascending=False).style.format(float_point).background_gradient(subset=['금액','층'], cmap='Reds'),use_container_width=True,hide_index=True)
