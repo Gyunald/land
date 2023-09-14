@@ -77,6 +77,11 @@ try:
     get_매매 = db.collection(date[-1].id).document(city).get().to_dict()['매매']
     temp = 매매(get_매매)
     매매_당월 = temp[temp['계약'].str.contains(date[-1].id[5:8])].drop_duplicates()
+    
+    e = st.empty()
+    e1 = st.empty()
+    e2 = st.empty()
+    
     status = True
     if date[-1].id == day.date().strftime('%Y.%m.%d'):
         get_매매전일 = db.collection(date[-2].id).document(city).get().to_dict()['매매']
@@ -86,10 +91,6 @@ try:
         
         if len(신규) >= 1:
             status = False
-            e = st.empty()
-            e1 = st.empty()
-            e2 = st.empty()
-
             e.write(f"#### :orange[{city}] 실거래 {len(신규)}건 ({day.strftime('%m.%d')})")
             float_point = dict.fromkeys(신규.select_dtypes('float').columns, "{:.1f}")
 
