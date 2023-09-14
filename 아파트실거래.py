@@ -77,14 +77,13 @@ try:
     get_매매 = db.collection(date[-1].id).document(city).get().to_dict()['매매']
     temp = 매매(get_매매)
     매매_당월 = temp[temp['계약'].str.contains(date[-1].id[5:8])].drop_duplicates()
-
+    status = True
     if date[-1].id == day.date().strftime('%Y.%m.%d'):
         get_매매전일 = db.collection(date[-2].id).document(city).get().to_dict()['매매']
         temp3 = 매매(get_매매전일)
         신규 = pd.merge(temp,temp3, how='outer', indicator=True).query('_merge == "left_only"').drop(columns=['_merge']).reset_index(drop=True)
         신규 = 신규.reindex(columns=["아파트", "금액", "면적", "층", "계약", "건축", "동", "거래", "파기"])
         
-        status = True
         if len(신규) >= 1:
             status = False
             e = st.empty()
