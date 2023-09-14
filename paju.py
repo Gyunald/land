@@ -14,11 +14,16 @@ def 정규화(신규):
     temp['면적'] = temp['면적'].astype(float).map('{:.0f}'.format)
     temp['동'] = temp['동'].str.split().str[0]
     temp['금액'] = (temp['금액'].astype(float) / 10000)
-    replace_word = '\(.+\)',city_replace,'아파트','마을','신도시','단지','국제금융','국제','반도유보라','어반프라임','역','한양'
+    replace_word = '\(.+\)',city_replace,'신도시', '아파트','역','시범', '반도유보라', '국제','마을','에듀앤파크'
     for i in replace_word:
         temp['아파트'] = temp['아파트'].str.replace(i,'',regex=True)
-
+    if city == '파주시':
+        temp['아파트'] = temp['아파트'].apply(lambda j: j[j.index('단지')+2 :] if '단지' in j else j)
+    else :
+        temp['아파트'] = temp['아파트'].apply(lambda j: j[:j.index('단지')] if '단지' in j else j)
+  
     return temp
+
 
 if not firebase_admin._apps:
     cred = credentials.Certificate({
@@ -38,10 +43,12 @@ if not firebase_admin._apps:
 db = firestore.client()
 cities =  ['파주시', '김포시', '고양시 일산서구', '고양시 일산동구', '인천광역시 연수구', '인천광역시 서구', '성남시 분당구', '수원시 영통구', '용인시 수지구', '화성시', '평택시']
 
+date = list(db.collections())
+day = (datetime.utcnow()+timedelta(hours=9))
 for city in cities[::-1]:
-    if list(db.collections())[-1].id == (datetime.utcnow()+timedelta(hours=9)).date().strftime('%Y.%m.%d') :        
-        매매 = db.collection(list(db.collections())[-1].id).document(city).get().to_dict()['매매']
-        매매전일 = db.collection(list(db.collections())[-2].id).document(city).get().to_dict()['매매']
+    if date[-1].id == day.date().strftime('%Y.%m.%d') :        
+        매매 = db.collection(date[-1].id).document(city).get().to_dict()['매매']
+        매매전일 = db.collection(date[-2].id).document(city).get().to_dict()['매매']
         index = city[:city.rfind('시')]  # 마지막 '시'의 위치를 찾습니다.
         city_replace = index.replace('광역','').replace('특별','')
         신규 = [i for i in 매매 if i not in 매매전일]
@@ -49,7 +56,7 @@ for city in cities[::-1]:
         if len(신규) >= 1:
             e1 = st.empty()
             e = st.empty()
-            e1.write(f"#### :orange[{city}] 실거래 {len(신규)}건 ({(datetime.utcnow() + timedelta(hours=9)).strftime('%m.%d')})")                    
+            e1.write(f"#### :orange[{city}] 실거래 {len(신규)}건 ({day.strftime('%m.%d')})")                    
             float_point = dict.fromkeys(신규.select_dtypes('float').columns, "{:.1f}")
             e.dataframe(신규.sort_values(by=['금액'], ascending=False).style.format(float_point).background_gradient(subset=['금액','층'], cmap='Reds'),use_container_width=True,hide_index=True)
             time.sleep(2.7)
