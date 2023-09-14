@@ -2,3 +2,4 @@ BeautifulSoup4
 lxml
 requests
 firebase_admin
+matplotlib
