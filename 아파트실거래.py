@@ -174,32 +174,36 @@ address = {'서울특별시 종로구': '11110', '서울특별시 중구': '1114
            '천안시 동남구': '44131','천안시 서북구': '44133', '아산시': '44200', '전주시 완산구': '45111', '전주시 덕진구': '45113', '익산시': '45140','목포시': '46110', 
            '여수시': '46130', '순천시': '46150','광양시': '46230', '포항시 남구': '47111', '포항시 북구': '47113', '구미시': '47190', '경산시': '47290','창원시 의창구': '48121',
            '창원시 성산구': '48123', '창원시 마산합포구': '48125', '창원시 마산회원구': '48127', '창원시 진해구': '48129','김해시': '48250', '거제시': '48310', '제주시': '50110', '서귀포시': '50130'}
+
+user_key = st.secrets.user_key
+rows = '9999'
+
 # st.write('실거래 조회 🎈')
-# c1,c2 = st.columns([1,1])
-# with c1 :
-empty = st.empty()
-standard = empty.date_input('🧁 날짜', datetime.utcnow()+timedelta(hours=9),key='standard_date_1',max_value=datetime.utcnow()+timedelta(hours=9),label_visibility='collapsed')
-standard_previous = standard - timedelta(days=1)
-day_num = datetime.isoweekday(standard)
+c1,c2 = st.columns([1,1])
+with c1 :
+    empty = st.empty()
+    standard = empty.date_input('🧁 날짜', datetime.utcnow()+timedelta(hours=9),key='standard_date_1',max_value=datetime.utcnow()+timedelta(hours=9),label_visibility='collapsed')
+    standard_previous = standard - timedelta(days=1)
+    day_num = datetime.isoweekday(standard)
+    
+    if day_num == 1 :
+        standard = standard-timedelta(days=2)
+        standard_previous = standard_previous-timedelta(days=2)
+    elif day_num == 2:
+        standard_previous = standard_previous-timedelta(days=2) 
+    elif day_num == 7:
+        standard = standard-timedelta(days=1)
+        standard_previous = standard_previous-timedelta(days=1)
+    
+    standard_str = standard.strftime('%Y.%m.%d')
+    standard_previous_str = standard_previous.strftime('%Y.%m.%d')
 
-if day_num == 1 :
-    standard = standard-timedelta(days=2)
-    standard_previous = standard_previous-timedelta(days=2)
-elif day_num == 2:
-    standard_previous = standard_previous-timedelta(days=2) 
-elif day_num == 7:
-    standard = standard-timedelta(days=1)
-    standard_previous = standard_previous-timedelta(days=1)
-
-standard_str = standard.strftime('%Y.%m.%d')
-standard_previous_str = standard_previous.strftime('%Y.%m.%d')
-
-# with c2:
-시군구 = st.selectbox('🍔 시군구 검색', [i for i in address],index=104,label_visibility='collapsed') # 22 강남 104 파주
-
-city = address[시군구]
-address = {y:x for x,y in address.items()}
-법정동명 = address[city]
+with c2:
+    시군구 = st.selectbox('🍔 시군구 검색', [i for i in address],index=104,label_visibility='collapsed') # 22 강남 104 파주
+    
+    city = address[시군구]
+    address = {y:x for x,y in address.items()}
+    법정동명 = address[city]
 
 try:
     if standard_str[5:8] == (datetime.utcnow()+timedelta(hours=9)).date().strftime('%m.%d')[:3] :
@@ -223,13 +227,13 @@ try:
             신규 = 신규.reindex(columns=["아파트", "금액", "면적", "층", "계약", "건축", "동", "거래", "파기"])
             
             if len(신규) >= 1:
-                st.write(f"#### :orange[{법정동명.split()[-1]}] 실거래 {len(신규)}건 ({(datetime.utcnow() + timedelta(hours=9)).strftime('%m.%d')})")            
+                st.write(f"#### :orange[{법정동명}] 실거래 {len(신규)}건 ({(datetime.utcnow() + timedelta(hours=9)).strftime('%m.%d')})")            
 
                 # st.success('🍰 신규매매')
                 st.dataframe(신규.sort_values(by=['금액'], ascending=False).reset_index(drop=True).style.background_gradient(subset=['금액','층'], cmap="Reds"),use_container_width=True,hide_index=True)
     
 
-                st.write(f"#### :orange[{법정동명.split()[-1]}] ({standard.month}월 전체)")   
+                st.write(f"#### :orange[{법정동명}] ({standard.month}월 전체)")   
             아파트 = st.multiselect('🍞 아파트별',sorted([i for i in 매매_당월["아파트"].drop_duplicates()]),max_selections=3,placeholder= '아파트별 시세 그래프',label_visibility='collapsed')
             # st.warning('🍣 다중선택가능')
             # tab1, tab2 = st.tabs([f"매매 {len(매매_당월)}", f"전세 {len(전세_당월)}"])
@@ -301,7 +305,7 @@ try:
         # 월세_계약월별 = api_rent[(api_rent['계약'].str.contains(standard_str[4:])) & (api_rent['월세'] != 0)]
         # 매매_임대_계약월별 = pd.concat([매매_계약월별,전세_계약월별,])
         
-        st.write(f"#### :orange[{법정동명.split()[-1]}] ({standard.month}월 전체)")   
+        st.write(f"#### :orange[{법정동명}] ({standard.month}월 전체)")   
         아파트 = st.multiselect('🍞 아파트별',sorted([i for i in 매매_계약월별["아파트"].drop_duplicates()]),max_selections=3,placeholder= '아파트별 시세 그래프',label_visibility='collapsed')
         # st.warning('🍣 다중선택가능')
         
