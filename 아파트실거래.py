@@ -61,7 +61,7 @@ def 매매(get_매매):
     temp['계약'] = pd.to_datetime(temp['계약'],format = "%Y%m%d").dt.strftime('%m.%d')
     temp['면적'] = temp['면적'].astype(float).map('{:.0f}'.format).astype(int)
     temp['동'] = temp['동'].str.split().str[0]
-    temp['금액'] = temp['금액'].str.replace(',','').astype('int64')
+    temp['금액'] = (temp['금액'].astype(float) / 10000).astype('float')
     index = 법정동명[:법정동명.rfind('시')]  # 마지막 '시'의 위치를 찾습니다.
     city_replace = index.replace('광역','').replace('특별','')
     replace_word = '\(.+\)', city_replace, '아파트', '마을', '신도시', '단지', '시범','역'
@@ -131,6 +131,7 @@ def 실거래(url, city, date, user_key, rows):
         replace_word = '\(.+\)', city_replace, '아파트', '마을', '신도시', '단지', '시범','역'
         for i in replace_word:
             aptTrade['아파트'] = aptTrade['아파트'].str.replace(i,'',regex=True)
+        aptTrade['금액'] = (aptTrade['금액'].astype(float) / 10000).astype('float')
 
         aptTrade['계약'] = pd.to_datetime(aptTrade['계약'],format = "%Y%m%d").dt.strftime('%y.%m.%d')
         aptTrade['면적'] = aptTrade['면적'].astype(float).map('{:.0f}'.format).astype(int)
@@ -185,7 +186,7 @@ with c1 :
     standard = empty.date_input('🧁 날짜', datetime.utcnow()+timedelta(hours=9),key='standard_date_1',max_value=datetime.utcnow()+timedelta(hours=9),label_visibility='collapsed')
     standard_previous = standard - timedelta(days=1)
     day_num = datetime.isoweekday(standard)
-    
+
     if day_num == 1 :
         standard = standard-timedelta(days=2)
         standard_previous = standard_previous-timedelta(days=2)
@@ -194,13 +195,13 @@ with c1 :
     elif day_num == 7:
         standard = standard-timedelta(days=1)
         standard_previous = standard_previous-timedelta(days=1)
-    
+
     standard_str = standard.strftime('%Y.%m.%d')
     standard_previous_str = standard_previous.strftime('%Y.%m.%d')
 
 with c2:
     시군구 = st.selectbox('🍔 시군구 검색', [i for i in address],index=104,label_visibility='collapsed') # 22 강남 104 파주
-    
+
     city = address[시군구]
     address = {y:x for x,y in address.items()}
     법정동명 = address[city]
@@ -227,10 +228,9 @@ try:
             신규 = 신규.reindex(columns=["아파트", "금액", "면적", "층", "계약", "건축", "동", "거래", "파기"])
             
             if len(신규) >= 1:
-                st.write(f"#### :orange[{법정동명}] 실거래 {len(신규)}건 ({(datetime.utcnow() + timedelta(hours=9)).strftime('%m.%d')})")            
-
-                # st.success('🍰 신규매매')
-                st.dataframe(신규.sort_values(by=['금액'], ascending=False).reset_index(drop=True).style.background_gradient(subset=['금액','층'], cmap="Reds"),use_container_width=True,hide_index=True)
+                st.write(f"#### :orange[{법정동명}] 실거래 {len(신규)}건 ({(datetime.utcnow() + timedelta(hours=9)).strftime('%m.%d')})")
+                float_point = dict.fromkeys(신규.select_dtypes('float').columns, "{:.1f}")
+                st.dataframe(신규.sort_values(by=['금액'], ascending=False).style.format(float_point).background_gradient(subset=['금액','층'], cmap="Reds"),use_container_width=True,hide_index=True)
     
 
                 st.write(f"#### :orange[{법정동명}] ({standard.month}월 전체)")   
@@ -244,7 +244,8 @@ try:
             else:
                 아파트별 = 매매_당월[매매_당월["아파트"].isin(아파트)]
             아파트별 = 아파트별.reindex(columns=["아파트", "금액", "면적", "층", "계약", "건축", "동", "거래", "파기"])
-            st.dataframe(아파트별.sort_values(by=['금액'], ascending=False).reset_index(drop=True).style.background_gradient(subset=['금액','층'], cmap="Reds"),use_container_width=True,hide_index=True)
+            float_point = dict.fromkeys(아파트별.select_dtypes('float').columns, "{:.1f}")
+            st.dataframe(아파트별.sort_values(by=['금액'], ascending=False).style.format(float_point).background_gradient(subset=['금액','층'], cmap="Reds"),use_container_width=True,hide_index=True)
             # if 아파트 :
             #     매매_전월당월_전체 = temp[temp["아파트"].isin(아파트)]
             #     if not 매매_전월당월_전체.empty :
@@ -283,8 +284,6 @@ try:
             #     st.dataframe(월세_당월.sort_values(by=['월세'], ascending=False).style.background_gradient(subset=['보증금','월세','종전보증금','종전월세'], cmap="Reds"),use_container_width=True,hide_index=True)
     
     else:
-        # with st.spinner('실거래 목록 구성중'):
-        # standard = empty.date_input('🧁 날짜', datetime.utcnow()+timedelta(hours=9),key='standard_date_2',max_value=datetime.utcnow()+timedelta(hours=9),label_visibility='collapsed')
         standard_previous = standard.replace(day=1) - timedelta(days=1)
     
         if standard.day == 1 :
@@ -307,7 +306,6 @@ try:
         
         st.write(f"#### :orange[{법정동명}] ({standard.month}월 전체)")   
         아파트 = st.multiselect('🍞 아파트별',sorted([i for i in 매매_계약월별["아파트"].drop_duplicates()]),max_selections=3,placeholder= '아파트별 시세 그래프',label_visibility='collapsed')
-        # st.warning('🍣 다중선택가능')
         
         # tab1, tab2 = st.tabs([f"매매 {len(매매_계약월별)}", f"전세 {len(전세_계약월별)}"])
         
@@ -317,7 +315,8 @@ try:
         else:
             매매_데이터프레임 = 매매_계약월별[매매_계약월별["아파트"].isin(아파트)]
         매매_데이터프레임 = 매매_데이터프레임.reindex(columns=["아파트", "금액", "면적", "층", "계약", "건축", "동", "거래", "파기"])
-        st.dataframe(매매_데이터프레임.sort_values(by=['금액'], ascending=False).reset_index(drop=True).style.background_gradient(subset=['금액','층'], cmap="Reds"),use_container_width=True,hide_index=True)
+        float_point = dict.fromkeys(매매_데이터프레임.select_dtypes('float').columns, "{:.1f}")
+        st.dataframe(매매_데이터프레임.sort_values(by=['금액'], ascending=False).reset_index(drop=True).style.format(float_point).background_gradient(subset=['금액','층'], cmap="Reds"),use_container_width=True,hide_index=True)
 
         # if 아파트 :                
         #     매매_차트 = api_trade[api_trade["아파트"].isin(아파트)]
@@ -354,5 +353,4 @@ try:
 
 except Exception as e:
     st.write(e)
-    # st.error('데이터 업데이트 중 😎')
-
+    st.error('데이터 업데이트 중 😎')
