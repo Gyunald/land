@@ -97,7 +97,7 @@ for city in zip(cities[::2],cities[1::2]):
                 hide_index=True,
                 
             )
-            e3.write(f"#### :orange[{city[1]}] 실거래 {len(신규)}건 ({day.strftime('%m.%d')})")
+            e3.write(f"#### :orange[{city[1]}] 실거래 {len(신규1)}건 ({day.strftime('%m.%d')})")
             e4.dataframe(
                 신규1.sort_values(by=['금액'], ascending=False).head(head)
                   .style.format(float_point)
