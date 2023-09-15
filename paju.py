@@ -73,7 +73,7 @@ e1 = st.empty()
 e2 = st.empty()
 e3 = st.empty()
 e4 = st.empty()
-head = 5
+head = 4
 
 for city in zip(cities[::2],cities[1::2]):
     if date[-1].id == day.date().strftime('%Y.%m.%d'):
