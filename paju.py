@@ -9,8 +9,8 @@ import time
 st.markdown('''
 <style>
 .stApp [data-testid="stHeader"] {visibility: hidden;}
-.appview-container .main .block-container{{
-        padding-top: {padding_top}rem;    }}
+.block-container {
+        margin-top: 0 !important;
 }
 </style>
 ''', unsafe_allow_html=True)
