@@ -6,6 +6,13 @@ from firebase_admin import credentials
 from firebase_admin import firestore
 import time
 
+st.markdown('''
+<style>
+.stApp [data-testid="stHeader"] {visibility: hidden;}
+
+</style>
+''', unsafe_allow_html=True)
+
 if not firebase_admin._apps:
     cred = credentials.Certificate({
     "type": st.secrets.type,
@@ -108,10 +115,3 @@ for city in zip(cities[::2],cities[1::2]):
             )
             
             time.sleep(3.3)
-
-st.markdown('''
-<style>
-.stApp [data-testid="stHeader"] {visibility: hidden;}
-
-</style>
-''', unsafe_allow_html=True)
