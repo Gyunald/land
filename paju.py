@@ -66,7 +66,7 @@ def 정규화(get_매매):
         temp['아파트'] = temp['아파트'].str.replace('일산','',regex=True)
 
     temp['아파트'] = temp['아파트'].apply(lambda j: j[:j.index('단지')] if '단지' in j else j)
-    temp['아파트'] =  temp['아파트'].str[:12]
+    temp['아파트'] =  temp['아파트'].str[:11]
     return temp
 
 db = firestore.client()
