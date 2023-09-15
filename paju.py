@@ -6,6 +6,16 @@ from firebase_admin import credentials
 from firebase_admin import firestore
 import time
 
+st.markdown('''
+<style>
+.stApp [data-testid="stHeader"] {visibility: hidden;}
+.reportview-container {
+    flex-direction: column;
+    margin-top: -1.5rem;
+}
+</style>
+''', unsafe_allow_html=True)
+
 if not firebase_admin._apps:
     cred = credentials.Certificate({
     "type": st.secrets.type,
