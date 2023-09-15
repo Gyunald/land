@@ -107,7 +107,7 @@ for city in zip(cities[::2],cities[1::2]):
             float_point = dict.fromkeys(신규.select_dtypes('float').columns, "{:.1f}")
             e1.write(f"### :orange[{city[0]}] 실거래 {len(신규)}건 ({day.strftime('%m.%d')})")
             e2.dataframe(
-                신규.head(head).sort_values(by=['금액'], ascending=False)
+                신규.sort_values(by=['금액'], ascending=False).head(head)
                   .style.format(float_point)
                   .background_gradient(subset=['금액','층'], cmap='Reds'),
                 use_container_width=True,
@@ -116,7 +116,7 @@ for city in zip(cities[::2],cities[1::2]):
             )
             e3.write(f"### :orange[{city[1]}] 실거래 {len(신규)}건 ({day.strftime('%m.%d')})")
             e4.dataframe(
-                신규1.head(head).sort_values(by=['금액'], ascending=False)
+                신규1.sort_values(by=['금액'], ascending=False).head(head)
                   .style.format(float_point)
                   .background_gradient(subset=['금액','층'], cmap='Reds'),
                 use_container_width=True,
