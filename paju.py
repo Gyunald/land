@@ -109,3 +109,9 @@ for city in zip(cities[::2],cities[1::2]):
             
             time.sleep(3.3)
 
+st.markdown('''
+<style>
+.stApp [data-testid="stHeader"] {visibility: hidden;}
+
+</style>
+''', unsafe_allow_html=True)
