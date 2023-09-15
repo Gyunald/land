@@ -7,6 +7,13 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 
+st.markdown('''
+<style>
+.stApp [data-testid="stHeader"] {visibility: hidden;}
+div[class^='block-container'] { padding-top: 1rem; }
+</style>
+''', unsafe_allow_html=True)
+
 if not firebase_admin._apps:
     cred = credentials.Certificate({
     "type": st.secrets.type,
