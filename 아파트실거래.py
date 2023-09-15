@@ -7,6 +7,8 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 
+st.set_page_config(page_title="🎈아파트 실거래가") # layout='wide'
+
 st.markdown('''
 <style>
 .stApp [data-testid="stHeader"] {visibility: hidden;}
@@ -30,7 +32,6 @@ if not firebase_admin._apps:
     app = firebase_admin.initialize_app(cred)
     
 db = firestore.client()
-st.set_page_config(page_title="🎈아파트 실거래가") # layout='wide'
 
 @st.cache_data
 def 매매(get_매매):
