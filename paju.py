@@ -37,36 +37,20 @@ def 정규화(get_매매):
 
     index1 = city[1][:city[1].rfind('시')]  # 마지막 '시'의 위치를 찾습니다.
     city_replace1 = index1.replace('광역','').replace('특별','')
-    replace_word = '\(.+\)',city_replace,city_replace1,'신도시', '아파트','역','시범','마을','세상'
+    replace_word = '\(.+\)',city_replace,city_replace1,'신도시', '아파트',' '
     for i in replace_word:
         temp['아파트'] = temp['아파트'].str.replace(i,'',regex=True)
-    if '파주시' in cities: # 김포시
-        for i in temp['아파트']:
-            if '단지' in i :
-                if len(i)/2 > i.index('단지'):
-                    i = i.replace(i[i.index('단지')+2:],'')
-                    temp['아파트'] = temp['아파트'].str.replace(i,'',regex=True)
-                else:
-                    i = i.replace(i[: i.index('단지')],'')
-                    temp['아파트'] = temp['아파트'].str.replace(i,'',regex=True)
 
-    if '평택시' in city: # 화성시
-        temp['아파트'] = temp['아파트'].str.replace('국제','',regex=True)
+    for i in temp['아파트']:
+        if '단지' in i :
+            if len(i)/2 > i.index('단지'):
+                i = i.replace(i[i.index('단지')+2:],'')
+                temp['아파트'] = temp['아파트'].str.replace(i,'',regex=True)
+            else:
+                i = i.replace(i[: i.index('단지')],'')
+                temp['아파트'] = temp['아파트'].str.replace(i,'',regex=True)
 
-    # elif '화성시' in city:
-        temp['아파트'] = temp['아파트'].str.replace('반도유보라','',regex=True).replace('산척동.동탄호수공원','',regex=True)
-
-    if '인천광역시 서구' in city:
-        temp['아파트'] = temp['아파트'].str.replace('에듀앤파크','',regex=True).str.replace('국제금융단지','',regex=True).str.replace('지구','',regex=True).str.replace('블루','',regex=True)
-
-    # elif '인천광역시 연수구' in city:
-        temp['아파트'] = temp['아파트'].str.replace('더샵','',regex=True).str.replace('송도1차','1차',regex=True).str.replace('송도2차','2차',regex=True).str.replace('송도3차','3차',regex=True).str.replace('송도4차','4차',regex=True)
-
-    if '고양시 일산동구' in city:
-        temp['아파트'] = temp['아파트'].str.replace('일산','',regex=True)
-
-    temp['아파트'] = temp['아파트'].apply(lambda j: j[:j.index('단지')] if '단지' in j else j)
-    temp['아파트'] =  temp['아파트'].str[:11]
+    temp['아파트'] =  temp['아파트'].str[:10]
     return temp
 
 db = firestore.client()
@@ -90,7 +74,7 @@ e1 = st.empty()
 e2 = st.empty()
 e3 = st.empty()
 e4 = st.empty()
-head = 3
+head = 4
 
 for city in zip(cities[::2],cities[1::2]):
     if date[-1].id == day.date().strftime('%Y.%m.%d'):
