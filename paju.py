@@ -22,7 +22,6 @@ if not firebase_admin._apps:
     app = firebase_admin.initialize_app(cred)
     
 db = firestore.client()
-st.set_page_config(page_title="🎈아파트 실거래가 매매/전세/월세 ") # layout='wide'
 
 @st.cache_data
 def 정규화(get_매매):
@@ -66,24 +65,57 @@ def 정규화(get_매매):
     return temp
 
 db = firestore.client()
-cities =  ['파주시', '김포시', '고양시 일산서구', '고양시 일산동구', '인천광역시 연수구', '인천광역시 서구', '성남시 분당구', '수원시 영통구', '용인시 수지구', '화성시', '평택시']
+cities =  ['파주시', '김포시', '고양시 일산서구', '고양시 일산동구', '인천광역시 연수구', '인천광역시 서구', '하남시', '성남시 분당구', '수원시 영통구', '용인시 수지구', '화성시', '평택시']
 
 date = list(db.collections())
 day = (datetime.utcnow()+timedelta(hours=9))
-for city in cities[::-1]:
-    if date[-1].id == day.date().strftime('%Y.%m.%d') :        
-        매매 = db.collection(date[-1].id).document(city).get().to_dict()['매매']
-        매매전일 = db.collection(date[-2].id).document(city).get().to_dict()['매매']
-        index = city[:city.rfind('시')]  # 마지막 '시'의 위치를 찾습니다.
-        city_replace = index.replace('광역','').replace('특별','')
-        신규 = [i for i in 매매 if i not in 매매전일]
-        신규 = 정규화(신규).reindex(columns=["아파트", "금액", "면적", "층", "계약", "건축", "동", "거래", "파기"])
-        e1 = st.empty()
-        e = st.empty()
-        if len(신규) >= 1:          
-            e1.write(f"#### :orange[{city}] 실거래 {len(신규)}건 ({day.strftime('%m.%d')})")                    
+
+
+def get_data(collection_id, city):
+    return db.collection(collection_id).document(city).get().to_dict()['매매']
+
+def get_new_entries(data_today, data_yesterday):
+    return [i for i in data_today if i not in data_yesterday]
+
+def normalize_and_reindex(new_entries):
+    normalized = 정규화(new_entries)
+    return normalized.reindex(columns=["아파트", "금액", "면적", "층", "계약", "건축", "동", "거래", "파기"])
+
+e1 = st.empty()
+e2 = st.empty()
+e3 = st.empty()
+e4 = st.empty()
+head = 3
+
+for city in zip(cities[::2],cities[1::2]):
+    if date[-1].id == day.date().strftime('%Y.%m.%d'):
+        매매_today = get_data(date[-1].id, city[0])
+        매매_yesterday = get_data(date[-2].id, city[0])
+
+        매매1_today = get_data(date[-1].id, city[1])
+        매매1_yesterday = get_data(date[-2].id, city[1])
+
+        신규 = normalize_and_reindex(get_new_entries(매매_today , 매매_yesterday))
+        신규1 = normalize_and_reindex(get_new_entries(매매1_today , 매매1_yesterday))
+
+        if len(신규) >= 1 and len(신규1) >= 1:
             float_point = dict.fromkeys(신규.select_dtypes('float').columns, "{:.1f}")
-            e.dataframe(신규.sort_values(by=['금액'], ascending=False).style.format(float_point).background_gradient(subset=['금액','층'], cmap='Reds'),use_container_width=True,hide_index=True)
+            e1.write(f":orange[{city[0]}] 실거래 {len(신규)}건 ({day.strftime('%m.%d')})")
+            e2.dataframe(
+                신규.head(head).sort_values(by=['금액'], ascending=False)
+                  .style.format(float_point)
+                  .background_gradient(subset=['금액','층'], cmap='Reds'),
+                use_container_width=True,
+                hide_index=True,
+                
+            )
+            e3.write(f":orange[{city[1]}] 실거래 {len(신규)}건 ({day.strftime('%m.%d')})")
+            e4.dataframe(
+                신규1.head(head).sort_values(by=['금액'], ascending=False)
+                  .style.format(float_point)
+                  .background_gradient(subset=['금액','층'], cmap='Reds'),
+                use_container_width=True,
+                hide_index=True
+            )
+            
             time.sleep(3.3)
-        e.empty()
-        e1.empty()
