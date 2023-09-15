@@ -62,7 +62,6 @@ def 정규화(get_매매):
     temp['아파트'] =  temp['아파트'].str[:10]
     return temp
 
-db = firestore.client()
 cities =  ['파주시', '김포시', '고양시 일산서구', '고양시 일산동구', '인천광역시 연수구', '인천광역시 서구', '하남시', '성남시 분당구', '수원시 영통구', '용인시 수지구', '화성시', '평택시']
 
 date = list(db.collections())
