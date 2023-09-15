@@ -32,36 +32,41 @@ def 정규화(get_매매):
     temp['면적'] = temp['면적'].astype(float).map('{:.0f}'.format)
     temp['동'] = temp['동'].str.split().str[0]
     temp['금액'] = (temp['금액'].astype(float) / 10000)
-    index = city[:city.rfind('시')]  # 마지막 '시'의 위치를 찾습니다.
+    index = city[0][:city[0].rfind('시')]  # 마지막 '시'의 위치를 찾습니다.
     city_replace = index.replace('광역','').replace('특별','')
-    
-    replace_word = '\(.+\)',city_replace,'신도시', '아파트','역','시범','마을',
+
+    index1 = city[1][:city[1].rfind('시')]  # 마지막 '시'의 위치를 찾습니다.
+    city_replace1 = index1.replace('광역','').replace('특별','')
+    replace_word = '\(.+\)',city_replace,city_replace1,'신도시', '아파트','역','시범','마을','세상'
     for i in replace_word:
         temp['아파트'] = temp['아파트'].str.replace(i,'',regex=True)
-        
-    if city == '파주시':
-        temp['아파트'] = temp['아파트'].apply(lambda j: j[j.index('단지')+2 :] if '단지' in j else j)
-        temp['아파트'] = temp['아파트'].str.replace('세상','',regex=True)
-        
-    elif city == '평택시':
+    if '파주시' in cities: # 김포시
+        for i in temp['아파트']:
+            if '단지' in i :
+                if len(i)/2 > i.index('단지'):
+                    i = i.replace(i[i.index('단지')+2:],'')
+                    temp['아파트'] = temp['아파트'].str.replace(i,'',regex=True)
+                else:
+                    i = i.replace(i[: i.index('단지')],'')
+                    temp['아파트'] = temp['아파트'].str.replace(i,'',regex=True)
+
+    if '평택시' in city: # 화성시
         temp['아파트'] = temp['아파트'].str.replace('국제','',regex=True)
 
-    elif city == '화성시':
+    # elif '화성시' in city:
         temp['아파트'] = temp['아파트'].str.replace('반도유보라','',regex=True).replace('산척동.동탄호수공원','',regex=True)
 
-    elif city == '인천광역시 서구':
+    if '인천광역시 서구' in city:
         temp['아파트'] = temp['아파트'].str.replace('에듀앤파크','',regex=True).str.replace('국제금융단지','',regex=True).str.replace('지구','',regex=True).str.replace('블루','',regex=True)
 
-    elif city == '인천광역시 연수구':
+    # elif '인천광역시 연수구' in city:
         temp['아파트'] = temp['아파트'].str.replace('더샵','',regex=True).str.replace('송도1차','1차',regex=True).str.replace('송도2차','2차',regex=True).str.replace('송도3차','3차',regex=True).str.replace('송도4차','4차',regex=True)
 
-    elif city == '고양시 일산동구':
+    if '고양시 일산동구' in city:
         temp['아파트'] = temp['아파트'].str.replace('일산','',regex=True)
 
-    elif city == '고양시 일산서구':
-        temp['아파트'] = temp['아파트'].str.replace('일산','',regex=True)             
-    
     temp['아파트'] = temp['아파트'].apply(lambda j: j[:j.index('단지')] if '단지' in j else j)
+    temp['아파트'] =  temp['아파트'].str[:10]
     return temp
 
 db = firestore.client()
@@ -100,7 +105,7 @@ for city in zip(cities[::2],cities[1::2]):
 
         if len(신규) >= 1 and len(신규1) >= 1:
             float_point = dict.fromkeys(신규.select_dtypes('float').columns, "{:.1f}")
-            e1.write(f":orange[{city[0]}] 실거래 {len(신규)}건 ({day.strftime('%m.%d')})")
+            e1.write(f"### :orange[{city[0]}] 실거래 {len(신규)}건 ({day.strftime('%m.%d')})")
             e2.dataframe(
                 신규.head(head).sort_values(by=['금액'], ascending=False)
                   .style.format(float_point)
@@ -109,7 +114,7 @@ for city in zip(cities[::2],cities[1::2]):
                 hide_index=True,
                 
             )
-            e3.write(f":orange[{city[1]}] 실거래 {len(신규)}건 ({day.strftime('%m.%d')})")
+            e3.write(f"### :orange[{city[1]}] 실거래 {len(신규)}건 ({day.strftime('%m.%d')})")
             e4.dataframe(
                 신규1.head(head).sort_values(by=['금액'], ascending=False)
                   .style.format(float_point)
@@ -119,3 +124,4 @@ for city in zip(cities[::2],cities[1::2]):
             )
             
             time.sleep(3.3)
+
