@@ -63,7 +63,7 @@ def 매매(get_매매):
                 temp['아파트'] = temp['아파트'].str.replace(i,'',regex=True)
         except:
             pass
-    temp['아파트'] =  temp['아파트'].str[:10]
+    # temp['아파트'] =  temp['아파트'].str[:10]
     return temp
         
 db = firestore.client()
