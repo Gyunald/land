@@ -45,22 +45,25 @@ def 매매(get_매매):
     index = city[:city.rfind('시')]  # 마지막 '시'의 위치를 찾습니다.
     city_replace = index.replace('광역','').replace('특별','')
 
-    replace_word = '\(.+\)',city_replace,'신도시', '아파트',' ',
-
-    
+    replace_word = '\(.+\)',city_replace,'신도시', '아파트',' ','마을'
     for i in replace_word:
         temp['아파트'] = temp['아파트'].str.replace(i,'',regex=True)
 
     for i in temp['아파트']:
-        if '단지' in i :
+        try:
             if len(i)/2 > i.index('단지'):
-                i = i.replace(i[i.index('단지')+2:],'')
+                i = i[: i.index('단지')+2]
                 temp['아파트'] = temp['아파트'].str.replace(i,'',regex=True)
-            # else:
-            #     i = i.replace(i[: i.index('단지')],'')
-            #     temp['아파트'] = temp['아파트'].str.replace(i,'',regex=True)
-
-    # temp['아파트'] =  temp['아파트'].str[:10]
+        except:
+            pass
+    for i in temp['아파트']:
+        try:                
+            if len(i)/2 < i.index('단지'):
+                i = i[i.index('단지'):]
+                temp['아파트'] = temp['아파트'].str.replace(i,'',regex=True)
+        except:
+            pass
+    temp['아파트'] =  temp['아파트'].str[:10]
     return temp
         
 db = firestore.client()
