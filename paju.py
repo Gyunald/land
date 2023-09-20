@@ -10,7 +10,7 @@ st.markdown('''
 <style>
 .stApp [data-testid="stHeader"] {visibility: hidden;}
 div[class^='block-container'] { padding-top: 1rem; }
-div[class^='block-container'] { padding-left: 1.3rem; }
+div[class^='block-container'] { padding-left: 1.2rem; }
 </style>
 ''', unsafe_allow_html=True)
 
