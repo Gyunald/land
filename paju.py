@@ -100,7 +100,7 @@ e4 = st.empty()
 head = 5
 
 cities = list(reversed(cities))
-for city in zip(cities[::-2],cities[1::-2]):
+for city in zip(cities[::2],cities[1::2]):
     if date[-1].id == day.date().strftime('%Y.%m.%d'):
         매매_today = get_data(date[-1].id, city[0])
         매매_yesterday = get_data(date[-2].id, city[0])
