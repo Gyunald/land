@@ -115,3 +115,11 @@ try:
 except Exception as e:
     st.error('데이터 업데이트 중 😎')
     st.write(e)
+
+
+component_code = '''
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3299156260461199"
+     crossorigin="anonymous"></script>
+     '''
+component_value = html(component_code)
+st.markdown(component_value)
