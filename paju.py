@@ -62,6 +62,7 @@ def 정규화(get_매매):
 
 # cities =  ['파주시', '김포시', '고양시 일산서구', '고양시 일산동구', '인천광역시 연수구', '인천광역시 서구', '하남시', '성남시 분당구', '수원시 영통구', '용인시 수지구', '화성시', '평택시']
 cities = [
+        '서울특별시 서초구', '서울특별시 강남구',
         '고양시 덕양구', '고양시 일산서구',
         '과천시', '광명시',
         '광주시', '구리시',
@@ -81,7 +82,6 @@ cities = [
 
 date = list(db.collections())
 day = (datetime.utcnow()+timedelta(hours=9))
-
 
 def get_data(collection_id, city):
     return db.collection(collection_id).document(city).get().to_dict()['매매']
@@ -131,4 +131,4 @@ for city in zip(cities[::2],cities[1::2]):
                 hide_index=True
             )
             
-            time.sleep(3)
+            time.sleep(3.1)
