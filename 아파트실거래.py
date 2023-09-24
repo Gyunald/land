@@ -1,8 +1,6 @@
 import streamlit as st
-from bs4 import BeautifulSoup
 import pandas as pd
 from datetime import datetime, timedelta
-import requests
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
