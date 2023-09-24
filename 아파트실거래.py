@@ -6,7 +6,6 @@ import requests
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
-from streamlit.components.v1 import html
 
 st.set_page_config(page_title="🎈아파트 실거래가") # layout='wide'
 
