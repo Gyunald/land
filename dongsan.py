@@ -49,13 +49,19 @@ def 정규화(get_매매):
         temp['아파트'] = temp['아파트'].str.replace(i,'',regex=True)
 
     for i in temp['아파트']:
-        if '단지' in i :
+        try:
             if len(i)/2 > i.index('단지'):
-                i = i.replace(i[i.index('단지')+2:],'')
+                i = i[: i.index('단지')+2]
                 temp['아파트'] = temp['아파트'].str.replace(i,'',regex=True)
-            else:
-                i = i.replace(i[: i.index('단지')],'')
+        except:
+            pass
+    for i in temp['아파트']:
+        try:                
+            if len(i)/2 < i.index('단지'):
+                i = i[i.index('단지'):]
                 temp['아파트'] = temp['아파트'].str.replace(i,'',regex=True)
+        except:
+            pass
 
     temp['아파트'] =  temp['아파트'].str[:10]
     return temp
