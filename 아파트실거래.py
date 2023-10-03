@@ -12,7 +12,7 @@ st.set_page_config(page_title="🎈아파트 실거래가") # layout='wide'
 st.markdown('''
 <style>
 
-.styles_terminalButton__JBj5T {visibility: hidden;}
+.styles_terminalButton__JBj5T {display: none;}
 
 </style>
             
