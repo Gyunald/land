@@ -112,9 +112,11 @@ try:
         매매_당월 = 매매_당월.sort_values(by=['금액'], ascending=False)
         # e2.dataframe(매매_당월.sort_values(by=['금액'], ascending=False).style.format(float_point).background_gradient(subset=['금액','층'], cmap="Reds"),use_container_width=True,hide_index=True)
         
-        e2.dataframe(매매_당월.style.format(float_point).background_gradient(subset=['금액','층'], cmap="Reds"),use_container_width=True,hide_index=True,
+        e2.data_editor(매매_당월.style.format(float_point).background_gradient(subset=['금액','층'], cmap="Reds"),use_container_width=True,hide_index=True,
                          column_config={
-                             "아파트": st.column_config.LinkColumn()
+                             "아파트": st.column_config.LinkColumn(
+                                 validate = "https://map.naver.com/p/search/"
+                             )
                             }
                          )
 except Exception as e:
