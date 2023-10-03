@@ -7,12 +7,12 @@ from firebase_admin import firestore
 
 st.set_page_config(page_title="🎈아파트 실거래가") # layout='wide'
 
-st.markdown('''
-<style>
-.stApp [data-testid="stHeader"] {visibility: hidden;}
-div[class^='block-container'] { padding-top: 1rem; }
-</style>
-''', unsafe_allow_html=True)
+# st.markdown('''
+# <style>
+# .stApp [data-testid="stHeader"] {visibility: hidden;}
+# div[class^='block-container'] { padding-top: 1rem; }
+# </style>
+# ''', unsafe_allow_html=True)
 
 if not firebase_admin._apps:
     cred = credentials.Certificate({
@@ -100,12 +100,12 @@ try:
         매매_당월 = 매매_당월.reindex(columns=["아파트", "금액", "면적", "층", "계약", "건축", "동", "거래", "파기"])
             
         e.write(f"#### :orange[{city}] 실거래 {len(매매_당월)}건")
-        아파트 = e1.multiselect('🍞 아파트별1',sorted([i for i in 매매_당월["아파트"].drop_duplicates()]),max_selections=3,placeholder= '아파트별',label_visibility='collapsed')
+        # 아파트 = e1.multiselect('아파트별',sorted([i for i in 매매_당월["아파트"].drop_duplicates()]),max_selections=3,placeholder= '아파트별',label_visibility='collapsed')
             
-        if not 아파트:
-            매매_당월 = 매매_당월
-        else:
-            매매_당월 = 매매_당월[매매_당월["아파트"].isin(아파트)]
+        # if not 아파트:
+        #     매매_당월 = 매매_당월
+        # else:
+        #     매매_당월 = 매매_당월[매매_당월["아파트"].isin(아파트)]
 
         float_point = dict.fromkeys(매매_당월.select_dtypes('float').columns, "{:.1f}")
         e2.dataframe(매매_당월.sort_values(by=['금액'], ascending=False).style.format(float_point).background_gradient(subset=['금액','층'], cmap="Reds"),use_container_width=True,hide_index=True)
