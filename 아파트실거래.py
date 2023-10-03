@@ -11,9 +11,12 @@ st.set_page_config(page_title="🎈아파트 실거래가") # layout='wide'
 
 st.markdown('''
 <style>
-
-.styles_stateContainer__CelYF [data-testid="manage-app-button"] {visibility: hidden;}
-
+    div[data-testid="manage-app-button"] {
+    visibility: hidden;
+    height: 0%;
+    position: fixed;
+    }
+    """
 </style>
             
 ''', unsafe_allow_html=True)
