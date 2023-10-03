@@ -7,23 +7,12 @@ from firebase_admin import firestore
 
 st.set_page_config(page_title="🎈아파트 실거래가") # layout='wide'
 
-# st.markdown('''
-# <style>
-# .stApp [data-testid="stHeader"] {visibility: hidden;}
-# div[class^='block-container'] { padding-top: 1rem; }
-# </style>
-# ''', unsafe_allow_html=True)
-
-st.markdown("""
-    <style>
-        .reportview-container {
-            margin-top: -2em;
-        }
-        #MainMenu {visibility: hidden;}
-        footer {visibility: hidden;}
-        #stDecoration {display:none;}
-    </style>
-""", unsafe_allow_html=True)
+st.markdown('''
+<style>
+.stApp [data-testid="stHeader"] {visibility: hidden;}
+div[class^='block-container'] { padding-top: 1rem; }
+</style>
+''', unsafe_allow_html=True)
 
 if not firebase_admin._apps:
     cred = credentials.Certificate({
