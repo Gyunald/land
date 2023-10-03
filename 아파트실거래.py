@@ -109,8 +109,13 @@ try:
 
         float_point = dict.fromkeys(매매_당월.select_dtypes('float').columns, "{:.1f}")
         매매_당월["지도"] = "https://map.naver.com/p/search/"+매매_당월["아파트"]
-        e2.dataframe(매매_당월.sort_values(by=['금액'], ascending=False).style.format(float_point).background_gradient(subset=['금액','층'], cmap="Reds"),use_container_width=True,hide_index=True)
-
+        매매_당월 = 매매_당월.sort_values(by=['금액'], ascending=False)
+        # e2.dataframe(매매_당월.sort_values(by=['금액'], ascending=False).style.format(float_point).background_gradient(subset=['금액','층'], cmap="Reds"),use_container_width=True,hide_index=True)
+        e2.dataframe(매매_당월.style.format(float_point).background_gradient(subset=['금액','층'], cmap="Reds"),
+                         column_config={
+                             "지도": st.column_config.LinkColumn("지도")
+                            }
+                         )
 except Exception as e:
     st.error('데이터 업데이트 중 😎')
     st.write(e)
