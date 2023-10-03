@@ -111,7 +111,7 @@ try:
         매매_당월["지도"] = "https://map.naver.com/p/search/"+매매_당월["아파트"]
         매매_당월 = 매매_당월.sort_values(by=['금액'], ascending=False)
         # e2.dataframe(매매_당월.sort_values(by=['금액'], ascending=False).style.format(float_point).background_gradient(subset=['금액','층'], cmap="Reds"),use_container_width=True,hide_index=True)
-        e2.dataframe(매매_당월.style.format(float_point).background_gradient(subset=['금액','층'], cmap="Reds"),
+        e2.dataframe(매매_당월.style.format(float_point).background_gradient(subset=['금액','층'], cmap="Reds"),use_container_width=True,hide_index=True,
                          column_config={
                              "지도": st.column_config.LinkColumn("지도")
                             }
