@@ -16,7 +16,6 @@ st.markdown('''
     height: 0%;
     position: fixed;
     }
-    """
 </style>
             
 ''', unsafe_allow_html=True)
