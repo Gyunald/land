@@ -6,15 +6,12 @@ from firebase_admin import credentials
 from firebase_admin import firestore
 
 st.set_page_config(page_title="🎈아파트 실거래가") # layout='wide'
-# .stApp [data-testid="stHeader"] {visibility: hidden;}
-# div[class^='block-container'] { padding-top: 1rem; }
+
 
 st.markdown('''
 <style>
-    div[class^="styles_terminalButton__JBj5T"] {visibility: hidden;}
-    
-    div[class^='block-container'] { padding-top: 1rem; }
-    
+.stApp [data-testid="stHeader"] {visibility: hidden;}
+div[class^='block-container'] { padding-top: 1rem; }
 </style>
             
 ''', unsafe_allow_html=True)
