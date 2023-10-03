@@ -100,7 +100,7 @@ try:
         매매_당월 = 매매_당월.reindex(columns=["아파트", "금액", "면적", "층", "계약", "건축", "동", "거래", "파기"])
             
         e.write(f"#### :orange[{city}] 실거래 {len(매매_당월)}건")
-        아파트 = e2.multiselect('아파트별',sorted([i for i in 매매_당월["아파트"].drop_duplicates()]),max_selections=3,placeholder= '아파트별',label_visibility='collapsed')
+        아파트 = st.multiselect('아파트별',sorted([i for i in 매매_당월["아파트"].drop_duplicates()]),max_selections=3,placeholder= '아파트별',label_visibility='collapsed')
             
         if not 아파트:
             매매_당월 = 매매_당월
