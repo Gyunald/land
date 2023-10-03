@@ -16,6 +16,9 @@ st.markdown('''
     height: 0%;
     position: fixed;
     }
+    
+    div[class^='block-container'] { padding-top: 1rem; }
+    
 </style>
             
 ''', unsafe_allow_html=True)
