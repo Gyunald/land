@@ -7,11 +7,13 @@ from firebase_admin import firestore
 
 st.set_page_config(page_title="🎈아파트 실거래가") # layout='wide'
 # .stApp [data-testid="stHeader"] {visibility: hidden;}
+# div[class^='block-container'] { padding-top: 1rem; }
+
 st.markdown('''
 <style>
 
-[data-testid="manage-app-button"] {visibility: hidden;}
-div[class^='block-container'] { padding-top: 1rem; }
+[data-testid="manage-app-button"] {display: none;}
+
 </style>
             
 ''', unsafe_allow_html=True)
