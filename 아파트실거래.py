@@ -12,10 +12,7 @@ st.markdown('''
 <style>
 .stApp [data-testid="stHeader"] {visibility: hidden;}
 div[class^='block-container'] { padding-top: 1rem; }
-div[class="viewerBadge_link__qRIco"] {visibility: hidden;}
-
 </style>
-            
 ''', unsafe_allow_html=True)
 
 if not firebase_admin._apps:
