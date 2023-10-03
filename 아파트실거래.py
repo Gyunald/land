@@ -114,9 +114,7 @@ try:
         
         e2.dataframe(매매_당월.style.format(float_point).background_gradient(subset=['금액','층'], cmap="Reds"),use_container_width=True,hide_index=True,
                          column_config={
-                             "아파트": st.column_config.LinkColumn(
-                                 validate="https://map.naver.com/p/search/",
-                             )
+                             "아파트": st.column_config.LinkColumn()
                             }
                          )
 except Exception as e:
