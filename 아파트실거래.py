@@ -115,3 +115,11 @@ try:
 except Exception as e:
     st.error('데이터 업데이트 중 😎')
     st.write(e)
+
+st.markdown('''
+<ins class="kakao_ad_area" style="display:none;"
+data-ad-unit = "DAN-tBHW8oeQLBYfjo73"
+data-ad-width = "728"
+data-ad-height = "90"></ins>
+<script type="text/javascript" src="//t1.daumcdn.net/kas/static/ba.min.js" async></script>
+''',unsafe_allow_html=True)
