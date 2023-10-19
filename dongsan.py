@@ -131,4 +131,4 @@ for city in zip(cities[::2],cities[1::2]):
                 hide_index=True
             )
             
-            time.sleep(2.5)
+            time.sleep(2.8)
