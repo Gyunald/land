@@ -90,7 +90,19 @@ def get_new_entries(data_today, data_yesterday):
 def normalize_and_reindex(new_entries):
     normalized = 정규화(new_entries)
     return normalized.reindex(columns=["아파트", "금액", "면적", "층", "계약", "건축", "동", "거래", "파기"])
-
+    
+def df(df,empty):
+    return empty.dataframe(
+            df.sort_values(by=['금액'], ascending=False).head(head)
+            .style.format(float_point)
+            .background_gradient(subset=['금액','층'], cmap='Reds'),
+            use_container_width=True,
+            hide_index=True
+        ) 
+    
+def title(empty,index,new):
+    return empty.write(f":orange[{city[index]}] {len(new)}건 ({day.strftime('%m.%d')})")
+    
 e1 = st.empty()
 e2 = st.empty()
 e3 = st.empty()
@@ -108,24 +120,15 @@ for city in zip(cities[::2],cities[1::2]):
 
         신규 = normalize_and_reindex(get_new_entries(매매_today , 매매_yesterday))
         신규1 = normalize_and_reindex(get_new_entries(매매1_today , 매매1_yesterday))
-
         float_point = dict.fromkeys(신규.select_dtypes('float').columns, "{:.1f}")
-        e1.write(f"### :orange[{city[0]}] {len(신규)}건 ({day.strftime('%m.%d')})")
-        e2.dataframe(
-            신규.sort_values(by=['금액'], ascending=False).head(head)
-              .style.format(float_point)
-              .background_gradient(subset=['금액','층'], cmap='Reds'),
-            use_container_width=True,
-            hide_index=True,
-            
-        )
-        e3.write(f"### :orange[{city[1]}] {len(신규1)}건 ({day.strftime('%m.%d')})")
-        e4.dataframe(
-            신규1.sort_values(by=['금액'], ascending=False).head(head)
-              .style.format(float_point)
-              .background_gradient(subset=['금액','층'], cmap='Reds'),
-            use_container_width=True,
-            hide_index=True
-        )
+
+        title(e1,0,신규)
+        title(e3,1,신규1)
+
+        if len(신규) > 0:
+            df(신규,e2)
+
+        if len(신규1) > 0:
+            df(신규1,e4)
         
         time.sleep(2.8)
