@@ -63,7 +63,7 @@ def 정규화(get_매매):
         except:
             pass
 
-    temp['아파트'] =  temp['아파트'].str[:10]
+    temp['아파트'] =  temp['아파트'].str[:10].str.ljust(10,'　')
     return temp
     
 cities = [
