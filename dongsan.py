@@ -131,4 +131,4 @@ for city in zip(cities[::2],cities[1::2]):
         if len(신규1) > 0:
             df(신규1,e4)
         
-        time.sleep(2.8)
+        time.sleep(3)
