@@ -124,11 +124,15 @@ for city in zip(cities[::2],cities[1::2]):
 
         title(e1,0,신규)
         title(e3,1,신규1)
-
-        if len(신규) >= 0:
+        
+        if len(신규) > 0:
             df(신규,e2)
+        else:
+            e2.dataframe(신규)
 
-        if len(신규1) >= 0:
+        if len(신규1) > 0:
             df(신규1,e4)
+        else:
+            e4.dataframe(신규1)
         
         time.sleep(3)
