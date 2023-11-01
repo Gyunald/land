@@ -92,13 +92,16 @@ def normalize_and_reindex(new_entries):
     return normalized.reindex(columns=["아파트", "금액", "면적", "층", "계약", "건축", "동", "거래", "파기"])
     
 def df(df,empty):
-    return empty.dataframe(
-            df.sort_values(by=['금액'], ascending=False).head(head)
-            .style.format(float_point)
-            .background_gradient(subset=['금액','층'], cmap='Reds'),
-            use_container_width=True,
-            hide_index=True
-        )
+    try:
+        return empty.dataframe(
+                df.sort_values(by=['금액'], ascending=False).head(head)
+                .style.format(float_point)
+                .background_gradient(subset=['금액','층'], cmap='Reds'),
+                use_container_width=True,
+                hide_index=True
+            )
+    except:
+        pass
     
 def title(empty,index,new):
     return empty.write(f"### :orange[{city[index]}] {len(new)}건 ({day.strftime('%m.%d')})")
