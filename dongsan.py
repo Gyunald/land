@@ -128,11 +128,11 @@ for city in zip(cities[::2],cities[1::2]):
         if len(신규) > 0:
             df(신규,e2)
         else:
-            e2.dataframe(신규)
+            e2.write('')
 
         if len(신규1) > 0:
             df(신규1,e4)
         else:
-            e4.dataframe(신규1)
+            e4.write('')
         
         time.sleep(3)
