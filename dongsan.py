@@ -92,6 +92,10 @@ def normalize_and_reindex(new_entries):
     return normalized.reindex(columns=["아파트", "금액", "면적", "층", "계약", "건축", "동", "거래", "파기"])
     
 def df(df,empty):
+    if len(df) == 0 :
+        empty.write('')
+        return
+
     return empty.dataframe(
             df.sort_values(by=['금액'], ascending=False).head(head)
             .style.format(float_point)
@@ -125,14 +129,7 @@ for city in zip(cities[::2],cities[1::2]):
         title(e1,0,신규)
         title(e3,1,신규1)
         
-        if len(신규) > 0:
-            df(신규,e2)
-        else:
-            e2.write('')
-
-        if len(신규1) > 0:
-            df(신규1,e4)
-        else:
-            e4.write('')
+        df(신규,e2)
+        df(신규1,e4)
         
         time.sleep(3)
