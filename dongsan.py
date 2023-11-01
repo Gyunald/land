@@ -104,13 +104,16 @@ def df(df,empty):
         pass
     
 def title(empty,index,new):
-    return empty.write(f"### :orange[{city[index]}] {len(new)}건 ({day.strftime('%m.%d')})")
+    return empty.write(f"""
+    ## :orange[{city[index]}] {len(new)}건 ({day.strftime('%m.%d')})
+    ###
+    """)
     
 e1 = st.empty()
 e2 = st.empty()
 e3 = st.empty()
 e4 = st.empty()
-head = 5
+head = 4
 
 cities = list(reversed(cities))
 for city in zip(cities[::2],cities[1::2]):
