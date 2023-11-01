@@ -79,6 +79,8 @@ address = ['서울특별시 종로구', '서울특별시 중구', '서울특별�
 
 city = st.selectbox('🍔 시군구 검색', [i for i in address],index=22,label_visibility='collapsed') # 22 강남 103 파주
 
+if len(city.split()) > 1:
+    city = 
 date = list(db.collections())
 day = (datetime.utcnow() + timedelta(hours=9))
 try:    
@@ -99,7 +101,7 @@ try:
         
         if len(신규) >= 1:
             status = False
-            e.write(f"### :orange[{city.split()[1]}] 실거래 {len(신규)}건 ({day.strftime('%m.%d')})")
+            e.write(f"### :orange[{city.split()[-1]}] 실거래 {len(신규)}건 ({day.strftime('%m.%d')})")
             float_point = dict.fromkeys(신규.select_dtypes('float').columns, "{:.1f}")
 
             e1.dataframe(신규.sort_values(by=['금액'], ascending=False).style.format(float_point).background_gradient(subset=['금액','층'], cmap="Reds"),use_container_width=True,hide_index=True)
@@ -109,7 +111,7 @@ try:
     if 전체 :
         매매_당월 = 매매_당월.reindex(columns=["아파트", "금액", "면적", "층", "계약", "건축", "동", "거래", "파기"])
             
-        e.write(f"### :orange[{city.split()[1]}] 실거래 {len(매매_당월)}건")
+        e.write(f"### :orange[{city.split()[-1]}] 실거래 {len(매매_당월)}건")
         아파트 = e1.multiselect('아파트별',sorted([i for i in 매매_당월["아파트"].drop_duplicates()]),max_selections=3,placeholder= '아파트별',label_visibility='collapsed')
             
         if not 아파트:
