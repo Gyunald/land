@@ -113,7 +113,7 @@ e1 = st.empty()
 e2 = st.empty()
 e3 = st.empty()
 e4 = st.empty()
-head = 4
+head = 3
 
 cities = list(reversed(cities))
 for city in zip(cities[::2],cities[1::2]):
