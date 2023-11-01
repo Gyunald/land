@@ -79,8 +79,6 @@ address = ['서울특별시 종로구', '서울특별시 중구', '서울특별�
 
 city = st.selectbox('🍔 시군구 검색', [i for i in address],index=22,label_visibility='collapsed') # 22 강남 103 파주
 
-if len(city.split()) > 1:
-    city = 
 date = list(db.collections())
 day = (datetime.utcnow() + timedelta(hours=9))
 try:    
