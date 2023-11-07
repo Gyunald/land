@@ -249,16 +249,7 @@ def process_data(url, code, user_key, rows, dong, what):
                 data_list.append(','.join((아파트, str(금액), str(층), str(면적), str(건축), 계약 ,동, 거래, 파기)))
 
     db.collection(f"{this_month.strftime('%Y.%m.%d')}").document(dong).set({what: data_list}, merge=True)
-
-list_range = list(db.collections())[:-3]
-
-db = firestore.client()
-for i in list_range:
-    target = db.collection(i.id).get()
-    for doc in target:
-        doc.reference.delete()
-st.warning('삭제 완료')
-
+    
 with st.spinner('진행중...'):
     if (datetime.utcnow() + timedelta(hours=9)).date().strftime('%Y.%m.%d') != list(db.collections())[-1].id:
         for dong, code in address.items():
@@ -269,4 +260,10 @@ with st.spinner('진행중...'):
         st.warning('업데이트 완료')
     else:
         st.error('데이터 중복!!!')
-                
+        
+list_range = list(db.collections())[:-3]
+for i in list_range:
+    target = db.collection(i.id).get()
+    for doc in target:
+        doc.reference.delete()
+st.warning('삭제 완료')
