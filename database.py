@@ -257,6 +257,7 @@ with st.spinner('진행중...'):
             t.start()
             # t = Thread(target=process_data, args=(urls['임대'], code, user_key, rows, dong, '임대'))
             # t.start()
+        t.join()
         st.warning('업데이트 완료')
     else:
         st.error('데이터 중복!!!')
