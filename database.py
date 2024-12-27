@@ -271,4 +271,4 @@ for i in list_range:
 st.warning('삭제 완료')
 
 for dong, code in address.items():
-    st.write(process_data(url['매매'], code, user_key, rows, dong, '매매'))
+    st.write(process_data(urls['매매'], code, user_key, rows, dong, '매매'))
