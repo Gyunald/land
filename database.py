@@ -64,7 +64,7 @@ from threading import Thread
 #         result = xml.text
 #         soup = BeautifulSoup(result, 'lxml-xml')
 #         items = soup.find_all("item")
-
+    
 #         for item in items:
 #             if item.find('건축년도') == None :
 #                 continue
@@ -224,7 +224,7 @@ def process_data(url, code, user_key, rows, dong, what):
         result = xml.text
         soup = BeautifulSoup(result, 'html.parser')
         items = soup.find_all("item")
-
+        st.wtite(items)
         for item in items:
             if item.find('건축년도') == None :
                 continue
