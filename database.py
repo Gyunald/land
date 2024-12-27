@@ -174,7 +174,7 @@ urls= {'매매' : 'http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service
 user_key = st.secrets.user_key
 rows = '9999'
 
-this_month = (datetime.utcnow() + timedelta(hours=9)).date()
+this_month = (datetime.now() + timedelta(hours=9)).date()
 previous_month = this_month.replace(day=1) - timedelta(days=1)
     
 address = {'서울특별시 종로구': '11110', '서울특별시 중구': '11140', '서울특별시 용산구': '11170', '서울특별시 성동구': '11200', '서울특별시 광진구': '11215', '서울특별시 동대문구': '11230',
@@ -251,7 +251,7 @@ def process_data(url, code, user_key, rows, dong, what):
     db.collection(f"{this_month.strftime('%Y.%m.%d')}").document(dong).set({what: data_list}, merge=True)
     
 with st.spinner('진행중...'):
-    if (datetime.utcnow() + timedelta(hours=9)).date().strftime('%Y.%m.%d') != list(db.collections())[-1].id:
+    if (datetime.now() + timedelta(hours=9)).date().strftime('%Y.%m.%d') != list(db.collections())[-1].id:
         for dong, code in address.items():
             t = Thread(target=process_data, args=(urls['매매'], code, user_key, rows, dong, '매매'))
             t.start()
