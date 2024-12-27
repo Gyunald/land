@@ -186,7 +186,9 @@ rows = '9999'
 
 this_month = (datetime.now() + timedelta(hours=9)).date()
 previous_month = this_month.replace(day=1) - timedelta(days=1)
-    
+
+# address = {'파주시': '41480'}
+
 address = {'서울특별시 종로구': '11110', '서울특별시 중구': '11140', '서울특별시 용산구': '11170', '서울특별시 성동구': '11200', '서울특별시 광진구': '11215', '서울특별시 동대문구': '11230',
            '서울특별시 중랑구': '11260', '서울특별시 성북구': '11290', '서울특별시 강북구': '11305', '서울특별시 도봉구': '11320', '서울특별시 노원구': '11350', '서울특별시 은평구': '11380',
            '서울특별시 서대문구': '11410', '서울특별시 마포구': '11440', '서울특별시 양천구': '11470', '서울특별시 강서구': '11500', '서울특별시 구로구': '11530', '서울특별시 금천구': '11545',
@@ -235,7 +237,7 @@ if not firebase_admin._apps :
 db = firestore.client()
 
 def process_data(url, code, user_key, rows, dong, what):
-    data_list = []    
+    data_list = {}    
     
     for date in [previous_month, this_month]:
         query_url = url + f"?&serviceKey={user_key}&LAWD_CD={code}&DEAL_YMD={date.strftime('%Y%m')}&pageNo=1&numOfRows={rows}"
@@ -251,42 +253,27 @@ def process_data(url, code, user_key, rows, dong, what):
                 년 = item.find("dealYear").text if item.find("dealYear") else ""                           # 계약년도
                 월 = item.find("dealMonth").text if item.find("dealMonth") else ""                         # 계약월
                 일 = item.find("dealDay").text if item.find("dealDay") else ""                             # 계약일
-                도로명 = item.find("roadNm").text if item.find("roadNm") else ""                           # 도로명
                 법정동 = item.find("umdNm").text if item.find("umdNm") else ""                             # 법정동코드
                 아파트 = item.find("aptNm").text if item.find("aptNm") else ""                             # 아파트단지명
                 건축년도 = item.find("buildYear").text if item.find("buildYear") else ""                   # 건축년도                 
                 층 = item.find("floor").text if item.find("floor") else ""                                 # 층
                 거래금액 = item.find("dealAmount").text if item.find("dealAmount") else ""                 # 거래금액(만원)
-                도로명건물본번호코드 = item.find("roadNmBonbun").text if item.find("roadNmBonbun") else ""  # 도로명건물본번호코드
-                도로명건물부번호코드 = item.find("roadNmBubun").text if item.find("roadNmBubun") else ""    # 도로명건물부번호코드
-                도로명시군구코드 = item.find("roadNmSggCd").text if item.find("roadNmSggCd") else ""        # 도로명시군구코드
-                도로명일련번호코드 = item.find("roadNmSeq").text if item.find("roadNmSeq") else ""          # 도로명일련번호코드
-                도로명지상지하코드 = item.find("roadNmbCd").text if item.find("roadNmbCd") else ""          # 도로명지상지하코드
-                도로명코드 = item.find("roadNmCd").text if item.find("roadNmCd") else ""                    # 도로명코드
-                법정동본번코드 = item.find("bonbun").text if item.find("bonbun") else ""                    # 법정동본번코드 
-                법정동부번코드 = item.find("bubun").text if item.find("bubun") else ""                      # 법정동부번코드
-                법정동시군구코드 = item.find("sggCd").text if item.find("sggCd") else ""                    # 법정동시군구코드
-                법정동읍면동코드 = item.find("umdCd").text if item.find("umdCd") else ""                    # 법정동읍면동코드
-                법정동지번코드 = item.find("landCd").text if item.find("landCd") else ""                    # 법정동지번코드
-                일련번호 = item.find("aptSeq").text if item.find("aptSeq") else ""                          # 단지 일련번호 
                 전용면적 = item.find("excluUseAr").text if item.find("excluUseAr") else ""                  # 전용면적     
-                지번 = item.find("jibun").text if item.find("jibun") else ""                                # 지번
-                지역코드 = item.find("LAWD_CD").text if item.find("LAWD_CD") else ""                       # 지역코드
                 거래 = item.find("dealingGbn").text if item.find("dealingGbn") else ""
-                계약               =   item.find("dealYear").text + item.find("dealMonth").text.zfill(2) + item.find("dealDay").text.zfill(2)
-
-                # 데이터를 리스트로 저장
-                # items_data = [
-                #     년, 월, 일, 도로명, 법정동, 아파트, 건축년도, 층, 거래금액,계약,거래,
-                #     도로명건물본번호코드, 도로명건물부번호코드, 도로명시군구코드,
-                #     도로명일련번호코드, 도로명지상지하코드, 도로명코드,
-                #     법정동본번코드, 법정동부번코드, 법정동시군구코드, 법정동읍면동코드,
-                #     법정동지번코드, 일련번호, 전용면적, 지번, 지역코드
-                # ]
-
-                data_list.append(','.join((아파트, str(거래금액), str(층), str(전용면적), str(건축년도), 계약 ,법정동, 거래)))  # 리스트에 추가
-
-    db.collection(f"{this_month.strftime('%Y.%m.%d')}").document(dong).set({what: data_list}, merge=True)
+                data_list[what] = {
+                    '년': 년,
+                    '월': 월,
+                    '일': 일,
+                    '법정동': 법정동,
+                    '아파트': 아파트,
+                    '건축년도': 건축년도,
+                    '층': 층,
+                    '거래금액': 거래금액,
+                    '전용면적': 전용면적,
+                    '거래': 거래,
+                    }
+                
+    db.collection(f"{this_month.strftime('%Y.%m.%d')}").document(dong).set(data_list, merge=True)
 
 # 병렬처리
 def process_data_threaded(dong, code, url, user_key, rows, what):
@@ -314,5 +301,6 @@ for i in list_range:
     for doc in target:
         doc.reference.delete()
 st.write("모든 데이터 처리가 완료되었습니다.")
+
 
 
