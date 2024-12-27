@@ -221,7 +221,7 @@ def process_data(url, code, user_key, rows, dong, what):
         query_url = url + f"?&LAWD_CD={code}&DEAL_YMD={date.strftime('%Y%m')}&serviceKey={user_key}&numOfRows={rows}"
         xml = requests.get(query_url)
         result = xml.text
-        soup = BeautifulSoup(result, 'lxml-xml')
+        soup = BeautifulSoup(result, 'html.parser')
         items = soup.find_all("item")
 
         for item in items:
