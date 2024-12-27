@@ -167,7 +167,6 @@ from threading import Thread
 
 
 # 수정
-
 import streamlit as st
 from bs4 import BeautifulSoup
 from datetime import datetime,timedelta
@@ -184,11 +183,11 @@ urls= {'매매' : 'http://apis.data.go.kr/1613000/RTMSDataSvcAptTradeDev/getRTMS
 user_key = '3eOnAkVjvK966MbeTAVERd%2Fbmv0OmPtDl0u%2BprDb96wKHePnJWANhz%2B4xUGls%2FKBO0JbDu%2BI8rg%2FzD4WBwLtGg%3D%3D'
 rows = '9999'
 
-this_month = (datetime.now() + timedelta(hours=9)).date()
+this_month = (datetime.now() - timedelta(hours=9)).date()
 previous_month = this_month.replace(day=1) - timedelta(days=1)
 
 # address = {'파주시': '41480'}
-
+    
 address = {'서울특별시 종로구': '11110', '서울특별시 중구': '11140', '서울특별시 용산구': '11170', '서울특별시 성동구': '11200', '서울특별시 광진구': '11215', '서울특별시 동대문구': '11230',
            '서울특별시 중랑구': '11260', '서울특별시 성북구': '11290', '서울특별시 강북구': '11305', '서울특별시 도봉구': '11320', '서울특별시 노원구': '11350', '서울특별시 은평구': '11380',
            '서울특별시 서대문구': '11410', '서울특별시 마포구': '11440', '서울특별시 양천구': '11470', '서울특별시 강서구': '11500', '서울특별시 구로구': '11530', '서울특별시 금천구': '11545',
@@ -237,7 +236,7 @@ if not firebase_admin._apps :
 db = firestore.client()
 
 def process_data(url, code, user_key, rows, dong, what):
-    data_list = {}    
+    data_list = []    
     
     for date in [previous_month, this_month]:
         query_url = url + f"?&serviceKey={user_key}&LAWD_CD={code}&DEAL_YMD={date.strftime('%Y%m')}&pageNo=1&numOfRows={rows}"
@@ -259,8 +258,10 @@ def process_data(url, code, user_key, rows, dong, what):
                 층 = item.find("floor").text if item.find("floor") else ""                                 # 층
                 거래금액 = item.find("dealAmount").text if item.find("dealAmount") else ""                 # 거래금액(만원)
                 전용면적 = item.find("excluUseAr").text if item.find("excluUseAr") else ""                  # 전용면적     
-                거래 = item.find("dealingGbn").text if item.find("dealingGbn") else ""
-                data_list[what] = {
+
+                # data_list.append(','.join((아파트, str(거래금액), str(층), str(전용면적), str(건축년도), 법정동, 거래)))  # 리스트에 추가
+
+                data_list.append({
                     '년': 년,
                     '월': 월,
                     '일': 일,
@@ -270,10 +271,9 @@ def process_data(url, code, user_key, rows, dong, what):
                     '층': 층,
                     '거래금액': 거래금액,
                     '전용면적': 전용면적,
-                    '거래': 거래,
-                    }
+                    })
                 
-    db.collection(f"{this_month.strftime('%Y.%m.%d')}").document(dong).set(data_list, merge=True)
+    db.collection(f"{this_month.strftime('%Y.%m.%d')}").document(dong).set({what: data_list}, merge=True)
 
 # 병렬처리
 def process_data_threaded(dong, code, url, user_key, rows, what):
@@ -301,6 +301,3 @@ for i in list_range:
     for doc in target:
         doc.reference.delete()
 st.write("모든 데이터 처리가 완료되었습니다.")
-
-
-
