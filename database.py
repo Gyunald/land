@@ -183,7 +183,7 @@ urls= {'매매' : 'http://apis.data.go.kr/1613000/RTMSDataSvcAptTradeDev/getRTMS
 user_key = '3eOnAkVjvK966MbeTAVERd%2Fbmv0OmPtDl0u%2BprDb96wKHePnJWANhz%2B4xUGls%2FKBO0JbDu%2BI8rg%2FzD4WBwLtGg%3D%3D'
 rows = '9999'
 
-this_month = (datetime.now() - timedelta(hours=9)).date()
+this_month = (datetime.now() + timedelta(hours=9)).date()
 previous_month = this_month.replace(day=1) - timedelta(days=1)
 
 # address = {'파주시': '41480'}
