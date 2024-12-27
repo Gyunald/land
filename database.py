@@ -198,6 +198,7 @@ previous_month = this_month.replace(day=1) - timedelta(days=1)
 #            '천안시 동남구': '44131','천안시 서북구': '44133', '아산시': '44200', '전주시 완산구': '45111', '전주시 덕진구': '45113', '익산시': '45140','목포시': '46110', 
 #            '여수시': '46130', '순천시': '46150','광양시': '46230', '포항시 남구': '47111', '포항시 북구': '47113', '구미시': '47190', '경산시': '47290','창원시 의창구': '48121',
 #            '창원시 성산구': '48123', '창원시 마산합포구': '48125', '창원시 마산회원구': '48127', '창원시 진해구': '48129','김해시': '48250', '거제시': '48310', '제주시': '50110', '서귀포시': '50130'}
+
 address = {'서울특별시 종로구': '11110', '서울특별시 중구': '11140', '서울특별시 용산구': '11170'}
 
 if not firebase_admin._apps :
@@ -224,7 +225,7 @@ def process_data(url, code, user_key, rows, dong, what):
         result = xml.text
         soup = BeautifulSoup(result, 'html.parser')
         items = soup.find_all("item")
-        st.wtite(items)
+
         for item in items:
             if item.find('건축년도') == None :
                 continue
@@ -270,5 +271,3 @@ for i in list_range:
         doc.reference.delete()
 st.warning('삭제 완료')
 
-for dong, code in address.items():
-    st.write(process_data(urls['매매'], code, user_key, rows, dong, '매매'))
