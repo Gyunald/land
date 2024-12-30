@@ -183,7 +183,7 @@ urls= {'매매' : 'http://apis.data.go.kr/1613000/RTMSDataSvcAptTradeDev/getRTMS
 user_key = '3eOnAkVjvK966MbeTAVERd%2Fbmv0OmPtDl0u%2BprDb96wKHePnJWANhz%2B4xUGls%2FKBO0JbDu%2BI8rg%2FzD4WBwLtGg%3D%3D'
 rows = '9999'
 
-this_month = datetime.now().date()
+this_month = (datetime.now() + timedelta(hours=9)).date()
 previous_month = this_month.replace(day=1) - timedelta(days=1)
 
 # address = {'파주': '41480'}
@@ -296,7 +296,7 @@ def process_data_threaded(dong, code, url, user_key, rows, what):
 # threads = []
 
 with st.spinner('진행중...'):
-    if datetime.now().date().strftime('%Y.%m.%d') != list(db.collections())[-1].id:
+    if (datetime.now() + timedelta(hours=9)).date().strftime('%Y.%m.%d') != list(db.collections())[-1].id:
         for dong, code in address.items():       
             thread = threading.Thread(target=process_data_threaded, args=(dong, code, urls['매매'], user_key, rows, '매매'))
             # threads.append(thread)
