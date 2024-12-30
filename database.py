@@ -179,7 +179,7 @@ import threading
 
 
 urls= {'매매' : 'http://apis.data.go.kr/1613000/RTMSDataSvcAptTradeDev/getRTMSDataSvcAptTradeDev'}
-    #    '임대' : 'http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptRent?'}
+    #    '임대' : 'http://apis.data.go.kr/1613000/RTMSDataSvcAptRent'}
 
 user_key = '3eOnAkVjvK966MbeTAVERd%2Fbmv0OmPtDl0u%2BprDb96wKHePnJWANhz%2B4xUGls%2FKBO0JbDu%2BI8rg%2FzD4WBwLtGg%3D%3D'
 rows = '9999'
