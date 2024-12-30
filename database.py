@@ -178,13 +178,12 @@ from firebase_admin import firestore
 import threading
 
 
-urls= {'매매' : 'http://apis.data.go.kr/1613000/RTMSDataSvcAptTradeDev/getRTMSDataSvcAptTradeDev'}
-    #    '임대' : 'http://apis.data.go.kr/1613000/RTMSDataSvcAptRent'}
+urls= {'매매' : 'http://apis.data.go.kr/1613000/RTMSDataSvcAptTradeDev/getRTMSDataSvcAptTradeDev', '임대' : 'http://apis.data.go.kr/1613000/RTMSDataSvcAptRent/getRTMSDataSvcAptRent'}
 
 user_key = '3eOnAkVjvK966MbeTAVERd%2Fbmv0OmPtDl0u%2BprDb96wKHePnJWANhz%2B4xUGls%2FKBO0JbDu%2BI8rg%2FzD4WBwLtGg%3D%3D'
 rows = '9999'
 
-this_month = (datetime.now() + timedelta(hours=9)).date()
+this_month = datetime.now().date()
 previous_month = this_month.replace(day=1) - timedelta(days=1)
 
 # address = {'파주': '41480'}
@@ -253,26 +252,39 @@ def process_data(url, code, user_key, rows, dong, what):
                 년 = item.find("dealYear").text if item.find("dealYear") else ""                           # 계약년도
                 월 = item.find("dealMonth").text if item.find("dealMonth") else ""                         # 계약월
                 일 = item.find("dealDay").text if item.find("dealDay") else ""                             # 계약일
-                법정동 = item.find("umdNm").text if item.find("umdNm") else ""                             # 법정동코드
+                동 = item.find("umdNm").text if item.find("umdNm") else ""                             # 법정동코드
                 아파트 = item.find("aptNm").text if item.find("aptNm") else ""                             # 아파트단지명
-                건축년도 = item.find("buildYear").text if item.find("buildYear") else ""                   # 건축년도                 
+                건축 = item.find("buildYear").text if item.find("buildYear") else ""                   # 건축년도                 
                 층 = item.find("floor").text if item.find("floor") else ""                                 # 층
-                거래금액 = item.find("dealAmount").text if item.find("dealAmount") else ""                 # 거래금액(만원)
-                전용면적 = item.find("excluUseAr").text if item.find("excluUseAr") else ""                  # 전용면적     
+                면적 = item.find("excluUseAr").text if item.find("excluUseAr") else ""                  # 전용면적     
 
-                # data_list.append(','.join((아파트, str(거래금액), str(층), str(전용면적), str(건축년도), 법정동, 거래)))  # 리스트에 추가
+                if 'RTMSDataSvcAptRent' in url :
+                    보증금 = item.find("deposit").text if item.find("deposit") else ""                 # 보증금금(만원)
+                    월세 = item.find("monthlyRent").text if item.find("monthlyRent") else ""                 # 월세(만원)
+                    갱신 = item.find("contractType").text if item.find("contractType") else "" # 계약
 
-                data_list.append({
-                    '년': 년,
-                    '월': 월,
-                    '일': 일,
-                    '법정동': 법정동,
-                    '아파트': 아파트,
-                    '건축년도': 건축년도,
-                    '층': 층,
-                    '거래금액': 거래금액,
-                    '전용면적': 전용면적,
-                    })
+                    data_list.append({
+                        '계약' : f"{월}.{일}",
+                        '동': 동,
+                        '아파트': 아파트,
+                        '보증금': 보증금,
+                        '월세' : 월세,
+                        '면적': 면적,
+                        '갱신': 갱신
+                        })
+                
+                else:
+                    금액 = item.find("dealAmount").text if item.find("dealAmount") else "" # 거래금액(만원)
+
+                    data_list.append({
+                        '계약' : f"{월}.{일}",
+                        '동': 동,
+                        '아파트': 아파트,
+                        '건축': 건축,
+                        '층': 층,
+                        '금액': 금액,
+                        '면적': 면적,
+                        })
                 
     db.collection(f"{this_month.strftime('%Y.%m.%d')}").document(dong).set({what: data_list}, merge=True)
 
@@ -284,11 +296,13 @@ def process_data_threaded(dong, code, url, user_key, rows, what):
 # threads = []
 
 with st.spinner('진행중...'):
-    if (datetime.now() + timedelta(hours=9)).date().strftime('%Y.%m.%d') != list(db.collections())[-1].id:
-        for dong, code in address.items():        
+    if datetime.now().date().strftime('%Y.%m.%d') != list(db.collections())[-1].id:
+        for dong, code in address.items():       
             thread = threading.Thread(target=process_data_threaded, args=(dong, code, urls['매매'], user_key, rows, '매매'))
             # threads.append(thread)
             thread.start()
+            thread2 = threading.Thread(target=process_data_threaded, args=(dong, code, urls['임대'], user_key, rows, '임대'))
+            thread2.start()
 
         # 모든 스레드가 완료될 때까지 대기
         # for thread in threads:
