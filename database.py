@@ -248,7 +248,7 @@ def process_data(url, code, user_key, rows, dong, what):
         for item in items:
             if item.find('buildYear') == None :
                 continue
-            else         
+            else:
                 동 = item.find("umdNm").text if item.find("umdNm") else ""                             # 법정동코드
                 아파트 = item.find("aptNm").text if item.find("aptNm") else ""                             # 아파트단지명              
                 층 = item.find("floor").text if item.find("floor") else ""                                 # 층
