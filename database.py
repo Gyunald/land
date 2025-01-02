@@ -248,39 +248,30 @@ def process_data(url, code, user_key, rows, dong, what):
         for item in items:
             if item.find('buildYear') == None :
                 continue
-            else:
-                년 = item.find("dealYear").text if item.find("dealYear") else ""                           # 계약년도
-                월 = item.find("dealMonth").text if item.find("dealMonth") else ""                         # 계약월
-                일 = item.find("dealDay").text if item.find("dealDay") else ""                             # 계약일
+            else         
                 동 = item.find("umdNm").text if item.find("umdNm") else ""                             # 법정동코드
-                아파트 = item.find("aptNm").text if item.find("aptNm") else ""                             # 아파트단지명
-                건축 = item.find("buildYear").text if item.find("buildYear") else ""                   # 건축년도                 
+                아파트 = item.find("aptNm").text if item.find("aptNm") else ""                             # 아파트단지명              
                 층 = item.find("floor").text if item.find("floor") else ""                                 # 층
                 면적 = item.find("excluUseAr").text if item.find("excluUseAr") else ""                  # 전용면적     
 
                 if 'RTMSDataSvcAptRent' in url :
                     보증금 = item.find("deposit").text if item.find("deposit") else ""                 # 보증금금(만원)
                     월세 = item.find("monthlyRent").text if item.find("monthlyRent") else ""                 # 월세(만원)
-                    갱신 = item.find("contractType").text if item.find("contractType") else "" # 계약
 
                     data_list.append({
-                        '계약' : f"{월}.{일}",
                         '동': 동,
                         '아파트': 아파트,
                         '보증금': 보증금,
                         '월세' : 월세,
                         '면적': 면적,
-                        '갱신': 갱신
                         })
                 
                 else:
                     금액 = item.find("dealAmount").text if item.find("dealAmount") else "" # 거래금액(만원)
 
                     data_list.append({
-                        '계약' : f"{월}.{일}",
                         '동': 동,
                         '아파트': 아파트,
-                        '건축': 건축,
                         '층': 층,
                         '금액': 금액,
                         '면적': 면적,
