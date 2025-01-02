@@ -284,20 +284,24 @@ def process_data_threaded(dong, code, url, user_key, rows, what):
     process_data(url, code, user_key, rows, dong, what)
 
 # Thread 리스트 생성
-# threads = []
+threads = []
+threads2 = []
 
 with st.spinner('진행중...'):
     if (datetime.now() + timedelta(hours=9)).date().strftime('%Y.%m.%d') != list(db.collections())[-1].id:
         for dong, code in address.items():       
             thread = threading.Thread(target=process_data_threaded, args=(dong, code, urls['매매'], user_key, rows, '매매'))
-            # threads.append(thread)
+            threads.append(thread)
             thread.start()
             thread2 = threading.Thread(target=process_data_threaded, args=(dong, code, urls['임대'], user_key, rows, '임대'))
+            threads2.append(thread2)            
             thread2.start()
 
         # 모든 스레드가 완료될 때까지 대기
-        # for thread in threads:
-        #     thread.join()
+        for thread in threads:
+            thread.join()
+        for thread in threads2:
+            thread.join()
     else:
         st.error('데이터 중복!!!')
 
