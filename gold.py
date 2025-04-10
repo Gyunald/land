@@ -56,12 +56,11 @@ if __name__ == "__main__":
 
     gold_data = st.session_state.gold
 
+    bt = st.button('실시간 금 시세 갱신',use_container_width=False,type='primary')
 
-    # bt = st.button('실시간 금 시세 갱신',use_container_width=False,type='primary')
-
-    # if bt:
-    #     gold_data = scrape_naver_gold_prices(url)
-    #     st.session_state.gold = gold_data
+    if bt:
+        gold_data = scrape_naver_gold_prices(url)
+        st.session_state.gold = gold_data
 
     
     gold_data2 = float(gold_data.replace(',', ''))
