@@ -65,14 +65,14 @@ if __name__ == "__main__":
     
     gold_data2 = float(gold_data.replace(',', ''))
 
-    st.write(f"#### 현재 금 시세: {gold_data2:,.0f}/g")
+    st.write(f"현재 금 시세: {gold_data2:,.0f}/g")
 
     # c1,c2 = st.columns(2)
     if gold_data is not None:
         gold_data = float(gold_data.replace(',', ''))
 
-        a = st.radio('함량', ['14k', '18k', '24k'], horizontal=True)
-        b = st.radio('단위', ['돈', 'g'], horizontal=True)
+        a = st.radio('함량', ['14k', '18k', '24k'],label_visibility="invisible", horizontal=True)
+        b = st.radio('단위', ['돈', 'g'],label_visibility="invisible", horizontal=True)
         
         weight = st.number_input('중량', value=1.0, step=0.01)
         diamond_weight = st.number_input('다이아몬드 중량 (캐럿)', value=0.0, step=0.1, help='※ 1부 = 0.1캐럿')
@@ -93,11 +93,11 @@ if __name__ == "__main__":
             # Subtract diamond weight from total weight for gold calculation
             gold_weight = max(0, (weight - diamond_weight_in_grams) * purity_factor)
             result = gold_weight * gold_price_per_gram
-            st.info(f"##### 함량: {a}\n##### 총 중량: {float(weight):.2f}g\n##### 다이아몬드 중량: {diamond_weight_in_grams:.2f}g\n##### 순수 금 중량: {gold_weight:.2f}g\n##### KRW: {result:,.0f}원")
+            st.info(f"###### 함량: {a}\n###### 총 중량: {float(weight):.2f}g\n###### 다이아몬드 중량: {diamond_weight_in_grams:.2f}g\n###### 순수 금 중량: {gold_weight:.2f}g\n##### KRW: {result:,.0f}원")
         
         if b == '돈':
             # Convert to grams first (1 돈 = 3.75g), then subtract diamond weight
             weight_in_grams = weight * 3.75
             gold_weight = max(0, (weight_in_grams - diamond_weight_in_grams) * purity_factor)
             result = gold_weight * gold_price_per_gram
-            st.info(f"##### 함량: {a}\n##### 총 중량: {weight_in_grams:.2f}g\n##### 다이아몬드 중량: {diamond_weight_in_grams:.2f}g\n##### 순수 금 중량: {gold_weight:.2f}g\n##### KRW: {result:,.0f}원")
+            st.info(f"###### 함량: {a}\n###### 총 중량: {weight_in_grams:.2f}g\n###### 다이아몬드 중량: {diamond_weight_in_grams:.2f}g\n###### 순수 금 중량: {gold_weight:.2f}g\n##### KRW: {result:,.0f}원")
