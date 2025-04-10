@@ -81,11 +81,11 @@ if __name__ == "__main__":
         # Convert diamond weight from carats to grams (1 carat = 0.2g)
         diamond_weight_in_grams = diamond_weight * 0.2
         
-        if b == '14k':
+        if a == '14k':
             purity_factor = 0.58
-        elif b == '18k':
+        elif a == '18k':
             purity_factor = 0.75
-        elif b == '24k':
+        elif a == '24k':
             purity_factor = 1.0
             
         gold_price_per_gram = gold_data * purity_factor
