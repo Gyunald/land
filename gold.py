@@ -68,15 +68,15 @@ if __name__ == "__main__":
 
     st.write(f"#### 현재 금 시세: {gold_data2:,.0f}/g")
 
-    c1,c2 = st.columns(2)
+    # c1,c2 = st.columns(2)
     if gold_data is not None:
         gold_data = float(gold_data.replace(',', ''))
 
-        a = c1.radio('단위', ['돈', 'g'], horizontal=True)
-        b = c2.radio('함량', ['14k', '18k', '24k'], horizontal=True)
+        a = st.radio('함량', ['14k', '18k', '24k'], horizontal=True)
+        b = st.radio('단위', ['돈', 'g'], horizontal=True)
         
-        weight = c1.number_input('중량', value=1.0, step=0.01)
-        diamond_weight = c2.number_input('다이아몬드 중량 (캐럿)', value=0.0, step=0.1, help='※ 1부 = 0.1캐럿')
+        weight = st.number_input('중량', value=1.0, step=0.01)
+        diamond_weight = st.number_input('다이아몬드 중량 (캐럿)', value=0.0, step=0.1, help='※ 1부 = 0.1캐럿')
 
         # Convert diamond weight from carats to grams (1 carat = 0.2g)
         diamond_weight_in_grams = diamond_weight * 0.2
