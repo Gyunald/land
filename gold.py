@@ -71,8 +71,8 @@ if __name__ == "__main__":
     if gold_data is not None:
         gold_data = float(gold_data.replace(',', ''))
 
-        a = st.radio('함량', ['14k', '18k', '24k'],label_visibility="invisible", horizontal=True)
-        b = st.radio('단위', ['돈', 'g'],label_visibility="invisible", horizontal=True)
+        a = st.radio('함량', ['14k', '18k', '24k'],label_visibility="collapsed", horizontal=True)
+        b = st.radio('단위', ['돈', 'g'],label_visibility="collapsed", horizontal=True)
         
         weight = st.number_input('중량', value=1.0, step=0.01)
         diamond_weight = st.number_input('다이아몬드 중량 (캐럿)', value=0.0, step=0.1, help='※ 1부 = 0.1캐럿')
