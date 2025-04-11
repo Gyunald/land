@@ -162,12 +162,12 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import streamlit as st
 
-st.markdown('''
-<style>
-.stApp [data-testid="stHeader"] {visibility: hidden;}
-div[class^='block-container'] { padding-top: 1rem; }
-</style>
-''', unsafe_allow_html=True)
+# st.markdown('''
+# <style>
+# .stApp [data-testid="stHeader"] {visibility: hidden;}
+# div[class^='block-container'] { padding-top: 1rem; }
+# </style>
+# ''', unsafe_allow_html=True)
 
 # 세션 상태 초기화
 if 'gold_price' not in st.session_state:
