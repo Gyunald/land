@@ -205,7 +205,7 @@ def main():
                     # st.rerun()
         
         with col2:
-            st.button(f"{gold_price_numeric:,.0f}/g", type='tertiary')
+            st.button(f"{gold_price_numeric:,.0f}/g", type='tertiary', use_container_width=True)
         
         # 사용자 입력 영역
         # st.subheader("계산 설정")
