@@ -215,7 +215,7 @@ def main():
             purity = st.radio('함량', ['14k', '18k', '24k'], label_visibility="collapsed", horizontal=True,)
         
         with col2:
-            unit = st.radio('단위', ['돈', 'g'], label_visibility="hidden", horizontal=True)
+            unit = st.radio('단위', ['돈', 'g'], label_visibility="collapsed", horizontal=True)
         
         # 무게 입력
         col1, col2 = st.columns(2)
