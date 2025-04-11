@@ -65,7 +65,7 @@ if __name__ == "__main__":
     
     gold_data2 = float(gold_data.replace(',', ''))
 
-    st.write(f"현재 금 시세: {gold_data2:,.0f}/g")
+    st.write(f"###### 현재 금 시세: {gold_data2:,.0f}/g")
 
     # c1,c2 = st.columns(2)
     if gold_data is not None:
@@ -93,11 +93,11 @@ if __name__ == "__main__":
             # Subtract diamond weight from total weight for gold calculation
             gold_weight = max(0, (weight - diamond_weight_in_grams) * purity_factor)
             result = gold_weight * gold_price_per_gram
-            st.info(f"###### 함량: {a}\n###### 총 중량: {float(weight):.2f}g\n###### 다이아몬드 중량: {diamond_weight_in_grams:.2f}g\n###### 순수 금 중량: {gold_weight:.2f}g\n##### KRW: {result:,.0f}원")
+            st.info(f"함량: {a}\n총 중량: {float(weight):.2f}g\n다이아몬드 중량: {diamond_weight_in_grams:.2f}g\n순수 금 중량: {gold_weight:.2f}g\n###### KRW: {result:,.0f}원")
         
         if b == '돈':
             # Convert to grams first (1 돈 = 3.75g), then subtract diamond weight
             weight_in_grams = weight * 3.75
             gold_weight = max(0, (weight_in_grams - diamond_weight_in_grams) * purity_factor)
             result = gold_weight * gold_price_per_gram
-            st.info(f"###### 함량: {a}\n###### 총 중량: {weight_in_grams:.2f}g\n###### 다이아몬드 중량: {diamond_weight_in_grams:.2f}g\n###### 순수 금 중량: {gold_weight:.2f}g\n##### KRW: {result:,.0f}원")
+            st.info(f"함량: {a}\n총 중량: {weight_in_grams:.2f}g\n다이아몬드 중량: {diamond_weight_in_grams:.2f}g\n순수 금 중량: {gold_weight:.2f}g\n###### KRW: {result:,.0f}원")
