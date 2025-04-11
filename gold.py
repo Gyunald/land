@@ -220,7 +220,7 @@ def main():
         
         with col1:
             purity = st.radio('함량', ['14k', '18k', '24k'], label_visibility="collapsed", horizontal=True,)
-        
+            purity
         with col2:
             unit = st.radio('단위', ['돈', 'g'], label_visibility="collapsed", horizontal=True)
         
