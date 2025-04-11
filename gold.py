@@ -69,7 +69,7 @@ def calculate_gold_value(purity, unit, weight, diamond_weight, gold_price_per_gr
     return gold_weight, gold_value
 
 def main():
-    st.subheader('순수 금 함량 계산')
+
     # 초기 금 시세 가져오기
     url = 'https://finance.naver.com/marketindex/goldDailyQuote.naver'
     if st.session_state.gold_price is None:
@@ -82,7 +82,7 @@ def main():
         gold_data = st.session_state.gold_price
         gold_price_numeric = float(gold_data.replace(',', ''))
 
-        refresh_button = st.button('# 현재 금 시세 조회하기', use_container_width=True, type='primary')
+        refresh_button = st.button('# 현재 금 시세 조회하기', use_container_width=True, type='primary', placeholder='금/g 가격')
         if refresh_button:
             st.toast("금 시세가 갱신되었습니다.", icon='🌟')
             gold_data = scrape_naver_gold_prices(url)
@@ -135,7 +135,7 @@ def main():
         
         # 상세 정보
         with st.expander("상세 정보", expanded=True):
-            st.write(f"- 현재 금 시세: {gold_price_numeric:,.2f}원/g")
+            st.write(f"- 현재 금 시세: {gold_price_numeric:,d}원/g")
             st.write(f"- 함량: {purity} (순도: {'58.5%' if purity=='14k' else '75.00%' if purity=='18k' else '99.99%'})")
             if unit == '돈':
                 st.write(f"- 총 중량: {weight:.2f}돈 ({weight*3.75:.2f}g)")
