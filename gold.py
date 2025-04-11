@@ -282,8 +282,12 @@ def main():
                     toggle_manual_price_mode()
         
         with price_col2:
-            mode_button = st.toggle("직접입력" if not st.session_state.manual_price_mode else "자동모드", 
-                                    on_click=toggle_manual_price_mode, type='tertiary')
+            mode_button = st.toggle("직접입력")
+            
+            if mode_button :
+                st.session_state.manual_price_mode = Ture
+            else:
+                st.session_state.manual_price_mode = False
                 
         col1, col2 = st.columns(2)
         
