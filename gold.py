@@ -154,7 +154,6 @@
 # if __name__ == "__main__":
 #     main()
 
-
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
@@ -236,8 +235,9 @@ def calculate_gold_value(purity, unit, weight, diamond_weight, gold_price_per_gr
     
     return gold_weight, gold_value
 
-def toggle_manual_price_mode():
-    st.session_state.manual_price_mode = not st.session_state.manual_price_mode
+# 이 함수는 더 이상 필요하지 않음 (체크박스를 사용하기 때문)
+# def toggle_manual_price_mode():
+#     st.session_state.manual_price_mode = not st.session_state.manual_price_mode
 
 def main():
     # st.title("금 시세 계산기")
@@ -254,7 +254,8 @@ def main():
         gold_data = st.session_state.gold_price
         gold_price_numeric = float(gold_data.replace(',', ''))
 
-        if st.button(f'# 현재 금 시세 조회하기', use_container_width=True, type='primary'):
+        refresh_button = st.button(f'# 현재 금 시세 조회하기', use_container_width=True, type='primary')
+        if refresh_button:
             if not st.session_state.manual_price_mode:
                 st.toast("금 시세가 갱신되었습니다.", icon='🌟')
                 gold_data = scrape_naver_gold_prices(url)
@@ -268,6 +269,12 @@ def main():
         # 금 시세 표시 및 직접 입력 모드 전환
         price_col1, price_col2 = st.columns([4, 1])
         
+        with price_col2:
+            manual_mode = st.checkbox("직접입력", value=st.session_state.manual_price_mode)
+            # 체크박스 상태가 변경되면 세션 상태 업데이트
+            if manual_mode != st.session_state.manual_price_mode:
+                st.session_state.manual_price_mode = manual_mode
+        
         with price_col1:
             if st.session_state.manual_price_mode:
                 manual_price = st.number_input('금 시세 직접 입력(원/g)', 
@@ -277,17 +284,7 @@ def main():
                                             format="%d")
                 gold_price_numeric = manual_price
             else:
-                bt = st.button(f'{gold_price_numeric:,.0f}원/g', use_container_width=True, type='tertiary')
-                # if bt:
-                #     toggle_manual_price_mode()
-        
-        with price_col2:
-            mode_button = st.toggle("직접입력")
-            
-            if not mode_button :
-                st.session_state.manual_price_mode = True
-            else:
-                st.session_state.manual_price_mode = False
+                st.write(f'### {gold_price_numeric:,.0f}원/g')
                 
         col1, col2 = st.columns(2)
         
