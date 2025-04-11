@@ -113,12 +113,12 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import streamlit as st
 
-# st.markdown('''
-# <style>
-# .stApp [data-testid="stHeader"] {visibility: hidden;}
-# div[class^='block-container'] { padding-top: 1rem; }
-# </style>
-# ''', unsafe_allow_html=True)
+st.markdown('''
+<style>
+.stApp [data-testid="stHeader"] {visibility: hidden;}
+div[class^='block-container'] { padding-top: 1rem; }
+</style>
+''', unsafe_allow_html=True)
 
 # 세션 상태 초기화
 if 'gold_price' not in st.session_state:
@@ -234,8 +234,6 @@ def main():
             purity, unit, weight, diamond_weight, gold_price_numeric
         )
         
-        # 결과 표시
-        # st.subheader("계산 결과")
         col1, col2 = st.columns(2)
         
         with col1:
@@ -255,13 +253,6 @@ def main():
             
             if diamond_weight > 0:
                 st.write(f"- 다이아몬드 중량: {diamond_weight:.2f}캐럿 ({diamond_weight*0.2:.2f}g)")
-    # else:
-    #     st.error("금 시세를 가져올 수 없습니다. 다시 시도해주세요.")
-    #     if st.button('시세 다시 가져오기'):
-    #         gold_data = scrape_naver_gold_prices(url)
-    #         if gold_data:
-    #             st.session_state.gold_price = gold_data
-    #             st.rerun()
 
 if __name__ == "__main__":
     main()
