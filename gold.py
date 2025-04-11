@@ -113,12 +113,12 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import streamlit as st
 
-st.markdown('''
-<style>
-.stApp [data-testid="stHeader"] {visibility: hidden;}
-div[class^='block-container'] { padding-top: 1rem; }
-</style>
-''', unsafe_allow_html=True)
+# st.markdown('''
+# <style>
+# .stApp [data-testid="stHeader"] {visibility: hidden;}
+# div[class^='block-container'] { padding-top: 1rem; }
+# </style>
+# ''', unsafe_allow_html=True)
 
 # 세션 상태 초기화
 if 'gold_price' not in st.session_state:
@@ -200,7 +200,7 @@ def main():
         gold_data = st.session_state.gold_price
         gold_price_numeric = float(gold_data.replace(',', ''))
         
-        col1, col2 = st.columns([3, 1])
+        col1, col2 = st.columns(2)
         with col1:
             if st.button('현재 금 시세 조회하기', use_container_width=True):
                 gold_data = scrape_naver_gold_prices(url)
