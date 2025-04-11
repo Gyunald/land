@@ -178,11 +178,12 @@ def calculate_gold_value(purity, unit, weight, diamond_weight, gold_price_per_gr
         weight_in_grams = weight
     
     # 순수 금 무게 계산 (총 무게에서 다이아몬드 무게 제외)
-    gold_weight = max(0, weight_in_grams - diamond_weight_in_grams) * purity_factor
+    pure_gold_weight = max(0, weight_in_grams - diamond_weight_in_grams)
+    gold_weight = pure_gold_weight * purity_factor
     
-    # 금 가격 계산
-    gold_value = gold_weight * (gold_price_per_gram / purity_factor)
-    gold_value
+    # 금 가격 계산 (순수 24K 금 시세 × 실제 함유된 금 무게)
+    gold_value = gold_price_per_gram * gold_weight
+    
     return gold_weight, gold_value
 
 def main():
