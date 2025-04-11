@@ -106,8 +106,8 @@ def main():
             # e.empty()
             aaa = st.number_input('직접입력',value=0)
             
-            if aaa:
-                gold_price_numeric = float(aaa.replace(',', ''))
+
+            gold_price_numeric = float(aaa.replace(',', ''))
 
         col1, col2 = st.columns(2)
         
