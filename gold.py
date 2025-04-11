@@ -82,7 +82,7 @@ def main():
         gold_data = st.session_state.gold_price
         gold_price_numeric = float(gold_data.replace(',', ''))
 
-        refresh_button = st.button('# 현재 금 시세 조회하기', use_container_width=True, type='primary', placeholder='금/g 가격')
+        refresh_button = st.button('# 현재 금 시세 조회하기', use_container_width=True, type='primary')
         if refresh_button:
             st.toast("금 시세가 갱신되었습니다.", icon='🌟')
             gold_data = scrape_naver_gold_prices(url)
@@ -92,6 +92,7 @@ def main():
                 gold_price_numeric = float(gold_data.replace(',', ''))
 
         manual_price = st.number_input('금 시세(원/g)', 
+                                    placeholder='금/g 가격',
                                     value=int(gold_price_numeric), 
                                     step=1000,
                                     min_value=0,
