@@ -169,15 +169,6 @@ import streamlit as st
 # 세션 상태 초기화
 if 'gold_price' not in st.session_state:
     st.session_state.gold_price = None
-    
-if 'manual_price_mode' not in st.session_state:
-    st.session_state.manual_price_mode = False
-
-def change_mode():
-    if st.session_state.manual_price_mode == False:
-        st.session_state.manual_price_mode = True
-    else:
-        st.session_state.manual_price_mode = False
 
 def scrape_naver_gold_prices(url='https://finance.naver.com/marketindex/goldDailyQuote.naver'):
     """네이버 금융에서 금 시세를 스크랩하는 함수"""
@@ -262,15 +253,14 @@ def main():
             if gold_data:
                 st.session_state.gold_price = gold_data
                 gold_price_numeric = float(gold_data.replace(',', ''))
-    
-        if st.session_state.manual_price_mode:
-            manual_price = st.number_input('금 시세(원/g)', 
-                                        value=int(gold_price_numeric), 
-                                        step=1000,
-                                        min_value=0,
-                                        format="%d",
-                                        label_visibility="collapsed")
-            gold_price_numeric = manual_price
+
+        manual_price = st.number_input('금 시세(원/g)', 
+                                    value=int(gold_price_numeric), 
+                                    step=1000,
+                                    min_value=0,
+                                    format="%d",
+                                    label_visibility="collapsed")
+        gold_price_numeric = manual_price
                 
         col1, col2 = st.columns(2)
         
