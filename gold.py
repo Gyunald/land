@@ -52,7 +52,7 @@ def calculate_gold_value(purity, unit, weight, diamond_weight, gold_price_per_gr
     """금 가치를 계산하는 함수"""
     # 순도 계수 설정
     purity_factors = {
-        '14k': 0.5833,
+        '14k': 0.585,
         '18k': 0.75,
         '24k': 1.0
     }
@@ -91,7 +91,7 @@ def main():
     if st.session_state.gold_price != None:
         gold_data = st.session_state.gold_price
         gold_price_numeric = float(gold_data.replace(',', ''))
-        
+
         if st.button(f'# 현재 금 시세 조회하기', use_container_width=True, type='primary'):
             st.toast("금 시세가 갱신되었습니다.", icon='🌟')
             gold_data = scrape_naver_gold_prices(url)
@@ -99,9 +99,13 @@ def main():
             if gold_data:
                 st.session_state.gold_price = gold_data
                 gold_price_numeric = float(gold_data.replace(',', ''))
-
-        st.button(f'{gold_price_numeric:,.0f}/g', use_container_width=True, type='tertiary')
-        
+                
+        e = st.empty()
+        bt = e.button(f'{gold_price_numeric:,.0f}/g', use_container_width=True, type='tertiary')
+        if bt :
+            e.empty()
+            bt = e.number_input('직접입력',value=0)
+            
         col1, col2 = st.columns(2)
         
         with col1:
@@ -140,7 +144,7 @@ def main():
         # 상세 정보
         with st.expander("상세 정보",expanded=True):
             st.write(f"- 현재 금 시세: {gold_price_numeric:,.2f}원/g")
-            st.write(f"- 함량: {purity} (순도: {'58.33%' if purity=='14k' else '75%' if purity=='18k' else '99.99%'})")
+            st.write(f"- 함량: {purity} (순도: {'58.5%' if purity=='14k' else '75.00%' if purity=='18k' else '99.99%'})")
             if unit == '돈':
                 st.write(f"- 입력 중량: {weight:.2f}돈 ({weight*3.75:.2f}g)")
             else:
