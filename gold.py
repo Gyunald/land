@@ -287,4 +287,5 @@ def main():
                 st.write(f"- 다이아몬드 중량: {diamond_weight:.2f}캐럿 ({diamond_weight*0.2:.2f}g)")
 
 if __name__ == "__main__":
+    set_page_container_style()
     main()
