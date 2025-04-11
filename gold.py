@@ -200,7 +200,7 @@ def main():
                 if gold_data:
                     st.session_state.gold_price = gold_data
                     gold_price_numeric = float(gold_data.replace(',', ''))
-                    st.success("금 시세가 갱신되었습니다.")
+                    st.toast("금 시세가 갱신되었습니다.")
                     # # 페이지 리프레시
                     # st.rerun()
         
