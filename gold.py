@@ -100,6 +100,7 @@ def main():
             if gold_data:
                 st.session_state.gold_price = gold_data
                 gold_price_numeric = float(gold_data.replace(',', ''))
+                time.sleep(.1)
                 st.rerun()
                 
         col1, col2 = st.columns(2)
