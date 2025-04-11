@@ -278,16 +278,16 @@ def main():
                 gold_price_numeric = manual_price
             else:
                 bt = st.button(f'{gold_price_numeric:,.0f}원/g', use_container_width=True, type='tertiary')
-                if bt:
-                    toggle_manual_price_mode()
+                # if bt:
+                #     toggle_manual_price_mode()
         
         with price_col2:
-            mode_button = st.toggle("직접입력")
+            mode_button = st.toggle("직접입력", on_change=toggle_manual_price_mode())
             
-            if not mode_button :
-                st.session_state.manual_price_mode = True
-            else:
-                st.session_state.manual_price_mode = False
+            # if not mode_button :
+            #     st.session_state.manual_price_mode = True
+            # else:
+            #     st.session_state.manual_price_mode = False
                 
         col1, col2 = st.columns(2)
         
