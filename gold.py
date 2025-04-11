@@ -14,7 +14,7 @@ import time
 
 # 세션 상태 초기화
 if 'gold_price' not in st.session_state:
-    st.session_state.gold_price = 0
+    st.session_state.gold_price = None
     
 def scrape_naver_gold_prices(url='https://finance.naver.com/marketindex/goldDailyQuote.naver'):
     """네이버 금융에서 금 시세를 스크랩하는 함수"""
@@ -83,13 +83,13 @@ def main():
     
     # 초기 금 시세 가져오기
     url = 'https://finance.naver.com/marketindex/goldDailyQuote.naver'
-    if st.session_state.gold_price == 0:
+    if st.session_state.gold_price == None:
         gold_data = scrape_naver_gold_prices(url)
         if gold_data:
             st.session_state.gold_price = gold_data
     
     # 금 시세 표시
-    if st.session_state.gold_price:
+    if st.session_state.gold_price != None:
         gold_data = st.session_state.gold_price
         gold_price_numeric = float(gold_data.replace(',', ''))
         
