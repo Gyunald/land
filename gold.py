@@ -60,7 +60,7 @@ if __name__ == "__main__":
     
     gold_data2 = float(gold_data.replace(',', ''))
 
-    bt = st.button(f"##### 현재 금 시세 조회:\n {gold_data2:,.0f}/g", type='tertiary', use_container_width=True)
+    bt = st.button(f"## 현재 금 시세 조회:\n {gold_data2:,.0f}/g", type='tertiary', use_container_width=True)
 
     if bt:
         gold_data = scrape_naver_gold_prices(url)
