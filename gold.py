@@ -269,23 +269,24 @@ def main():
                 st.toast("직접 입력 모드입니다. 금 시세를 수동으로 입력하세요.", icon='ℹ️')
         
         # 금 시세 표시 및 직접 입력 모드 전환
-        price_col1, price_col2 = st.columns(2)
+        # price_col1, price_col2 = st.columns(2)
         
-        with price_col2:
-            # 올바른 방법으로 on_click 설정 - 함수 자체를 전달하고 호출하지 않음
-            manual_mode = st.button(f'### {gold_price_numeric:,.0f}원/g', 
-                                   use_container_width=True, 
-                                   type='tertiary', 
-                                   on_click=change_mode)
+        # with price_col2:
+        #     # 올바른 방법으로 on_click 설정 - 함수 자체를 전달하고 호출하지 않음
+        #     manual_mode = st.button(f'### {gold_price_numeric:,.0f}원/g', 
+        #                            use_container_width=True, 
+        #                            type='tertiary', 
+        #                            on_click=change_mode)
         
-        with price_col1:
-            if st.session_state.manual_price_mode:
-                manual_price = st.number_input('금 시세 직접 입력(원/g)', 
-                                            value=int(gold_price_numeric), 
-                                            step=1000,
-                                            min_value=0,
-                                            format="%d")
-                gold_price_numeric = manual_price
+    # with price_col1:
+        if st.session_state.manual_price_mode:
+            manual_price = st.number_input('금 시세(원/g)', 
+                                        value=int(gold_price_numeric), 
+                                        step=1000,
+                                        min_value=0,
+                                        format="%d",
+                                        label_visibility="collapsed")
+            gold_price_numeric = manual_price
                 
         col1, col2 = st.columns(2)
         
