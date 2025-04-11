@@ -1,20 +1,18 @@
-
 # import requests
 # from bs4 import BeautifulSoup
-# import pandas as pd
 # import streamlit as st
 
-# # st.markdown('''
-# # <style>
-# # .stApp [data-testid="stHeader"] {visibility: hidden;}
-# # div[class^='block-container'] { padding-top: 1rem; }
-# # </style>
-# # ''', unsafe_allow_html=True)
+# st.markdown('''
+# <style>
+# .stApp [data-testid="stHeader"] {visibility: hidden;}
+# div[class^='block-container'] { padding-top: 1rem; }
+# </style>
+# ''', unsafe_allow_html=True)
 
 # # 세션 상태 초기화
 # if 'gold_price' not in st.session_state:
 #     st.session_state.gold_price = None
-    
+
 # def scrape_naver_gold_prices(url='https://finance.naver.com/marketindex/goldDailyQuote.naver'):
 #     """네이버 금융에서 금 시세를 스크랩하는 함수"""
 #     headers = {
@@ -78,8 +76,6 @@
 #     return gold_weight, gold_value
 
 # def main():
-#     # st.title("금 시세 계산기")
-    
 #     # 초기 금 시세 가져오기
 #     url = 'https://finance.naver.com/marketindex/goldDailyQuote.naver'
 #     if st.session_state.gold_price == None:
@@ -92,18 +88,23 @@
 #         gold_data = st.session_state.gold_price
 #         gold_price_numeric = float(gold_data.replace(',', ''))
 
-#         if st.button(f'# 현재 금 시세 조회하기', use_container_width=True, type='primary'):
+#         refresh_button = st.button(f'# 현재 금 시세 조회하기', use_container_width=True, type='primary')
+#         if refresh_button:
 #             st.toast("금 시세가 갱신되었습니다.", icon='🌟')
 #             gold_data = scrape_naver_gold_prices(url)
             
 #             if gold_data:
 #                 st.session_state.gold_price = gold_data
 #                 gold_price_numeric = float(gold_data.replace(',', ''))
+
+#         manual_price = st.number_input('금 시세(원/g)', 
+#                                     value=int(gold_price_numeric), 
+#                                     step=1000,
+#                                     min_value=0,
+#                                     format="%d",
+#                                     label_visibility="collapsed")
+#         gold_price_numeric = manual_price
                 
-#         bt = st.button(f'{gold_price_numeric:,.0f}/g', use_container_width=True, type='tertiary')
-#         if bt :
-#             aaa = st.number_input('직접입력',value=0)
-            
 #         col1, col2 = st.columns(2)
         
 #         with col1:
@@ -140,8 +141,9 @@
 #             st.metric("예상 가격", f"{gold_value:,.0f}원")
         
 #         # 상세 정보
-#         with st.expander("상세 정보",expanded=True):
-#             st.write(f"- 현재 금 시세: {gold_price_numeric:,.2f}원/g")
+#         with st.expander("상세 정보", expanded=True):
+#             st.write(f"- 현재 금 시세: {gold_price_numeric:,.2f}원/g" + 
+#                     (" (직접 입력)" if st.session_state.manual_price_mode else ""))
 #             st.write(f"- 함량: {purity} (순도: {'58.5%' if purity=='14k' else '75.00%' if purity=='18k' else '99.99%'})")
 #             if unit == '돈':
 #                 st.write(f"- 입력 중량: {weight:.2f}돈 ({weight*3.75:.2f}g)")
@@ -156,15 +158,7 @@
 
 import requests
 from bs4 import BeautifulSoup
-import pandas as pd
 import streamlit as st
-
-# st.markdown('''
-# <style>
-# .stApp [data-testid="stHeader"] {visibility: hidden;}
-# div[class^='block-container'] { padding-top: 1rem; }
-# </style>
-# ''', unsafe_allow_html=True)
 
 # 세션 상태 초기화
 if 'gold_price' not in st.session_state:
@@ -177,30 +171,23 @@ def scrape_naver_gold_prices(url='https://finance.naver.com/marketindex/goldDail
     }
     try:
         response = requests.get(url, headers=headers)
-        response.raise_for_status()  # 오류 발생 시 예외 발생
+        response.raise_for_status()
         
         soup = BeautifulSoup(response.content, 'html.parser')
         table = soup.find('table', class_='tbl_exchange')
         
         if not table:
-            st.error("금 시세 테이블을 찾을 수 없습니다.")
             return None
         
         rows = table.find('tbody').find_all('tr')
         for row in rows:
             price_cells = row.find_all('td', class_='num')
             if len(price_cells) >= 1:
-                price_text = price_cells[0].text.strip()
-                return price_text
+                return price_cells[0].text.strip()
         
-        st.error("시세 정보를 찾을 수 없습니다.")
         return None
     
-    except requests.exceptions.RequestException as e:
-        st.error(f"웹페이지 요청 중 오류 발생: {e}")
-        return None
-    except Exception as e:
-        st.error(f"데이터 처리 중 오류 발생: {e}")
+    except Exception:
         return None
 
 def calculate_gold_value(purity, unit, weight, diamond_weight, gold_price_per_gram):
@@ -235,17 +222,17 @@ def calculate_gold_value(purity, unit, weight, diamond_weight, gold_price_per_gr
 def main():
     # 초기 금 시세 가져오기
     url = 'https://finance.naver.com/marketindex/goldDailyQuote.naver'
-    if st.session_state.gold_price == None:
+    if st.session_state.gold_price is None:
         gold_data = scrape_naver_gold_prices(url)
         if gold_data:
             st.session_state.gold_price = gold_data
     
     # 금 시세 표시
-    if st.session_state.gold_price != None:
+    if st.session_state.gold_price is not None:
         gold_data = st.session_state.gold_price
         gold_price_numeric = float(gold_data.replace(',', ''))
 
-        refresh_button = st.button(f'# 현재 금 시세 조회하기', use_container_width=True, type='primary')
+        refresh_button = st.button('# 현재 금 시세 조회하기', use_container_width=True, type='primary')
         if refresh_button:
             st.toast("금 시세가 갱신되었습니다.", icon='🌟')
             gold_data = scrape_naver_gold_prices(url)
@@ -265,7 +252,7 @@ def main():
         col1, col2 = st.columns(2)
         
         with col1:
-            purity = st.radio('함량', ['14k', '18k', '24k'], label_visibility="collapsed", horizontal=True,)
+            purity = st.radio('함량', ['14k', '18k', '24k'], label_visibility="collapsed", horizontal=True)
 
         with col2:
             unit = st.radio('단위', ['돈', 'g'], label_visibility="collapsed", horizontal=True)
@@ -274,7 +261,6 @@ def main():
         col1, col2 = st.columns(2)
         with col1:
             weight = st.number_input('중량', value=0.00, step=0.01, min_value=0.0, format="%.2f")
-
             
         with col2:
             diamond_weight = st.number_input('다이아몬드 중량 (캐럿)', 
@@ -299,8 +285,7 @@ def main():
         
         # 상세 정보
         with st.expander("상세 정보", expanded=True):
-            st.write(f"- 현재 금 시세: {gold_price_numeric:,.2f}원/g" + 
-                    (" (직접 입력)" if st.session_state.manual_price_mode else ""))
+            st.write(f"- 현재 금 시세: {gold_price_numeric:,.2f}원/g")
             st.write(f"- 함량: {purity} (순도: {'58.5%' if purity=='14k' else '75.00%' if purity=='18k' else '99.99%'})")
             if unit == '돈':
                 st.write(f"- 입력 중량: {weight:.2f}돈 ({weight*3.75:.2f}g)")
