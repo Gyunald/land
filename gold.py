@@ -15,9 +15,9 @@ div[class^='block-container'] { padding-top: 1rem; }
 if 'gold_price' not in st.session_state:
     st.session_state.gold_price = 0
 if 'weight' not in st.session_state:
-    st.session_state.weight = 0.00
+    st.session_state.weight = None
 if 'diamond_weight' not in st.session_state:
-    st.session_state.diamond_weight = 0.00
+    st.session_state.diamond_weight = None
     
 def scrape_naver_gold_prices(url='https://finance.naver.com/marketindex/goldDailyQuote.naver'):
     """네이버 금융에서 금 시세를 스크랩하는 함수"""
