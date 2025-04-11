@@ -241,10 +241,6 @@ def calculate_gold_value(purity, unit, weight, diamond_weight, gold_price_per_gr
     
     return gold_weight, gold_value
 
-# 이 함수는 더 이상 필요하지 않음 (체크박스를 사용하기 때문)
-# def toggle_manual_price_mode():
-#     st.session_state.manual_price_mode = not st.session_state.manual_price_mode
-
 def main():
     # st.title("금 시세 계산기")
     
@@ -276,11 +272,11 @@ def main():
         price_col1, price_col2 = st.columns(2)
         
         with price_col2:
-            # manual_mode = st.checkbox("직접입력", value=st.session_state.manual_price_mode)
-            manual_mode = st.button(f'### {gold_price_numeric:,.0f}원/g', use_container_width=True, type='tertiary', on_click=change_mode())
-            # # 체크박스 상태가 변경되면 세션 상태 업데이트
-            # if manual_mode:
-            #     st.session_state.manual_price_mode = True
+            # 올바른 방법으로 on_click 설정 - 함수 자체를 전달하고 호출하지 않음
+            manual_mode = st.button(f'### {gold_price_numeric:,.0f}원/g', 
+                                   use_container_width=True, 
+                                   type='tertiary', 
+                                   on_click=change_mode)
         
         with price_col1:
             if st.session_state.manual_price_mode:
@@ -290,8 +286,6 @@ def main():
                                             min_value=0,
                                             format="%d")
                 gold_price_numeric = manual_price
-            # else:
-            #     st.write(f'### {gold_price_numeric:,.0f}원/g')
                 
         col1, col2 = st.columns(2)
         
