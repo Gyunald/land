@@ -172,7 +172,13 @@ if 'gold_price' not in st.session_state:
     
 if 'manual_price_mode' not in st.session_state:
     st.session_state.manual_price_mode = False
-    
+
+def change_mode():
+    if st.session_state.manual_price_mode == False:
+        st.session_state.manual_price_mode = True
+    else:
+        st.session_state.manual_price_mode = False
+
 def scrape_naver_gold_prices(url='https://finance.naver.com/marketindex/goldDailyQuote.naver'):
     """네이버 금융에서 금 시세를 스크랩하는 함수"""
     headers = {
@@ -267,14 +273,14 @@ def main():
                 st.toast("직접 입력 모드입니다. 금 시세를 수동으로 입력하세요.", icon='ℹ️')
         
         # 금 시세 표시 및 직접 입력 모드 전환
-        price_col1, price_col2 = st.columns([4, 1])
+        price_col1, price_col2 = st.columns(2)
         
         with price_col2:
             # manual_mode = st.checkbox("직접입력", value=st.session_state.manual_price_mode)
-            manual_mode = st.button(f'### {gold_price_numeric:,.0f}원/g', use_container_width=True, type='tertiary')
-            # 체크박스 상태가 변경되면 세션 상태 업데이트
-            if manual_mode:
-                st.session_state.manual_price_mode = True
+            manual_mode = st.button(f'### {gold_price_numeric:,.0f}원/g', use_container_width=True, type='tertiary', on_click=change_mode())
+            # # 체크박스 상태가 변경되면 세션 상태 업데이트
+            # if manual_mode:
+            #     st.session_state.manual_price_mode = True
         
         with price_col1:
             if st.session_state.manual_price_mode:
