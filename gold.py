@@ -179,7 +179,7 @@ def calculate_gold_value(purity, unit, weight, diamond_weight, gold_price_per_gr
     return gold_weight, gold_value
 
 def main():
-    st.title("금 시세 계산기")
+    # st.title("금 시세 계산기")
     
     # 초기 금 시세 가져오기
     url = 'https://finance.naver.com/marketindex/goldDailyQuote.naver'
@@ -205,10 +205,10 @@ def main():
                     # st.rerun()
         
         with col2:
-            st.button(f"{gold_price_numeric:,.0f}/g", type='primary', disabled=True)
+            st.button(f"{gold_price_numeric:,.0f}/g", type='tertiary')
         
         # 사용자 입력 영역
-        st.subheader("계산 설정")
+        # st.subheader("계산 설정")
         col1, col2 = st.columns(2)
         
         with col1:
@@ -236,7 +236,7 @@ def main():
         )
         
         # 결과 표시
-        st.subheader("계산 결과")
+        # st.subheader("계산 결과")
         col1, col2 = st.columns(2)
         
         with col1:
@@ -256,13 +256,13 @@ def main():
             
             if diamond_weight > 0:
                 st.write(f"- 다이아몬드 중량: {diamond_weight:.2f}캐럿 ({diamond_weight*0.2:.2f}g)")
-    else:
-        st.error("금 시세를 가져올 수 없습니다. 다시 시도해주세요.")
-        if st.button('시세 다시 가져오기'):
-            gold_data = scrape_naver_gold_prices(url)
-            if gold_data:
-                st.session_state.gold_price = gold_data
-                st.rerun()
+    # else:
+    #     st.error("금 시세를 가져올 수 없습니다. 다시 시도해주세요.")
+    #     if st.button('시세 다시 가져오기'):
+    #         gold_data = scrape_naver_gold_prices(url)
+    #         if gold_data:
+    #             st.session_state.gold_price = gold_data
+    #             st.rerun()
 
 if __name__ == "__main__":
     main()
