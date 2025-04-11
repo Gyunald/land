@@ -226,7 +226,7 @@ def main():
                                              value=0.0, 
                                              step=0.1, 
                                              min_value=0.0,
-                                             format="%.2f", 
+                                             format="%.1f", 
                                              help='※ 1부 = 0.1캐럿')
         
         # 계산 실행
