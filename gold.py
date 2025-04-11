@@ -200,7 +200,7 @@ def main():
                 if gold_data:
                     st.session_state.gold_price = gold_data
                     gold_price_numeric = float(gold_data.replace(',', ''))
-                    st.toast("금 시세가 갱신되었습니다.")
+                    st.toast("금 시세가 갱신되었습니다.", icon='🌟')
                     # # 페이지 리프레시
                     # st.rerun()
         
@@ -212,20 +212,20 @@ def main():
         col1, col2 = st.columns(2)
         
         with col1:
-            purity = st.radio('함량', ['14k', '18k', '24k'], horizontal=True)
+            purity = st.radio('함량', ['14k', '18k', '24k'], label_visibility="collapsed", horizontal=True,)
         
         with col2:
-            unit = st.radio('단위', ['돈', 'g'], horizontal=True)
+            unit = st.radio('단위', ['돈', 'g'], label_visibility="hidden", horizontal=True)
         
         # 무게 입력
         col1, col2 = st.columns(2)
         with col1:
-            weight = st.number_input('중량', value=1.0, step=0.1, min_value=0.0, format="%.2f")
+            weight = st.number_input('중량', value=0.0, step=0.01, min_value=0.0, format="%.2f")
         
         with col2:
             diamond_weight = st.number_input('다이아몬드 중량 (캐럿)', 
                                              value=0.0, 
-                                             step=0.1, 
+                                             step=0.01, 
                                              min_value=0.0,
                                              format="%.2f", 
                                              help='※ 1부 = 0.1캐럿')
