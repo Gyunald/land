@@ -104,7 +104,10 @@ def main():
         bt = e.button(f'{gold_price_numeric:,.0f}/g', use_container_width=True, type='tertiary')
         if bt :
             e.empty()
-            bt = e.number_input('직접입력',value=0)
+            gold_price_numeric = st.number_input('직접입력',value=0)
+            gold_price_numeric = float(gold_data.replace(',', ''))
+
+
             
         col1, col2 = st.columns(2)
         
