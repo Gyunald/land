@@ -116,7 +116,7 @@ def main():
         col1, col2 = st.columns(2)
         with col1:
             weight = st.number_input('중량', value=st.session_state.weight, step=0.01, min_value=0.0, format="%.2f")
-            st.session_state.diamond_weight = weight
+            st.session_state.weight = weight
             
         with col2:
             diamond_weight = st.number_input('다이아몬드 중량 (캐럿)', 
