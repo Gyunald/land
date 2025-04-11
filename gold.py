@@ -113,37 +113,12 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import streamlit as st
 
-if max_width_100_percent:
-    max_width_str = f'max-width: 100%;'
-else:
-    max_width_str = f'max-width: {max_width}px;'
-st.markdown(
-    f'''
-    <style>
-        .reportview-container .sidebar-content {{
-            padding-top: {padding_top}rem;
-        }}
-        .reportview-container .main .block-container {{
-            {max_width_str}
-            padding-top: {padding_top}rem;
-            padding-right: {padding_right}rem;
-            padding-left: {padding_left}rem;
-            padding-bottom: {padding_bottom}rem;
-        }}
-        .reportview-container .main {{
-            color: {color};
-            background-color: {background_color};
-        }}
-    </style>
-    ''',
-    unsafe_allow_html=True,
-)
-# st.markdown('''
-# <style>
-# .stApp [data-testid="stHeader"] {visibility: hidden;}
-# div[class^='block-container'] { padding-top: 1rem; }
-# </style>
-# ''', unsafe_allow_html=True)
+st.markdown('''
+<style>
+.stApp [data-testid="stHeader"] {visibility: hidden;}
+div[class^='block-container'] { padding-top: 1rem; }
+</style>
+''', unsafe_allow_html=True)
 
 # 세션 상태 초기화
 if 'gold_price' not in st.session_state:
