@@ -284,7 +284,7 @@ def main():
         with price_col2:
             mode_button = st.toggle("직접입력")
             
-            if mode_button :
+            if not mode_button :
                 st.session_state.manual_price_mode = True
             else:
                 st.session_state.manual_price_mode = False
