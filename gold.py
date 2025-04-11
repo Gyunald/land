@@ -219,14 +219,14 @@ def main():
         # 무게 입력
         col1, col2 = st.columns(2)
         with col1:
-            weight = st.number_input('중량', value=0.0, step=0.01, min_value=0.0, format=%.2f)
+            weight = st.number_input('중량', value=0.0, step=0.01, min_value=0.0, format="%.2f")
         
         with col2:
             diamond_weight = st.number_input('다이아몬드 중량 (캐럿)', 
                                              value=0.0, 
                                              step=0.1,
                                              min_value=0.0,
-                                             format=%.2f,
+                                             format="%.2f",
                                              help='※ 1부 = 0.1캐럿')
         
         # 계산 실행
