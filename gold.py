@@ -60,8 +60,8 @@ if __name__ == "__main__":
     
     gold_data2 = float(gold_data.replace(',', ''))
 
-    bt = st.button(f"### :orange[현재 금 시세 조회]\n {gold_data2:,.0f}/g", type='tertiary', use_container_width=True)
-
+    bt = st.button(f"### 현재 금 시세 조회하기\n {gold_data2:,.0f}/g", use_container_width=True)
+    #type='tertiary'
     if bt:
         gold_data = scrape_naver_gold_prices(url)
         st.session_state.gold = gold_data
@@ -101,6 +101,6 @@ if __name__ == "__main__":
             weight_in_grams = weight * 3.75
             gold_weight = max(0, (weight_in_grams - diamond_weight_in_grams) * purity_factor)
             result = gold_weight * gold_price_per_gram
-            st.info(f"\n순수 금 중량: {gold_weight:.2f}g\n###### :orange[KRW: {result:,.0f}원]")
+            st.info(f""###### 순수 금 중량: {gold_weight:.2f}g\n###### :orange[KRW: {result:,.0f}원]")
             
-            #함량: {a}\n총 중량: {weight_in_grams:.2f}g\n다이아몬드 중량: {diamond_weight_in_grams:.2f}g 
+            #함량: {a}\n총 중량: {weight_in_grams:.2f}g\n다이아몬드 중량: {diamond_weight_in_grams:.2f}g\n
