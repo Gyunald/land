@@ -94,8 +94,9 @@ def main():
         gold_price_numeric = float(gold_data.replace(',', ''))
         
         if st.button(f'# 현재 금 시세 조회하기\n {gold_price_numeric:,.0f}/g', use_container_width=True):
-            gold_data = scrape_naver_gold_prices(url)
             st.toast("금 시세가 갱신되었습니다.", icon='🌟')
+            gold_data = scrape_naver_gold_prices(url)
+            
             if gold_data:
                 st.session_state.gold_price = gold_data
                 gold_price_numeric = float(gold_data.replace(',', ''))
