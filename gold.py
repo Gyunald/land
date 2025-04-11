@@ -99,7 +99,7 @@ def main():
                 st.session_state.gold_price = gold_data
                 gold_price_numeric = float(gold_data.replace(',', ''))
                 st.rerun()
-            st.toast("금 시세가 갱신되었습니다.", icon='🌟')
+        st.toast("금 시세가 갱신되었습니다.", icon='🌟')
                 
         col1, col2 = st.columns(2)
         
