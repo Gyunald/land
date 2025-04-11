@@ -270,7 +270,7 @@ def main():
         price_col1, price_col2 = st.columns([4, 1])
         
         with price_col2:
-            manual_mode = st.checkbox("직접입력", value=st.session_state.manual_price_mode)
+            manual_mode = st.toggle("직접입력", value=st.session_state.manual_price_mode)
             # 체크박스 상태가 변경되면 세션 상태 업데이트
             if manual_mode != st.session_state.manual_price_mode:
                 st.session_state.manual_price_mode = manual_mode
