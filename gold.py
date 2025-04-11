@@ -55,8 +55,6 @@ if __name__ == "__main__":
         pass
 
     #bt = st.button('실시간 금 시세 갱신',use_container_width=False,type='primary')
-    
-    gold_data2 = float(gold_data.replace(',', ''))
 
     bt = st.button('현재 금 시세 조회하기', use_container_width=False)
     bt2 = st.button(f"{gold_data2:,.0f}/g", type='tertiary',)
@@ -68,6 +66,7 @@ if __name__ == "__main__":
         st.session_state.gold = gold_data
         
     gold_data = st.session_state.gold
+    gold_data2 = float(gold_data.replace(',', ''))
     
     # c1,c2 = st.columns(2)
     if gold_data is not None:
