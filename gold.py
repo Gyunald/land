@@ -117,6 +117,7 @@ def main():
         with col1:
             weight = st.number_input('중량', value=st.session_state.weight, step=0.01, min_value=0.0, format="%.2f")
             st.session_state.weight = weight
+            weight = st.session_state.weight
             
         with col2:
             diamond_weight = st.number_input('다이아몬드 중량 (캐럿)', 
@@ -127,7 +128,7 @@ def main():
                                              help='※ 1부 = 0.1캐럿')
             
             st.session_state.diamond_weight = diamond_weight
-        
+            diamond_weight = st.session_state.diamond_weight
         # 계산 실행
         gold_weight, gold_value = calculate_gold_value(
             purity, unit, weight, diamond_weight, gold_price_numeric
