@@ -108,7 +108,7 @@ def main():
             
 
             # gold_price_numeric = float(aaa.replace(',', ''))
-        aaa
+            aaa
         col1, col2 = st.columns(2)
         
         with col1:
