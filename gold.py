@@ -200,27 +200,18 @@ def main():
         gold_data = st.session_state.gold_price
         gold_price_numeric = float(gold_data.replace(',', ''))
         
-        col1, col2 = st.columns(2)
-        with col1:
-            if st.button('현재 금 시세 조회하기', use_container_width=True):
-                gold_data = scrape_naver_gold_prices(url)
-                if gold_data:
-                    st.session_state.gold_price = gold_data
-                    gold_price_numeric = float(gold_data.replace(',', ''))
-                    st.toast("금 시세가 갱신되었습니다.", icon='🌟')
-                    # # 페이지 리프레시
-                    # st.rerun()
-        
-        with col2:
-            st.button(f"{gold_price_numeric:,.0f}/g", type='tertiary', use_container_width=True)
-        
-        # 사용자 입력 영역
-        # st.subheader("계산 설정")
+        if st.button(f'# 현재 금 시세 조회하기\n {gold_price_numeric:,.0f}/g"', use_container_width=True):
+            gold_data = scrape_naver_gold_prices(url)
+            if gold_data:
+                st.session_state.gold_price = gold_data
+                gold_price_numeric = float(gold_data.replace(',', ''))
+                st.toast("금 시세가 갱신되었습니다.", icon='🌟')
+
         col1, col2 = st.columns(2)
         
         with col1:
             purity = st.radio('함량', ['14k', '18k', '24k'], label_visibility="collapsed", horizontal=True,)
-            purity
+
         with col2:
             unit = st.radio('단위', ['돈', 'g'], label_visibility="collapsed", horizontal=True)
         
