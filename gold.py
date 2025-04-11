@@ -123,7 +123,11 @@ div[class^='block-container'] { padding-top: 1rem; }
 # 세션 상태 초기화
 if 'gold_price' not in st.session_state:
     st.session_state.gold_price = 0
-
+if 'weight' not in st.session_state:
+    st.session_state.weight = 0
+if 'weight' not in st.session_state:
+    st.session_state.diamond_weight = 0
+    
 def scrape_naver_gold_prices(url='https://finance.naver.com/marketindex/goldDailyQuote.naver'):
     """네이버 금융에서 금 시세를 스크랩하는 함수"""
     headers = {
@@ -205,9 +209,10 @@ def main():
             gold_data = scrape_naver_gold_prices(url)
             if gold_data:
                 st.session_state.gold_price = gold_data
-                gold_price_numeric = float(gold_data.replace(',', ''))      
+                gold_price_numeric = float(gold_data.replace(',', ''))
+                st.rerun()
                 st.toast("금 시세가 갱신되었습니다.", icon='🌟')
-                # st.rerun()
+                
         col1, col2 = st.columns(2)
         
         with col1:
@@ -219,15 +224,18 @@ def main():
         # 무게 입력
         col1, col2 = st.columns(2)
         with col1:
-            weight = st.number_input('중량', value=0.0, step=0.01, min_value=0.0, format="%.2f")
-        
+            weight = st.number_input('중량', value=st.session_state.diamond_weight, step=0.01, min_value=0.0, format="%.2f")
+            st.session_state.diamond_weight = weight
+            
         with col2:
             diamond_weight = st.number_input('다이아몬드 중량 (캐럿)', 
-                                             value=0.0, 
+                                             value=st.session_state.diamond_weight, 
                                              step=0.1,
                                              min_value=0.0,
                                              format="%.2f",
                                              help='※ 1부 = 0.1캐럿')
+            
+            st.session_state.diamond_weight = diamond_weight
         
         # 계산 실행
         gold_weight, gold_value = calculate_gold_value(
