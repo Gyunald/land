@@ -255,35 +255,35 @@ def main():
         gold_price_numeric = float(gold_data.replace(',', ''))
 
         if st.button(f'# 현재 금 시세 조회하기', use_container_width=True, type='primary'):
-            if st.session_state.manual_price_mode:
+            if not st.session_state.manual_price_mode:
                 st.toast("금 시세가 갱신되었습니다.", icon='🌟')
                 gold_data = scrape_naver_gold_prices(url)
                 
                 if gold_data:
                     st.session_state.gold_price = gold_data
                     gold_price_numeric = float(gold_data.replace(',', ''))
-            # else:
-            #     st.toast("직접 입력 모드입니다. 금 시세를 수동으로 입력하세요.", icon='ℹ️')
+            else:
+                st.toast("직접 입력 모드입니다. 금 시세를 수동으로 입력하세요.", icon='ℹ️')
         
         # 금 시세 표시 및 직접 입력 모드 전환
-        # price_col1, price_col2 = st.columns([4, 1])
+        price_col1, price_col2 = st.columns([4, 1])
         
-    # with price_col1:
-        if st.session_state.manual_price_mode:
-            manual_price = st.number_input('금 시세 직접 입력(원/g)', 
-                                        value=int(gold_price_numeric), 
-                                        step=1000,
-                                        min_value=0,
-                                        format="%d")
-            gold_price_numeric = manual_price
-        else:
-            bt = st.button(f'{gold_price_numeric:,.0f}원/g', use_container_width=True, type='tertiary')
-            if bt:
-                toggle_manual_price_mode()
+        with price_col1:
+            if st.session_state.manual_price_mode:
+                manual_price = st.number_input('금 시세 직접 입력(원/g)', 
+                                            value=int(gold_price_numeric), 
+                                            step=1000,
+                                            min_value=0,
+                                            format="%d")
+                gold_price_numeric = manual_price
+            else:
+                bt = st.button(f'{gold_price_numeric:,.0f}원/g', use_container_width=True, type='tertiary')
+                if bt:
+                    toggle_manual_price_mode()
         
-        # with price_col2:
-        #     mode_button = st.button("직접입력" if not st.session_state.manual_price_mode else "자동모드", 
-        #                             on_click=toggle_manual_price_mode)
+        with price_col2:
+            mode_button = st.button("직접입력" if not st.session_state.manual_price_mode else "자동모드", 
+                                    on_click=toggle_manual_price_mode, type='tertiary')
                 
         col1, col2 = st.columns(2)
         
