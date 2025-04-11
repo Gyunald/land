@@ -112,13 +112,13 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 import streamlit as st
-hide_st_style = “”"
+hide_st_style = """
 
 #MainMenu {visibility: hidden;}
 footer {visibility: hidden;}
 header {visibility: hidden;}
 
-“”"
+"""
 st.markdown(hide_st_style, unsafe_allow_html=True)
 # 세션 상태 초기화
 if 'gold_price' not in st.session_state:
