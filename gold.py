@@ -182,7 +182,7 @@ def calculate_gold_value(purity, unit, weight, diamond_weight, gold_price_per_gr
     
     # 금 가격 계산
     gold_value = gold_weight * (gold_price_per_gram / purity_factor)
-    
+    gold_value
     return gold_weight, gold_value
 
 def main():
@@ -200,7 +200,7 @@ def main():
         gold_data = st.session_state.gold_price
         gold_price_numeric = float(gold_data.replace(',', ''))
         
-        if st.button(f'# 현재 금 시세 조회하기\n {gold_price_numeric:,.0f}/g"', use_container_width=True):
+        if st.button(f'# 현재 금 시세 조회하기\n {gold_price_numeric:,.0f}/g', use_container_width=True):
             gold_data = scrape_naver_gold_prices(url)
             if gold_data:
                 st.session_state.gold_price = gold_data
