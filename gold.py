@@ -3,7 +3,6 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 import streamlit as st
-import time
 
 # st.markdown('''
 # <style>
@@ -93,15 +92,14 @@ def main():
         gold_data = st.session_state.gold_price
         gold_price_numeric = float(gold_data.replace(',', ''))
         
-        if st.button(f'# 현재 금 시세 조회하기', use_container_width=True):
+        if st.button(f'# 현재 금 시세 조회하기', use_container_width=True, type='secondary'):
             st.toast("금 시세가 갱신되었습니다.", icon='🌟')
             gold_data = scrape_naver_gold_prices(url)
             
             if gold_data:
                 st.session_state.gold_price = gold_data
                 gold_price_numeric = float(gold_data.replace(',', ''))
-                time.sleep(.1)
-                
+
         st.button(f'{gold_price_numeric:,.0f}/g', use_container_width=True, type='tertiary')
         
         col1, col2 = st.columns(2)
@@ -140,7 +138,7 @@ def main():
             st.metric("예상 가격", f"{gold_value:,.0f}원")
         
         # 상세 정보
-        with st.expander("상세 정보"):
+        with st.expander("상세 정보",expanded=True):
             st.write(f"- 현재 금 시세: {gold_price_numeric:,.2f}원/g")
             st.write(f"- 함량: {purity} (순도 계수: {0.58 if purity=='14k' else 0.75 if purity=='18k' else 1.0})")
             if unit == '돈':
