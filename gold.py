@@ -96,7 +96,7 @@ def main():
                                     value=int(gold_price_numeric), 
                                     step=1000,
                                     min_value=0,
-                                    format="%,d",
+                                    format="%d,",
                                     label_visibility="collapsed")
         gold_price_numeric = manual_price
                 
