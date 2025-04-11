@@ -52,7 +52,7 @@ def calculate_gold_value(purity, unit, weight, diamond_weight, gold_price_per_gr
     """금 가치를 계산하는 함수"""
     # 순도 계수 설정
     purity_factors = {
-        '14k': 0.585,
+        '14k': 0.5833,
         '18k': 0.75,
         '24k': 1.0
     }
@@ -140,7 +140,7 @@ def main():
         # 상세 정보
         with st.expander("상세 정보",expanded=True):
             st.write(f"- 현재 금 시세: {gold_price_numeric:,.2f}원/g")
-            st.write(f"- 함량: {purity} (순도: {'58.5%' if purity=='14k' else '75%' if purity=='18k' else '99.99%'})")
+            st.write(f"- 함량: {purity} (순도: {'58.33%' if purity=='14k' else '75%' if purity=='18k' else '99.99%'})")
             if unit == '돈':
                 st.write(f"- 입력 중량: {weight:.2f}돈 ({weight*3.75:.2f}g)")
             else:
