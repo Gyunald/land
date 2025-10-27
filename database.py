@@ -180,7 +180,7 @@ import threading
 
 urls= {'매매' : 'http://apis.data.go.kr/1613000/RTMSDataSvcAptTradeDev/getRTMSDataSvcAptTradeDev', '임대' : 'http://apis.data.go.kr/1613000/RTMSDataSvcAptRent/getRTMSDataSvcAptRent'}
 
-user_key = '3eOnAkVjvK966MbeTAVERd%2Fbmv0OmPtDl0u%2BprDb96wKHePnJWANhz%2B4xUGls%2FKBO0JbDu%2BI8rg%2FzD4WBwLtGg%3D%3D'
+user_key = '70249309062bbcc450b5657c998230859db307752081dac307da5858b9fb147e'
 rows = '9999'
 
 this_month = (datetime.now() + timedelta(hours=9)).date()
@@ -541,3 +541,4 @@ for i in list_range:
     for doc in target:
         doc.reference.delete()
 st.write("모든 데이터 처리가 완료되었습니다.")
+
