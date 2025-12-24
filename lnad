@@ -1,0 +1,406 @@
+import streamlit as st
+import pandas as pd
+import requests
+import json
+import os
+import time
+from typing import Dict, List, Optional, Tuple
+from datetime import datetime
+
+# ==================== 상수 정의 ====================
+
+
+APT_NUM = 116750
+API_URL_TEMPLATE = 'https://m.land.naver.com/complex/getComplexArticleList?hscpNo={APT_NUM}&tradTpcd=b1&order=spc_&page={i}'
+DATA_FILE = 'data.txt'
+MAX_PAGES = 100
+REQUEST_TIMEOUT = 10
+DELAY_BETWEEN_REQUESTS = 1
+HEADERS = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+}
+
+# ==================== 세션 상태 초기화 ====================
+if 'data' not in st.session_state:
+    st.session_state.data = None
+if 'df' not in st.session_state:
+    st.session_state.df = None
+if 'last_update' not in st.session_state:
+    st.session_state.last_update = None
+
+
+# ==================== 데이터 처리 함수 ====================
+
+@st.cache_data(ttl=3600, show_spinner=False)
+def create_dataframe(data: Dict) -> pd.DataFrame:
+    """JSON 데이터를 pandas DataFrame으로 변환 (1시간 캐싱)"""
+    
+    if not isinstance(data, dict) or 'result' not in data or 'list' not in data['result']:
+        return pd.DataFrame()
+        
+    apt_list = data['result']['list']
+    if not apt_list:
+        return pd.DataFrame()
+    
+    processed_data = []
+    for apt in apt_list:
+        # 전용면적 추출 (숫자형으로 변환)
+        try:
+            exclusive_area = float(apt.get('spc2', '0'))
+        except (ValueError, TypeError):
+            exclusive_area = 0.0
+
+        # 매물명 생성
+        atcl_nm = apt.get('atclNm', 'N/A')
+        bild_nm = apt.get('bildNm', 'N/A')
+        prc_info = apt.get('prcInfo', 'N/A')
+        trad_tp_nm = apt.get('tradTpNm', 'N/A')
+        name = f"{atcl_nm} {bild_nm} - {prc_info} ({trad_tp_nm})"
+        
+        # 면적 정보
+        area_info = f"{apt.get('spc1', 'N/A')}㎡ / {apt.get('spc2', 'N/A')}㎡"
+        
+        # 층 정보 처리
+        floor_info = apt.get('flrInfo', 'N/A')
+        if floor_info != 'N/A' and '/' in str(floor_info):
+            floor_info = floor_info.replace('/', '층 중 ') + '층'
+        
+        # 태그 처리
+        tags = ", ".join(apt.get('tagList', []))
+        
+        processed_data.append({
+            '매물번호': apt.get('atclNo', 'N/A'),
+            '매물명': name,
+            '거래유형': trad_tp_nm,
+            '아파트명': atcl_nm,
+            '동': bild_nm,
+            '가격': prc_info,
+            '면적': area_info,
+            '전용면적': exclusive_area,
+            '층수': floor_info,
+            '방향': apt.get('direction', 'N/A'),
+            '특징': apt.get('atclFetrDesc', ''),
+            '확인일': apt.get('cfmYmd', 'N/A'),
+            '중개사': apt.get('rltrNm', 'N/A'),
+            '태그': tags
+        })
+        
+    return pd.DataFrame(processed_data)
+
+
+def download_all_pages(url_template: str, max_pages: int = MAX_PAGES) -> Optional[Dict]:
+    """API에서 모든 페이지 데이터를 수집"""
+    
+    st.info("🔄 API에서 데이터를 다운로드하는 중...")
+    
+    all_apt_list = []
+    page = 1
+    
+    progress_bar = st.progress(0)
+    status_text = st.empty()
+
+    session = requests.Session()
+    session.headers.update(HEADERS)
+
+    while page <= max_pages:
+        url = url_template.format(i=page)
+        
+        try:
+            status_text.text(f"📄 페이지 {page} 처리 중...")
+            response = session.get(url, timeout=REQUEST_TIMEOUT)
+            response.raise_for_status()
+            json_data = response.json()
+            
+            current_list = json_data.get('result', {}).get('list', [])
+            is_last = json_data.get('result', {}).get('isLast', False)
+
+            if not current_list:
+                status_text.text(f"✅ 페이지 {page}에 데이터 없음")
+                break
+                
+            all_apt_list.extend(current_list)
+            
+            if is_last:
+                status_text.text(f"✅ 마지막 페이지 도달")
+                break
+            
+            page += 1
+            progress_bar.progress(min(page / max_pages, 1.0))
+            time.sleep(DELAY_BETWEEN_REQUESTS)
+            
+        except requests.exceptions.RequestException as e:
+            status_text.error(f"❌ API 오류: {e}")
+            break
+        except json.JSONDecodeError:
+            status_text.error(f"❌ JSON 파싱 오류")
+            break
+        except Exception as e:
+            status_text.error(f"❌ 처리 오류: {e}")
+            break
+    
+    progress_bar.empty()
+    status_text.empty()
+    
+    if not all_apt_list:
+        return None
+        
+    final_data = {'result': {'list': all_apt_list}}
+    st.success(f"✅ {len(all_apt_list)}개 매물 수집 완료 ({page-1}페이지)")
+    
+    return final_data
+
+
+def save_data(data: Dict, file_name: str = DATA_FILE) -> bool:
+    """데이터를 로컬 파일에 저장"""
+    try:
+        with open(file_name, 'w', encoding='utf-8') as f:
+            json.dump(data, f, indent=2, ensure_ascii=False)
+        return True
+    except Exception as e:
+        st.error(f"❌ 파일 저장 오류: {e}")
+        return False
+
+
+def load_data(file_name: str = DATA_FILE) -> Optional[Dict]:
+    """로컬 파일에서 데이터 로드"""
+    if not os.path.exists(file_name):
+        return None
+
+    try:
+        with open(file_name, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        
+        count = len(data.get('result', {}).get('list', []))
+        mod_time = datetime.fromtimestamp(os.path.getmtime(file_name))
+        
+        st.success(f"📂 {count}개 매물 로드 (업데이트: {mod_time.strftime('%Y-%m-%d %H:%M')})")
+        
+        return data
+    except Exception as e:
+        st.error(f"❌ 파일 로드 오류: {e}")
+        return None
+
+
+def get_area_range(df: pd.DataFrame) -> Tuple[float, float]:
+    """DataFrame에서 면적 범위 추출"""
+    if df.empty or '전용면적' not in df.columns:
+        return 0.0, 100.0
+    
+    min_area = float(df['전용면적'].min())
+    max_area = float(df['전용면적'].max())
+    
+    # 0인 값들 제외
+    valid_areas = df[df['전용면적'] > 0]['전용면적']
+    if not valid_areas.empty:
+        min_area = float(valid_areas.min())
+        max_area = float(valid_areas.max())
+    
+    return min_area, max_area
+
+
+def apply_filters(df: pd.DataFrame, 
+                  trade_type: str, 
+                  dong: str, 
+                  area_range: Tuple[float, float]) -> pd.DataFrame:
+    """필터 조건을 적용하여 데이터프레임 필터링"""
+    filtered = df.copy()
+    
+    # 거래 유형 필터
+    if trade_type != '전체':
+        filtered = filtered[filtered['거래유형'] == trade_type]
+    
+    # 동 필터
+    if dong != '전체':
+        filtered = filtered[filtered['동'] == dong]
+    
+    # 면적 필터
+    min_sqm, max_sqm = area_range
+    filtered = filtered[
+        (filtered['전용면적'] >= min_sqm) & 
+        (filtered['전용면적'] <= max_sqm)
+    ]
+    
+    return filtered
+
+
+def render_property_details(apt_data: pd.Series):
+    """선택된 매물의 상세 정보 표시"""
+    st.markdown("---")
+    st.subheader(f"✨ {apt_data['아파트명']} {apt_data['동']}")
+
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+        st.metric("거래유형", apt_data['거래유형'])
+        st.metric("가격", apt_data['가격'])
+        
+    with col2:
+        st.metric("면적", apt_data['면적'])
+        st.metric("층수", apt_data['층수'])
+        
+    with col3:
+        st.metric("방향", apt_data['방향'])
+        st.metric("확인일", apt_data['확인일'])
+    
+    st.markdown("---")
+    
+    if apt_data['특징']:
+        st.write("**매물 특징**")
+        st.info(apt_data['특징'])
+    
+    if apt_data['태그']:
+        st.info(f"{apt_data['태그']}")
+    
+    # col_a, col_b = st.columns(2)
+    # with col_a:
+    # st.write(f"**중개사:** {apt_data['중개사']}")
+    # with col_b:
+    #     st.write(f"**매물번호:** {apt_data['매물번호']}")
+
+
+# ==================== 메인 앱 ====================
+
+st.set_page_config(
+    page_title="아파트 매물 정보",
+    page_icon="🏠",
+    layout="wide"
+)
+
+st.title('🏠 아파트 매물 정보 조회')
+
+# ==================== 사이드바: 데이터 관리 ====================
+
+with st.sidebar:
+    st.header("⚙️ 데이터 관리")
+    
+    col_btn1, col_btn2 = st.columns(2)
+    
+    with col_btn1:
+        if st.button("🔄 새로고침", use_container_width=True):
+            with st.spinner("다운로드 중..."):
+                new_data = download_all_pages(API_URL_TEMPLATE)
+                if new_data:
+                    if save_data(new_data):
+                        st.session_state.data = new_data
+                        st.session_state.df = None  # DataFrame 재생성 유도
+                        st.session_state.last_update = datetime.now()
+                        st.rerun()
+    
+    with col_btn2:
+        if st.button("🗑️ 초기화", use_container_width=True):
+            if os.path.exists(DATA_FILE):
+                os.remove(DATA_FILE)
+            st.session_state.clear()
+            st.rerun()
+    
+    if st.session_state.last_update:
+        st.caption(f"마지막 업데이트: {st.session_state.last_update.strftime('%H:%M:%S')}")
+
+# ==================== 데이터 로드 ====================
+
+if st.session_state.data is None:
+    data = load_data()
+    
+    if data is None:
+        data = download_all_pages(API_URL_TEMPLATE)
+        if data:
+            save_data(data)
+            st.session_state.last_update = datetime.now()
+    
+    if data is None or not data.get('result', {}).get('list'):
+        st.error("❌ 데이터 수집 실패")
+        st.stop()
+    
+    st.session_state.data = data
+
+# DataFrame 생성
+if st.session_state.df is None:
+    st.session_state.df = create_dataframe(st.session_state.data)
+
+df = st.session_state.df
+
+if df.empty:
+    st.error("❌ 유효한 데이터가 없습니다.")
+    st.stop()
+
+# ==================== 사이드바: 필터 옵션 ====================
+
+with st.sidebar:
+    st.markdown("---")
+    st.header("🔍 필터 옵션")
+    
+    # 1. 거래 유형 필터
+    trade_types = ['전체'] + sorted(df['거래유형'].unique().tolist())
+    selected_trade = st.selectbox('1️⃣ 거래 유형', trade_types)
+    
+    # 2. 동 필터
+    dong_list = ['전체'] + sorted(df['동'].unique().tolist())
+    selected_dong = st.selectbox('2️⃣ 동 선택', dong_list)
+    
+    # 3. 면적 필터
+    min_area, max_area = get_area_range(df)
+    area_range = st.slider(
+        '3️⃣ 전용면적 (㎡)',
+        min_value=float(min_area),
+        max_value=float(max_area),
+        value=(float(min_area), float(max_area)),
+        step=0.1
+    )
+    area_range
+    st.markdown("---")
+    
+    # 필터 초기화 버튼
+    if st.button("🔄 필터 초기화", use_container_width=True):
+        st.rerun()
+
+# ==================== 필터 적용 ====================
+
+filtered_df = apply_filters(df, selected_trade, selected_dong, area_range)
+
+# ==================== 통계 표시 ====================
+
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    st.metric("📊 전체 매물", len(df))
+
+with col2:
+    st.metric("🔍 필터링된 매물", len(filtered_df))
+
+
+with col3:
+    if not filtered_df.empty:
+        trade_counts = filtered_df['거래유형'].value_counts()
+        if not trade_counts.empty:
+            most_common = trade_counts.index[0]
+            st.metric("🏷️ 주요 유형", most_common)
+        else:
+            st.metric("🏷️ 주요 유형", "-")
+    else:
+        st.metric("🏷️ 주요 유형", "-")
+
+# ==================== 매물 목록 및 상세 정보 ====================
+
+st.markdown("---")
+st.subheader(f'📋 매물 목록 (총 {len(filtered_df)}건)')
+
+if filtered_df.empty:
+    st.warning("⚠️ 선택된 필터 조건에 해당하는 매물이 없습니다.")
+    st.info("💡 필터 조건을 조정하거나 '필터 초기화' 버튼을 눌러주세요.")
+else:
+    apartment_options = filtered_df['매물명'].tolist()
+    
+    selected_apt_name = st.selectbox(
+        '매물을 선택하세요',
+        apartment_options,
+        index=0,
+        label_visibility="collapsed"
+    )
+
+    selected_apt_data = filtered_df[filtered_df['매물명'] == selected_apt_name].iloc[0]
+    render_property_details(selected_apt_data)
+
+# ==================== 푸터 ====================
+
+st.markdown("---")
+st.caption("🏠 네이버 부동산 API 기반 매물 정보 조회 시스템")
