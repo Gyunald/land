@@ -190,3 +190,133 @@ if __name__ == "__main__":
             print("\n종료되었습니다.")
     else:
         pass
+
+
+
+
+#2 
+
+import requests
+from bs4 import BeautifulSoup as bs
+import time
+import os
+
+HEADERS = {"User-Agent": "Mozilla/5.0"}
+TIMEOUT = 10
+
+def fetch_index_data():
+    url = "https://m.stock.naver.com/front-api/domestic/index/majors"
+    try:
+        res = requests.get(url, timeout=TIMEOUT)
+        data = res.json()
+        return [{
+            "지수이름": item["stockName"],
+            "종가": item["closePrice"],
+            "등락률": f"{item['fluctuationsRatio']}%"
+        } for item in data.get("result", [])]
+    except Exception as e:
+        print(f"지수 데이터 가져오기 실패: {e}")
+        return []
+
+def fetch_top_movers():
+    url = "https://finance.naver.com/"
+    try:
+        html = requests.get(url, headers=HEADERS, timeout=TIMEOUT).text
+        soup = bs(html, "html.parser")
+
+        def parse_table(selector):
+            rows = soup.select(selector)[:5]
+            return [[t.strip() for t in row.get_text().strip().split("\n") if t.strip()] 
+                    for row in rows if row.get_text().strip()]
+
+        return {
+            'up': parse_table("#_topItems2 tr"),
+            'down': parse_table("#_topItems3 tr")
+        }
+    except Exception as e:
+        print(f"상승/하락 종목 가져오기 실패: {e}")
+        return {'up': [], 'down': []}
+
+def fetch_usd_krw():
+    url = 'https://m.stock.naver.com/front-api/marketIndex/productDetail?category=exchange&reutersCode=FX_USDKRW'
+    try:
+        response = requests.get(url, headers=HEADERS, timeout=TIMEOUT)
+        data = response.json()
+        result = data.get('result', {})
+        name = result.get('name', 'N/A')
+        close_price = result.get('closePrice', 'N/A')
+        fluctuations = result.get('fluctuations', 'N/A')
+        fluctuations_ratio = result.get('fluctuationsRatio', 'N/A')
+        return name, close_price, fluctuations, fluctuations_ratio
+    except Exception as e:
+        print(f"달러-원 환율 정보 가져오기 실패: {e}")
+        return None, None, None, None
+
+def fetch_dollar_index():
+    url = "https://m.stock.naver.com/marketindex/exchange/.DXY"
+    try:
+        response = requests.get(url, headers=HEADERS, timeout=TIMEOUT)
+        soup = bs(response.text, "html.parser")
+
+        price_tag = soup.select_one("strong.DetailInfo_price__v_j1V")
+        
+        fluctuation_tags = soup.select("div.Fluctuation_article__qrDEI span.Fluctuation_fluctuation__aToPR")
+
+        if price_tag and len(fluctuation_tags) >= 2:
+            price = price_tag.get_text(strip=True)
+            change = f"{fluctuation_tags[0].get_text(strip=True)} ({fluctuation_tags[1].get_text(strip=True)})"
+            return price, change
+        return None, None
+    except Exception as e:
+        print(f"달러인덱스 가져오기 실패: {e}")
+        return None, None
+
+def format_stock_data(stock):
+    if len(stock) >= 3:
+        return f"{stock[0]} {stock[1]} {stock[-1]}"
+    return f"데이터: {stock}"
+
+def display_data():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+    # 주요 지수 2개 출력
+    for idx in fetch_index_data()[:2]:
+        print(f"{idx['지수이름']} {idx['종가']} {idx['등락률']}")
+
+    # 달러-원 환율 출력
+    name, price, fluct, ratio = fetch_usd_krw()
+    if name and price and fluct and ratio:
+        print(f"달러 {price} {fluct} ({ratio}%)")
+    else:
+        print("달러-원 환율 정보를 찾을 수 없습니다.")
+
+    # 달러인덱스 출력
+    dxy_price, dxy_change = fetch_dollar_index()
+    if dxy_price and dxy_change:
+        print(f"달러인덱스 {dxy_price} {dxy_change}")
+    else:
+        print("달러인덱스 정보를 찾을 수 없습니다.")
+
+    # 상승/하락 종목 출력
+    movers = fetch_top_movers()
+    print()
+    for stock in movers['up']:
+        try:
+            print(format_stock_data(stock))
+        except Exception as e:
+            print(f"출력 오류: {stock} - {e}")
+
+    print()
+    for stock in movers['down']:
+        try:
+            print(format_stock_data(stock))
+        except Exception as e:
+            print(f"출력 오류: {stock} - {e}")
+
+if __name__ == "__main__":
+    try:
+        while True:
+            display_data()
+            time.sleep(180)
+    except KeyboardInterrupt:
+        print("\n종료되었습니다.")
