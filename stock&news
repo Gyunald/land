@@ -1,0 +1,192 @@
+import requests
+from bs4 import BeautifulSoup as bs
+import time
+import os
+import datetime
+
+HEADERS = {"User-Agent": "Mozilla/5.0"}
+TIMEOUT = 10
+NEWS_FILE = "news_stock.txt"
+MAX_NEWS_COUNT = 100  # 최대 뉴스 개수
+
+def news_form(title):
+    print(f"▶ {title}")
+
+def create_soup(url):
+    headers = {
+        "User-Agent": (
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/99.0.4844.74 Safari/537.36"
+        )
+    }
+    res = requests.get(url, headers=headers, timeout=TIMEOUT)
+    res.raise_for_status()
+    soup = bs(res.text, "lxml")
+    return soup
+
+def load_existing_news(filepath):
+    try:
+        with open(filepath, "r", encoding="utf8") as f:
+            lines = f.readlines()
+            # "▶ "로 시작하는 줄에서 뉴스 제목만 추출
+            existing_titles = [line.strip()[2:].strip() for line in lines if line.startswith("▶")]
+            return existing_titles
+    except FileNotFoundError:
+        return []
+
+def save_news(filepath, news_list):
+    # 헤더 포함 저장, 최대 MAX_NEWS_COUNT 뉴스까지만 저장
+    with open(filepath, "w", encoding="utf8") as f:
+        f.write("  [증시 헤드라인]\n\n")
+        for title in news_list[-MAX_NEWS_COUNT:]:
+            f.write(f"▶ {title}\n")
+
+def scrape_news():
+    url = "https://finance.naver.com/news/mainnews.naver"
+    soup = create_soup(url)
+    news_items = soup.find_all(attrs={"class":"articleSubject"})
+
+    existing_titles = load_existing_news(NEWS_FILE)
+    existing_set = set(existing_titles)
+
+    new_news = []
+    for item in news_items:
+        title = item.get_text().strip()
+        if title not in existing_set:
+            new_news.append(title)
+
+    if new_news:
+        # 기존 뉴스 + 새 뉴스 합치고 최대 개수만큼 유지
+        combined_news = existing_titles + new_news
+        save_news(NEWS_FILE, combined_news)
+        print("새로운 뉴스:")
+        for title in new_news:
+            news_form(title)
+    else:
+        print("새로운 뉴스가 없습니다.")
+
+    # 최근 5개 뉴스 출력 (파일에 있는 기존 뉴스 중 가장 최신 5개)
+    print("\n최근 뉴스:")
+    for title in existing_titles[-3:]:
+        news_form(title)
+    print()
+
+def fetch_index_data():
+    url = "https://m.stock.naver.com/front-api/domestic/index/majors"
+    try:
+        res = requests.get(url, timeout=TIMEOUT)
+        data = res.json()
+        return [{
+            "지수이름": item["stockName"],
+            "종가": item["closePrice"],
+            "등락률": f"{item['fluctuationsRatio']}%"
+        } for item in data.get("result", [])]
+    except Exception as e:
+        print(f"지수 데이터 가져오기 실패: {e}")
+        return []
+
+def fetch_top_movers():
+    url = "https://finance.naver.com/"
+    try:
+        html = requests.get(url, headers=HEADERS, timeout=TIMEOUT).text
+        soup = bs(html, "html.parser")
+
+        def parse_table(selector):
+            rows = soup.select(selector)[:5]
+            return [[t.strip() for t in row.get_text().strip().split("\n") if t.strip()]
+                    for row in rows if row.get_text().strip()]
+
+        return {
+            'up': parse_table("#_topItems2 tr"),
+            'down': parse_table("#_topItems3 tr")
+        }
+    except Exception as e:
+        print(f"상승/하락 종목 가져오기 실패: {e}")
+        return {'up': [], 'down': []}
+
+def fetch_usd_krw():
+    url = 'https://m.stock.naver.com/front-api/marketIndex/productDetail?category=exchange&reutersCode=FX_USDKRW'
+    try:
+        response = requests.get(url, headers=HEADERS, timeout=TIMEOUT)
+        data = response.json()
+        result = data.get('result', {})
+        return (
+            result.get('name', 'N/A'),
+            result.get('closePrice', 'N/A'),
+            result.get('fluctuations', 'N/A'),
+            result.get('fluctuationsRatio', 'N/A'),
+        )
+    except Exception as e:
+        print(f"달러-원 환율 정보 가져오기 실패: {e}")
+        return None, None, None, None
+
+def fetch_dollar_index():
+    url = "https://m.stock.naver.com/marketindex/exchange/.DXY"
+    try:
+        response = requests.get(url, headers=HEADERS, timeout=TIMEOUT)
+        soup = bs(response.text, "html.parser")
+
+        price_tag = soup.select_one("strong.DetailInfo_price__v_j1V")
+        fluctuation_tags = soup.select("div.Fluctuation_article__qrDEI span.Fluctuation_fluctuation__aToPR")
+
+        if price_tag and len(fluctuation_tags) >= 2:
+            price = price_tag.get_text(strip=True)
+            change = f"({fluctuation_tags[1].get_text(strip=True)})"
+            return price, change
+        return None, None
+    except Exception as e:
+        print(f"달러인덱스 가져오기 실패: {e}")
+        return None, None
+
+def format_stock_data(stock):
+    if len(stock) >= 3:
+        return f"{stock[0]} {stock[1]} ({stock[-1]})"
+    return f"데이터: {stock}"
+
+def display_data():
+    os.system('cls' if os.name == 'nt' else 'clear')
+    scrape_news()
+
+    for idx in fetch_index_data()[:2]:
+        print(f"{idx['지수이름']} {idx['종가']} ({idx['등락률']})")
+
+    print()
+    name, price, fluct, ratio = fetch_usd_krw()
+    if name and price and fluct and ratio:
+        print(f"달러 {price} ({ratio}%)")
+    else:
+        print("달러-원 환율 정보를 찾을 수 없습니다.")
+
+    dxy_price, dxy_change = fetch_dollar_index()
+    if dxy_price and dxy_change:
+        print(f"달러인덱스 {dxy_price} {dxy_change}")
+    else:
+        print("달러인덱스 정보를 찾을 수 없습니다.")
+    print()
+
+    # movers = fetch_top_movers()
+    # print("상승 종목:")
+    # for stock in movers['up']:
+    #     try:
+    #         print(format_stock_data(stock))
+    #     except Exception as e:
+    #         print(f"출력 오류: {stock} - {e}")
+    # print("\n하락 종목:")
+    # for stock in movers['down']:
+    #     try:
+    #         print(format_stock_data(stock))
+    #     except Exception as e:
+    #         print(f"출력 오류: {stock} - {e}")
+
+if __name__ == "__main__":
+    n = datetime.datetime.now()
+    if datetime.time(9,0) <= n.time() <= datetime.time(15,30) :
+        try:
+            while True:
+                display_data()
+                time.sleep(600)
+        except KeyboardInterrupt:
+            print("\n종료되었습니다.")
+    else:
+        pass
